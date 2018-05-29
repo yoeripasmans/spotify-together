@@ -1,8 +1,17 @@
-const express = require('express');
-const app = express();
+var express = require('express');
+var routes = require('./routes');
+var app = express();
+var dotenv = require('dotenv').load();
+var db = require('./models/index');
 
-app.get('/', (req, res) => res.send('Hello World!'));
+// view engine setup
+app.set('views', 'server/views');
+app.set('view engine', 'ejs');
 
 app.use(express.static('public'));
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'));
+app.use('/', routes);
+
+app.listen(process.env.PORT, function() {
+	console.log('Listening on port:', process.env.PORT);
+});
