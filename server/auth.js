@@ -1,20 +1,23 @@
 var passport = require('passport');
+var refresh = require('passport-oauth2-refresh');
 var SpotifyStrategy = require('passport-spotify').Strategy;
 var User = require('./models/user');
+var SpotifyWebApi = require('spotify-web-api-node');
 
 var client_id = process.env.CLIENT_ID; // Client ID
 var client_secret = process.env.CLIENT_SECRET; //Client secret
 var redirect_uri = process.env.REDIRECT_URI; // Redirect URI
 
 function auth() {
-	console.log(client_id);
 	//Serialize users into and deserialize users out of the session.  By storing the user when serializing, and finding the user when deserializing.
 	passport.serializeUser(function(user, done) {
-		done(null, user);
+		done(null, user._id);
 	});
 
-	passport.deserializeUser(function(obj, done) {
-		done(null, obj);
+	passport.deserializeUser(function(id, done) {
+		User.findById(id, function(err, user) {
+			done(err, user);
+		});
 	});
 	// Use the SpotifyStrategy within Passport.
 	passport.use(new SpotifyStrategy({

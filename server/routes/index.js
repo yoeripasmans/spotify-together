@@ -10,7 +10,7 @@ router.get('/', function(req, res) {
 router.get('/login',
 	passport.authenticate('spotify', {
 		scope: ['streaming user-read-birthdate user-read-private user-read-email user-read-playback-state user-modify-playback-state user-top-read'],
-		showDialog: true
+		showDialog: false
 	}),
 	function(req, res) {
 		// The request will be redirected to spotify for authentication, so this
@@ -25,15 +25,21 @@ router.get('/callback',
 		res.redirect('/playlist');
 	});
 
-router.get('/playlist', function(req, res) {
+router.get('/playlist', ensureAuthenticated, function(req, res) {
 	res.render('playlist');
 });
 
 function ensureAuthenticated(req, res, next) {
 	if (req.isAuthenticated()) {
+		console.log('auth');
+		
 		return next();
+	} else {
+		res.redirect('/');
+		console.log('not auth');
 	}
-	res.redirect('/login');
+
+
 }
 
 module.exports = router;
