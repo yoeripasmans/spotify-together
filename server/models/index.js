@@ -7,7 +7,6 @@ mongoose.Promise = global.Promise;
 //Get the default connection
 var db = mongoose.connection;
 
-// CONNECTION EVENTS
 // When successfully connected
 db.on('connected', function () {
   console.log('Mongoose default connection open to ' + mongoDB);
