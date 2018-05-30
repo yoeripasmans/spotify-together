@@ -4,6 +4,7 @@ var passport = require('passport');
 var auth = require('../auth').auth();
 var refresh = require('passport-oauth2-refresh');
 var SpotifyWebApi = require('spotify-web-api-node');
+var Playlists = require('../models/playlist');
 
 var spotifyApi = new SpotifyWebApi();
 
@@ -30,22 +31,48 @@ router.get('/callback',
 	});
 
 router.get('/playlist', ensureAuthenticated, function(req, res, next) {
-	spotifyApi.setAccessToken(req.user.accessToken);
-	function getMyTopTracks() {
-		//Get users top tracks and save it in variable
-		spotifyApi.getMyTopTracks()
-			.then(function(data) {
-				topTracks = data.body.items;
-				console.log(topTracks);
-			}).then(function(data) {
-				res.render('playlist');
-			}).catch(function(error) {
-				checkAccesToken(req, res, next, error, getMyTopTracks);
-			});
-	}
+	// spotifyApi.setAccessToken(req.user.accessToken);
+	// function getMyTopTracks() {
+	// 	//Get users top tracks and save it in variable
+	// 	spotifyApi.getMyTopTracks()
+	// 		.then(function(data) {
+	// 			topTracks = data.body.items;
+	// 			console.log(topTracks);
+	// 		}).then(function(data) {
+	// 			res.render('playlist');
+	// 		}).catch(function(error) {
+	// 			checkAccesToken(req, res, next, error, getMyTopTracks);
+	// 		});
+	// }
+	//
+	// getMyTopTracks();
 
-	getMyTopTracks();
+	Playlists.find({}).then(function(results) {
+		res.render('playlists-overview', {
+			playlists: results
+		});
+	}).catch(function(error) {
+		console.log(error);
+	});
 
+
+});
+
+router.get('/playlist/:id', ensureAuthenticated, function(req, res) {
+	Playlists.find({
+		id: req.params.id
+	}).then(function(results) {
+
+		console.log(results);
+		res.render('playlist');
+	}).catch(function(err){
+		console.log(err);
+	});
+});
+
+router.get('/logout', function(req, res) {
+	req.logout();
+	res.redirect('/');
 });
 
 function ensureAuthenticated(req, res, next) {
@@ -78,7 +105,6 @@ function checkAccesToken(req, res, next, error, callback) {
 		return next();
 		// There was another error, handle it appropriately.
 	}
-
 
 }
 

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Spotify Together</title>
+</head>
+
+<body>
+	<h1>All playlists</h1>
+	<ul>
+		<% for(var i=0; i < playlists.length; i++) { %>
+			<li>
+				<a href="playlist/<%= playlists[i].id %>">
+					<%= playlists[i].name %>
+				</a>
+			</li>
+			<% } %>
+	</ul>
+	<a href="/logout">Logout</a>
+</body>
+
+</html>
