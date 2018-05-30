@@ -2,7 +2,6 @@ var passport = require('passport');
 var refresh = require('passport-oauth2-refresh');
 var SpotifyStrategy = require('passport-spotify').Strategy;
 var User = require('./models/user');
-var SpotifyWebApi = require('spotify-web-api-node');
 
 var client_id = process.env.CLIENT_ID; // Client ID
 var client_secret = process.env.CLIENT_SECRET; //Client secret
@@ -20,61 +19,43 @@ function auth() {
 		});
 	});
 	// Use the SpotifyStrategy within Passport.
-	passport.use(new SpotifyStrategy({
+	var strategy = new SpotifyStrategy({
 			clientID: client_id,
 			clientSecret: client_secret,
 			callbackURL: redirect_uri
 		},
 		function(accessToken, refreshToken, expires_in, profile, done) {
-			// Asynchronous verification
-			process.nextTick(function() {
-				//If user exist in database associate the spotify account with a user record in the database and return that user.
-				User.findOne({
-					spotifyId: profile.id
-				}).then(function(currentUser) {
-					if (currentUser) {
-						currentUser.accessToken = accessToken;
-						currentUser.save().then(function(currentUser) {
-							return done(null, currentUser);
-						}).catch(function(err) {
-							console.log(err);
-						});
-					//If user doesn't exist in database create a new user record with the spotify account details.
-					} else {
-						new User({
-							spotifyId: profile.id,
-							username: profile.username,
-							displayName: profile.displayName,
-							email: profile.emails[0].value,
-							profilePic: profile.photos[0],
-							accessToken: accessToken,
-							refreshToken: refreshToken,
-						}).save().then(function(newUser) {
-							return done(null, newUser);
-						}).catch(function(err) {
-							console.log(err);
-						});
-					}
-				});
-
-				// User.findOrCreate({
-				// 	spotifyId: profile.id,
-				// 	username: profile.username,
-				// 	displayName: profile.displayName,
-				// 	email: profile.emails[0].value,
-				// 	profilePic: profile.photos[0],
-				// 	accessToken: accessToken,
-				// 	refreshToken: refreshToken,
-				// }, function(err, user) {
-				// 	console.log('A new uxer from "%s" was inserted', user.spotifyId);
-				// 	return done(null, user);
-				// });
-
-
-				// profile.accessToken = accessToken;
-				// return done(null, profile);
+			//Search for user in database
+			User.findOne({
+				spotifyId: profile.id
+			}, function(err, user) {
+				if (err) {
+					return done(err);
+				}
+				//If no user is found create one
+				if (!user) {
+					user = new User({
+						spotifyId: profile.id,
+						username: profile.username,
+						displayName: profile.displayName,
+						email: profile.emails[0].value,
+						profilePic: profile.photos[0],
+						accessToken: accessToken,
+						refreshToken: refreshToken,
+					});
+					user.save(function(err) {
+						if (err) console.log(err);
+						return done(err, user);
+					});
+				} else {
+					//If user found return user
+					return done(err, user);
+				}
 			});
-		}));
+		});
+
+	passport.use(strategy);
+	refresh.use(strategy);
 
 }
 

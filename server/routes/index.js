@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var auth = require('../auth').auth();
+var refresh = require('passport-oauth2-refresh');
+var SpotifyWebApi = require('spotify-web-api-node');
+
+var spotifyApi = new SpotifyWebApi();
 
 router.get('/', function(req, res) {
 	res.render('index');
@@ -25,18 +29,54 @@ router.get('/callback',
 		res.redirect('/playlist');
 	});
 
-router.get('/playlist', ensureAuthenticated, function(req, res) {
-	res.render('playlist');
+router.get('/playlist', ensureAuthenticated, function(req, res, next) {
+	spotifyApi.setAccessToken(req.user.accessToken);
+	function getMyTopTracks() {
+		//Get users top tracks and save it in variable
+		spotifyApi.getMyTopTracks()
+			.then(function(data) {
+				topTracks = data.body.items;
+				console.log(topTracks);
+			}).then(function(data) {
+				res.render('playlist');
+			}).catch(function(error) {
+				checkAccesToken(req, res, next, error, getMyTopTracks);
+			});
+	}
+
+	getMyTopTracks();
+
 });
 
 function ensureAuthenticated(req, res, next) {
 	if (req.isAuthenticated()) {
-		console.log('auth');
-		
 		return next();
 	} else {
 		res.redirect('/');
-		console.log('not auth');
+	}
+}
+
+function checkAccesToken(req, res, next, error, callback) {
+	if (error.statusCode === 401) {
+		// Access token expired.
+		// Try to fetch a new one.
+		refresh.requestNewAccessToken('spotify', req.user.refreshToken, function(err, accessToken) {
+			if (err || !accessToken) {
+				console.log('no accestoken');
+			}
+			spotifyApi.setAccessToken(accessToken);
+			// Save the new accessToken for future use
+			req.user.save({
+				accessToken: accessToken
+			}, function() {
+				// Retry the request.
+				callback();
+			});
+		});
+
+	} else {
+		return next();
+		// There was another error, handle it appropriately.
 	}
 
 
