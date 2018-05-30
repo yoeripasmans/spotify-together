@@ -6,6 +6,7 @@
 </head>
 
 <body>
+	<% include ./partials/header %>
 	<h1>All playlists</h1>
 	<ul>
 		<% for(var i=0; i < playlists.length; i++) { %>
@@ -17,7 +18,7 @@
 			<% } %>
 	</ul>
 	<a href="create">Create playlist</a>
-	
+
 	<% include ./partials/scripts %>
 </body>
 

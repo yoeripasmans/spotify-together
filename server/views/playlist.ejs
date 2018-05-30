@@ -6,17 +6,20 @@
 </head>
 
 <body>
-	<h1>Playlist</h1>
-	<a href="/playlists">Back</a>
-	<ul>
-		<% for(var i=0; i < playlistData.users.length; i++) { %>
-			<li>
-				<p><%= playlistData.users[i] %></p>
-			</li>
-			<% } %>
-	</ul>
-	
-	<% include ./partials/scripts %>
+	<% include ./partials/header %>
+		<h1>Playlist</h1>
+		<a href="/playlists">Back</a>
+		<ul>
+			<% for(var i=0; i < playlistData.songs.length; i++) { %>
+				<li>
+					<p>
+						<%= playlistData.songs[i] %>
+					</p>
+				</li>
+				<% } %>
+		</ul>
+
+		<% include ./partials/scripts %>
 </body>
 
 </html>

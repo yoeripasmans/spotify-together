@@ -5,8 +5,9 @@ var auth = require('../auth').auth();
 var refresh = require('passport-oauth2-refresh');
 var SpotifyWebApi = require('spotify-web-api-node');
 var Playlist = require('../models/playlist');
-
 var spotifyApi = new SpotifyWebApi();
+
+var returnRouter = function(io) {
 
 router.get('/', function(req, res) {
 	res.render('index');
@@ -27,11 +28,20 @@ router.get('/callback',
 		failureRedirect: '/'
 	}),
 	function(req, res) {
+		io.on('connection', function (socket) {
+			io.removeAllListeners();
+	        console.log('a user connected: ' + req.user.spotifyId);
+			
+			socket.on('disconnect', function (socket) {
+		        console.log('a user disconnected: ' + req.user.spotifyId);
+			});
+		});
 		res.redirect('/playlists');
 	});
 
 
 router.get('/playlists', ensureAuthenticated, function(req, res, next) {
+
 	// spotifyApi.setAccessToken(req.user.accessToken);
 	// function getMyTopTracks() {
 	// 	//Get users top tracks and save it in variable
@@ -122,5 +132,7 @@ function checkAccesToken(req, res, next, error, callback) {
 	}
 
 }
+return router;
+};
 
-module.exports = router;
+module.exports = returnRouter;
