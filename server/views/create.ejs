@@ -2,24 +2,24 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>Spotify Together</title>
+	<% include ./partials/head %>
 </head>
 
 <body>
-    <h1>Create playlist</h1>
-    <a href="/playlists">Back</a>
+	<h1>Create playlist</h1>
+	<a href="/playlists">Back</a>
 
-    <form name="create-playlist" method="POST" action="/create">
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name" required>
+	<form name="create-playlist" method="POST" action="/create">
+		<label for="name">Name</label>
+		<input type="text" name="name" id="name" required>
 
-        <label for="description">Description</label>
-        <input type="text" name="description" id="description">
+		<label for="description">Description</label>
+		<input type="text" name="description" id="description">
 
 		<input type="submit" value="Submit">
-    </form>
+	</form>
 
+	<% include ./partials/scripts %>
 </body>
 
 </html>

@@ -30,6 +30,7 @@ router.get('/callback',
 		res.redirect('/playlists');
 	});
 
+
 router.get('/playlists', ensureAuthenticated, function(req, res, next) {
 	// spotifyApi.setAccessToken(req.user.accessToken);
 	// function getMyTopTracks() {

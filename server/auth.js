@@ -1,3 +1,5 @@
+var express = require('express');
+var router = express.Router();
 var passport = require('passport');
 var refresh = require('passport-oauth2-refresh');
 var SpotifyStrategy = require('passport-spotify').Strategy;

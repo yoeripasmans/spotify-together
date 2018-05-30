@@ -2,17 +2,14 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<title>Spotify Together</title>
+	<% include ./partials/head %>
 </head>
 
 <body>
 	<h1>Spotify Together</h1>
 	<a href="/login">Connect</a>
-	<script src="/socket.io/socket.io.js"></script>
-	<script>
-		var socket = io();
-	</script>
+
+	<% include ./partials/scripts %>
 </body>
 
 </html>
