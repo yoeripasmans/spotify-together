@@ -8,8 +8,14 @@
 
 <body>
 	<h1>Playlist</h1>
-
-	<a href="/logout">Logout</a>
+	<a href="/playlists">Back</a>
+	<ul>
+		<% for(var i=0; i < playlistData.users.length; i++) { %>
+			<li>
+				<p><%= playlistData.users[i] %></p>
+			</li>
+			<% } %>
+	</ul>
 </body>
 
 </html>

@@ -11,13 +11,14 @@
 	<ul>
 		<% for(var i=0; i < playlists.length; i++) { %>
 			<li>
-				<a href="playlist/<%= playlists[i].id %>">
+				<a href="playlist/<%= playlists[i]._id %>">
 					<%= playlists[i].name %>
 				</a>
 			</li>
 			<% } %>
 	</ul>
-	<a href="/logout">Logout</a>
+	<a href="create">Create playlist</a>
+
 </body>
 
 </html>

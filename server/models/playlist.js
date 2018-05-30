@@ -12,6 +12,8 @@ var playlistSchema = new Schema({
    private: Boolean,
    password: Boolean,
    users: Array,
+   activeUsers: Array,
+   admins: Array,
    rules: Object
 });
 

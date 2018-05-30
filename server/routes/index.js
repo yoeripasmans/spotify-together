@@ -4,7 +4,7 @@ var passport = require('passport');
 var auth = require('../auth').auth();
 var refresh = require('passport-oauth2-refresh');
 var SpotifyWebApi = require('spotify-web-api-node');
-var Playlists = require('../models/playlist');
+var Playlist = require('../models/playlist');
 
 var spotifyApi = new SpotifyWebApi();
 
@@ -27,10 +27,10 @@ router.get('/callback',
 		failureRedirect: '/'
 	}),
 	function(req, res) {
-		res.redirect('/playlist');
+		res.redirect('/playlists');
 	});
 
-router.get('/playlist', ensureAuthenticated, function(req, res, next) {
+router.get('/playlists', ensureAuthenticated, function(req, res, next) {
 	// spotifyApi.setAccessToken(req.user.accessToken);
 	// function getMyTopTracks() {
 	// 	//Get users top tracks and save it in variable
@@ -47,8 +47,8 @@ router.get('/playlist', ensureAuthenticated, function(req, res, next) {
 	//
 	// getMyTopTracks();
 
-	Playlists.find({}).then(function(results) {
-		res.render('playlists-overview', {
+	Playlist.find({}).then(function(results) {
+		res.render('overview', {
 			playlists: results
 		});
 	}).catch(function(error) {
@@ -59,15 +59,29 @@ router.get('/playlist', ensureAuthenticated, function(req, res, next) {
 });
 
 router.get('/playlist/:id', ensureAuthenticated, function(req, res) {
-	Playlists.find({
-		id: req.params.id
+	Playlist.findOne({
+		_id: req.params.id
 	}).then(function(results) {
-
-		console.log(results);
-		res.render('playlist');
-	}).catch(function(err){
+		res.render('playlist', {
+			playlistData: results
+		});
+	}).catch(function(err) {
 		console.log(err);
 	});
+});
+
+router.get('/create', ensureAuthenticated, function(req, res) {
+	res.render('create');
+});
+
+router.post('/create', ensureAuthenticated, function(req, res) {
+	console.log(req.user);
+	new Playlist({
+		name: req.body.name,
+		description: req.body.description,
+	}).save();
+
+	res.redirect('playlists');
 });
 
 router.get('/logout', function(req, res) {
