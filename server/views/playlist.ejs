@@ -7,17 +7,29 @@
 
 <body>
 	<% include ./partials/header %>
-		<h1>Playlist</h1>
-		<a href="/playlists">Back</a>
-		<ul>
-			<% for(var i=0; i < trackData.length; i++) { %>
-				<li>
-					<p>
-						<%= trackData[i].name %>
-					</p>
-				</li>
-				<% } %>
-		</ul>
+
+		<main>
+			<header>
+				<a href="/playlists">Back</a>
+				<h1 class="playlist-title"><%= playlistData.name %></h1>
+				<p class="playlist-description">
+					<%= playlistData.description %>
+				</p>
+			</header>
+
+			<h3>Songs</h3>
+			<ul class="playlist">
+				<% for(var i=0; i < playlistData.tracks.length; i++) { %>
+					<li>
+						<p>
+							<%= playlistData.tracks[i].name %>
+						</p>
+					</li>
+					<% } %>
+			</ul>
+
+			<button class="show-add-tracks">Add songs</button>
+		</main>
 
 		<% include ./partials/scripts %>
 </body>

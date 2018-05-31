@@ -3,19 +3,19 @@ var Schema = mongoose.Schema;
 
 // create a schema
 var playlistSchema = new Schema({
-   id: Number,
    name: String,
    description: String,
    image: String,
    tracks: Array,
    restrictions: Boolean,
    private: Boolean,
-   password: Boolean,
+   password: String,
    users: Array,
    activeUsers: Array,
    admins: Array,
-   rules: Object
-});
+   rules: Object,
+
+}, {timestamps: true});
 
 // Set to user model
 var Playlists = mongoose.model('Playlists', playlistSchema);

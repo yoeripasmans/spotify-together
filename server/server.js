@@ -5,8 +5,6 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var routes = require('./routes')(io);
-
-
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
@@ -14,16 +12,10 @@ var session = require('express-session');
 var passport = require('passport');
 var db = require('./models/index');
 
-// var socket = require('./socket')(io);
-
 // view engine setup
 app.set('views', 'server/views');
 app.set('view engine', 'ejs');
 app.set('socketio', io);
-// app.use(function(req,res,next){
-// req.io = io;
-// next();
-// });
 
 app.use(express.json());
 app.use(express.urlencoded({

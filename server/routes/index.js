@@ -13,13 +13,10 @@ var returnRouter = function(io) {
 	router.get('/', function(req, res) {
 		res.render('index');
 	});
-	 let socket_id = [];
-
-
 
 	router.get('/login',
 		passport.authenticate('spotify', {
-			scope: ['streaming user-read-birthdate user-read-private user-read-email user-read-playback-state user-modify-playback-state user-top-read'],
+			scope: ['streaming user-read-birthdate user-read-private playlist-read-private user-read-email user-read-playback-state user-modify-playback-state user-top-read'],
 			showDialog: false
 		}),
 		function(req, res) {
@@ -32,14 +29,6 @@ var returnRouter = function(io) {
 			failureRedirect: '/'
 		}),
 		function(req, res) {
-			// io.on('connection', function(socket) {
-			// 	io.removeAllListeners();
-			// 	console.log('a user connected: ' + req.user.spotifyId);
-			//
-			// 	socket.on('disconnect', function(socket) {
-			// 		console.log('a user disconnected: ' + req.user.spotifyId);
-			// 	});
-			// });
 			res.redirect('/playlists');
 		});
 
@@ -62,15 +51,11 @@ var returnRouter = function(io) {
 		// }
 		//
 		// getMyTopTracks();
-		// io.on('connection', function(socket) {
-		//
-		// 	socket.leaveAll();
-		// 	console.log('leave',socket.adapter.rooms);
-		// 	socket.emit('leaveroom');
-		//
-		// });
 
-		Playlist.find({}).then(function(results) {
+
+		Playlist.find({}).sort({
+			createdAt: 'desc'
+		}).then(function(results) {
 			res.render('overview', {
 				playlists: results
 			});
@@ -84,21 +69,57 @@ var returnRouter = function(io) {
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
 
 		io.on('connection', function(socket) {
+			//Remove listeners
 			io.removeAllListeners('connection');
-			console.log('connect');
+			//See who connected
+			console.log(req.user.spotifyId, 'Connected');
+			//Update database
+			// Playlist.update({
+			// 	_id: req.params.id
+			// }, {
+			// 	activeUsers: req.user.spotifyId
+			// });
 
-			// io.sockets.emit('showsocket', socket);
-			socket.userid = req.user.spotifyId;
-			console.log('spotify id',socket.userid);
-			console.log('id',socket.id);
 			socket.join(req.params.id);
-			// io.to(req.params.id).emit('joinroom', req.params.id);
-			console.log('current roooms', socket.adapter.rooms);
+
+			io.to(req.params.id).emit('showsocket', socket.adapter.rooms);
+
+			socket.on('ShowAddTracks', function() {
+				function getTopTracks() {
+					spotifyApi.getMyTopTracks()
+						.then(function(data) {
+							topTracks = data.body.items;
+							console.log(topTracks);
+							socket.emit('ShowAddTracks', topTracks);
+						}).catch(function(err) {
+							checkAccesToken(req, res, next, err, getTopTracks);
+						});
+				}
+				getTopTracks();
+				console.log('add');
+			});
+
+			socket.on('addTrack', function(trackData) {
+				console.log(trackData);
+				Playlist.update({
+						"_id": req.params.id
+					}, {
+						"$push": {
+							"tracks": trackData
+						}
+					},
+					function(err, raw) {
+						if (err) return handleError(err);
+						console.log('The raw response from Mongo was ', raw);
+					});
+					io.to(req.params.id).emit('addTrack', trackData);
+			});
+
+			console.log('current rooms', socket.adapter.rooms);
+
 			socket.on('disconnect', function(socket) {
-				// console.log('a user disconnected: ' + req.user.spotifyId);
-				// io.sockets.connected[socket.id].disconnect();
 				console.log('rooms after disconnect', socket.adapter);
-				console.log('disconnect');
+				console.log(req.user.spotifyId, 'Disconnected');
 			});
 		});
 
@@ -109,29 +130,43 @@ var returnRouter = function(io) {
 		Playlist.findOne({
 			_id: req.params.id
 		}).then(function(results) {
-			var tracks = results.tracks;
+			// var tracks = results.tracks;
+			// console.log(tracks);
+			// if(tracks.length > 0) {
+			// 	getTracks();
+			// } else {
+			res.render('playlist', {
+				playlistData: results,
+			});
 
-			if (tracks.length > 0) {
-				getTracks();
-			} else {
-				res.render('playlist', {
-					playlistData: results
-				});
-			}
-			//Get track details from playlist
-			function getTracks() {
-				spotifyApi.getTracks(tracks).then(function(data) {
-					return data.body;
-				}).then(function(trackData) {
-					res.render('playlist', {
-						playlistData: results,
-						trackData: trackData.tracks,
+
+			function getTopTracks() {
+				spotifyApi.getMyTopTracks()
+					.then(function(data) {
+						topTracks = data.body.items;
+						console.log(topTracks);
+
+					}).catch(function(err) {
+						checkAccesToken(req, res, next, err, getTopTracks);
 					});
-				}).catch(function(error) {
-					//Refresh acces token if error
-					checkAccesToken(req, res, next, error, getTracks);
-				});
 			}
+			getTopTracks();
+			// }
+			// //Get track details from playlist
+			// function getTracks() {
+			// 	spotifyApi.getTracks(tracks).then(function(data) {
+			// 		return data.body;
+			// 	}).then(function(trackData) {
+			// 		res.render('playlist', {
+			// 			playlistData: results,
+			// 			trackData: trackData.tracks,
+			// 		});
+			// 	}).catch(function(error) {
+			// 		//Refresh acces token if error
+			// 		console.log(error);
+			// 		checkAccesToken(req, res, next, error, getTracks);
+			// 	});
+			// }
 
 		}).catch(function(err) {
 			console.log(err);
@@ -147,6 +182,11 @@ var returnRouter = function(io) {
 			name: req.body.name,
 			image: req.body.image,
 			description: req.body.description,
+			restrictions: req.body.restrictions,
+			private: req.body.private,
+			password: req.body.password,
+			users: req.user.spotifyId,
+			admins: req.user.spotifyId,
 		}).save();
 
 		res.redirect('playlists');
