@@ -13,6 +13,9 @@ var returnRouter = function(io) {
 	router.get('/', function(req, res) {
 		res.render('index');
 	});
+	 let socket_id = [];
+
+
 
 	router.get('/login',
 		passport.authenticate('spotify', {
@@ -43,6 +46,7 @@ var returnRouter = function(io) {
 
 	router.get('/playlists', ensureAuthenticated, function(req, res, next) {
 
+
 		// spotifyApi.setAccessToken(req.user.accessToken);
 		// function getMyTopTracks() {
 		// 	//Get users top tracks and save it in variable
@@ -58,6 +62,13 @@ var returnRouter = function(io) {
 		// }
 		//
 		// getMyTopTracks();
+		// io.on('connection', function(socket) {
+		//
+		// 	socket.leaveAll();
+		// 	console.log('leave',socket.adapter.rooms);
+		// 	socket.emit('leaveroom');
+		//
+		// });
 
 		Playlist.find({}).then(function(results) {
 			res.render('overview', {
@@ -71,29 +82,57 @@ var returnRouter = function(io) {
 	});
 
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
-		// spotifyApi.setAccessToken(req.user.accessToken);
 
-		function getTracks(songs) {
-			console.log("songs",songs);
-			spotifyApi.getTracks(songs).then(function(data) {
-				topTracks = data.body.items;
-				console.log(topTracks);
-			}).catch(function(error) {
-				checkAccesToken(req, res, next, error, getTracks);
+		io.on('connection', function(socket) {
+			io.removeAllListeners('connection');
+			console.log('connect');
+
+			// io.sockets.emit('showsocket', socket);
+			socket.userid = req.user.spotifyId;
+			console.log('spotify id',socket.userid);
+			console.log('id',socket.id);
+			socket.join(req.params.id);
+			// io.to(req.params.id).emit('joinroom', req.params.id);
+			console.log('current roooms', socket.adapter.rooms);
+			socket.on('disconnect', function(socket) {
+				// console.log('a user disconnected: ' + req.user.spotifyId);
+				// io.sockets.connected[socket.id].disconnect();
+				console.log('rooms after disconnect', socket.adapter);
+				console.log('disconnect');
 			});
-		}
+		});
 
+		//Set acces token
+		spotifyApi.setAccessToken(req.user.accessToken);
+
+		//Get playlist from database
 		Playlist.findOne({
 			_id: req.params.id
 		}).then(function(results) {
-			// var songs = results.songs;
-			// console.log(songs);
-			// if (songs.length > 0) {
-			// 	// getTracks(songs);
-			// }
-			res.render('playlist', {
-				playlistData: results
-			});
+			var tracks = results.tracks;
+
+			if (tracks.length > 0) {
+				getTracks();
+			} else {
+				res.render('playlist', {
+					playlistData: results
+				});
+			}
+			//Get track details from playlist
+			function getTracks() {
+				spotifyApi.getTracks(tracks).then(function(data) {
+					return data.body;
+				}).then(function(trackData) {
+					res.render('playlist', {
+						playlistData: results,
+						trackData: trackData.tracks,
+					});
+				}).catch(function(error) {
+					//Refresh acces token if error
+					checkAccesToken(req, res, next, error, getTracks);
+				});
+			}
+
 		}).catch(function(err) {
 			console.log(err);
 		});
@@ -104,9 +143,9 @@ var returnRouter = function(io) {
 	});
 
 	router.post('/create', ensureAuthenticated, function(req, res) {
-		console.log(req.user);
 		new Playlist({
 			name: req.body.name,
+			image: req.body.image,
 			description: req.body.description,
 		}).save();
 
@@ -134,7 +173,11 @@ var returnRouter = function(io) {
 				if (err || !newAccessToken) {
 					console.log('no accestoken');
 				}
-				User.update({ spotifyId: req.user.spotifyId }, {accessToken: newAccessToken});
+				User.update({
+					spotifyId: req.user.spotifyId
+				}, {
+					accessToken: newAccessToken
+				});
 				spotifyApi.setAccessToken(newAccessToken);
 				// Save the new accessToken for future use
 				req.user.save({

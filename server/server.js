@@ -19,7 +19,7 @@ var db = require('./models/index');
 // view engine setup
 app.set('views', 'server/views');
 app.set('view engine', 'ejs');
-
+app.set('socketio', io);
 // app.use(function(req,res,next){
 // req.io = io;
 // next();

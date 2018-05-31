@@ -10,10 +10,10 @@
 		<h1>Playlist</h1>
 		<a href="/playlists">Back</a>
 		<ul>
-			<% for(var i=0; i < playlistData.songs.length; i++) { %>
+			<% for(var i=0; i < trackData.length; i++) { %>
 				<li>
 					<p>
-						<%= playlistData.songs[i] %>
+						<%= trackData[i].name %>
 					</p>
 				</li>
 				<% } %>

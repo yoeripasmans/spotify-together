@@ -7,7 +7,7 @@ var playlistSchema = new Schema({
    name: String,
    description: String,
    image: String,
-   songs: Array,
+   tracks: Array,
    restrictions: Boolean,
    private: Boolean,
    password: Boolean,
