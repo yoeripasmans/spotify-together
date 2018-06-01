@@ -72,20 +72,36 @@ var returnRouter = function(io) {
 			//Remove listeners
 			io.removeAllListeners('connection');
 			//See who connected
-			console.log(req.user.spotifyId, 'Connected');
-			//Update database
-			// Playlist.update({
-			// 	_id: req.params.id
-			// }, {
-			// 	activeUsers: req.user.spotifyId
-			// });
+			console.log(req.user, 'Connected');
+			//Update database with adding active user to database
+			var currentUser = {
+				"id": req.user.spotifyId,
+				"name": req.user.username,
+				"profilePic": req.user.profilePic
+			};
 
+			Playlist.update({
+					"_id": req.params.id
+				}, {
+					"$push": {
+						"activeUsers": currentUser,
+						"users": req.user.spotifyId,
+					}
+				},
+				function(err, raw) {
+					if (err) return handleError(err);
+					console.log('The raw response from Mongo was ', raw);
+				});
+			//Join room
 			socket.join(req.params.id);
+
+			io.to(req.params.id).emit('joinPlaylist', currentUser);
 
 			io.to(req.params.id).emit('showsocket', socket.adapter.rooms);
 
 			socket.on('ShowAddTracks', function() {
 				spotifyApi.setAccessToken(req.user.accessToken);
+
 				function getTopTracks() {
 					spotifyApi.getMyTopTracks()
 						.then(function(data) {
@@ -97,7 +113,7 @@ var returnRouter = function(io) {
 						});
 				}
 				getTopTracks();
-				console.log('add');
+				console.log('add track');
 			});
 
 			socket.on('addTrack', function(trackData) {
@@ -111,14 +127,26 @@ var returnRouter = function(io) {
 					},
 					function(err, raw) {
 						if (err) return handleError(err);
-						console.log('The raw response from Mongo was ', raw);
+						// console.log('The raw response from Mongo was ', raw);
 					});
-					io.to(req.params.id).emit('addTrack', trackData);
+				io.to(req.params.id).emit('addTrack', trackData);
 			});
 
-			console.log('current rooms', socket.adapter.rooms);
-
 			socket.on('disconnect', function(socket) {
+				Playlist.update({
+						"_id": req.params.id
+					}, {
+						"$pull": {
+							"activeUsers": {
+								"id": req.user.spotifyId,
+								"name": req.user.spotifyId
+							},
+						}
+					},
+					function(err, raw) {
+						if (err) return handleError(err);
+						console.log('The raw response from Mongo was ', raw);
+					});
 				console.log('rooms after disconnect', socket.adapter);
 				console.log(req.user.spotifyId, 'Disconnected');
 			});
@@ -141,17 +169,17 @@ var returnRouter = function(io) {
 			});
 
 
-			function getTopTracks() {
-				spotifyApi.getMyTopTracks()
-					.then(function(data) {
-						topTracks = data.body.items;
-						console.log(topTracks);
-
-					}).catch(function(err) {
-						checkAccesToken(req, res, next, err, getTopTracks);
-					});
-			}
-			getTopTracks();
+			// function getTopTracks() {
+			// 	spotifyApi.getMyTopTracks()
+			// 		.then(function(data) {
+			// 			topTracks = data.body.items;
+			// 			console.log(topTracks);
+			//
+			// 		}).catch(function(err) {
+			// 			checkAccesToken(req, res, next, err, getTopTracks);
+			// 		});
+			// }
+			// getTopTracks();
 			// }
 			// //Get track details from playlist
 			// function getTracks() {

@@ -53,6 +53,19 @@ socket.on('leaveroom', function(room){
     console.log('leave room');
 });
 
-socket.on('showsocket', function(socket){
-    console.log(socket);
+socket.on('joinPlaylist', function(currentUser){
+	var currentusers = document.querySelector('.playlist-currentusers');
+	var li = document.createElement('li');
+	currentusers.appendChild(li);
+
+	var profilePic = document.createElement('img');
+	li.appendChild(profilePic);
+	profilePic.src = currentUser.profilePic;
+
+	var userName = document.createElement('p');
+	li.appendChild(userName);
+	userName.textContent = currentUser.name;
+
+
+
 });

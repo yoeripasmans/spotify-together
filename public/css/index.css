@@ -1,3 +1,13 @@
 body {
 	font-family: sans-serif;
 }
+
+.main-header {
+	width: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.logout-button {
+	margin-left: auto;
+}
