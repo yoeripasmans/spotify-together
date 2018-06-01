@@ -85,6 +85,7 @@ var returnRouter = function(io) {
 			io.to(req.params.id).emit('showsocket', socket.adapter.rooms);
 
 			socket.on('ShowAddTracks', function() {
+				spotifyApi.setAccessToken(req.user.accessToken);
 				function getTopTracks() {
 					spotifyApi.getMyTopTracks()
 						.then(function(data) {
