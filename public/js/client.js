@@ -4,19 +4,22 @@ socket.on('connected', function() {
 	var showAddTracksButton = document.querySelector('.show-add-tracks');
 
 	showAddTracksButton.addEventListener('click', function() {
-		console.log('add');
 		socket.emit('ShowAddTracks');
 	});
 });
 
 socket.on('ShowAddTracks', function(data) {
-	var addTrackOverlay = document.createElement('ul');
+	var addTrackOverlay = document.createElement('div');
+	addTrackOverlay.classList.add('add-track-overlay');
 	var main = document.querySelector('main');
 	main.appendChild(addTrackOverlay);
 
+	var addTrackList = document.createElement('ul');
+	addTrackOverlay.appendChild(addTrackList);
+
 	for (let i = 0; i < data.length; i++) {
 		var trackWrapper = document.createElement('li');
-		addTrackOverlay.appendChild(trackWrapper);
+		addTrackList.appendChild(trackWrapper);
 
 		var trackName = document.createElement('p');
 		trackWrapper.appendChild(trackName);
@@ -31,19 +34,44 @@ socket.on('ShowAddTracks', function(data) {
 	}
 
 	function addTrack(i) {
-		console.log(i);
 		socket.emit('addTrack', data[i]);
 	}
 });
 
 socket.on('addTrack', function(trackData) {
 	var queue = document.querySelector('.queue');
+
 	var li = document.createElement('li');
+	li.classList.add('queue__track');
 	queue.appendChild(li);
-	var trackName = document.createElement('p');
+
+	var trackName = document.createElement('span');
 	li.appendChild(trackName);
 	trackName.textContent = trackData.name;
-	console.log('addTrack', trackData);
+
+	var artistName = document.createElement('span');
+	li.appendChild(artistName);
+	artistName.textContent = trackData.artists.map(a => a.name).join(', ');
+
+	var albumName = document.createElement('span');
+	li.appendChild(albumName);
+	albumName.textContent = trackData.album.name;
+
+	var addedBy = document.createElement('span');
+	li.appendChild(addedBy);
+	addedBy.textContent = trackData.addedBy;
+
+	var likes = document.createElement('span');
+	li.appendChild(likes);
+
+	var likesAmount = document.createElement('span');
+	likes.appendChild(likesAmount);
+	likesAmount.textContent = trackData.likes;
+
+	var likeButton = document.createElement('button');
+	likes.appendChild(likeButton);
+	likeButton.textContent = 'Like';
+
 });
 
 
@@ -91,7 +119,7 @@ socket.on('showActiveUsers', function(activeUsers) {
 });
 
 socket.on('leavePlaylist', function(currentUser, activeUsers) {
-		console.log(currentUser.name, 'leaves');
+	console.log(currentUser.name, 'leaves');
 	var currentusers = document.querySelectorAll('.current-user');
 	var currentusersAmount = document.querySelector('.playlist-currentusers-amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
@@ -103,6 +131,26 @@ socket.on('leavePlaylist', function(currentUser, activeUsers) {
 	}
 });
 
-function leavePlaylist(){
+var checkboxes = document.querySelectorAll('input[type=checkbox]');
 
+for (var i = 0; i < checkboxes.length; i++) {
+	checkboxes[i].addEventListener('change', toggleCheckboxState);
+}
+
+window.addEventListener('load', function() {
+	for (var i = 0; i < checkboxes.length; i++) {
+		if (checkboxes[i].checked === true) {
+			checkboxes[i].value = true;
+		} else {
+			checkboxes[i].value = false;
+		}
+	}
+});
+
+function toggleCheckboxState() {
+	if (this.checked === true) {
+		this.value = true;
+	} else {
+		this.value = false;
+	}
 }

@@ -12,26 +12,40 @@
 			<a href="/playlists">Back</a>
 
 			<form name="create-playlist" method="POST" action="/create">
-				<label for="img">Image</label>
-				<input name="img" id="img" type="file">
+				<div>
+					<label for="img">Image</label>
+					<input name="img" id="img" type="file">
+				</div>
 
-				<label for="name">Name</label>
-				<input type="text" name="name" id="name" required>
+				<div>
+					<label for="name">Name</label>
+					<input type="text" name="name" id="name" required>
+				</div>
 
-				<label for="description">Description</label>
-				<input type="text" name="description" id="description">
+				<div>
+					<label for="description">Description</label>
+					<input type="text" name="description" id="description">
+				</div>
 
-				<label for="private">Make playlist private</label>
-				<input id="private" name="private" type="checkbox">
+				<div>
+					<label for="private">Make playlist private</label>
+					<input id="private" name="private" type="checkbox">
+				</div>
 
-				<label for="restricted">Make playlist restricted</label>
-				<input id="restricted" name="restricted" type="checkbox">
+				<div>
+					<label for="restricted">Make playlist restricted</label>
+					<input id="restricted" name="restricted" type="checkbox">
+				</div>
 
-				<label for="password">Password</label>
-				<input id="password" name="password" type="password">
+				<div>
+					<label for="password">Password</label>
+					<input id="password" name="password" type="password">
+				</div>
 
-				<label for="artist">Artist</label>
-				<input id="text" name="artist" type="artist">
+				<div>
+					<label for="artist">Artist</label>
+					<input id="text" name="artist" type="artist">
+				</div>
 
 				<select>
 			  <option value="pop">Pop</option>
@@ -43,7 +57,7 @@
 				<input type="submit" value="Save">
 			</form>
 		</main>
-
+		<script src="/js/form.js"></script>
 		<% include ./partials/scripts %>
 </body>
 

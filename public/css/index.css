@@ -1,17 +1,20 @@
 * {
-	box-sizing: border-box;
+    box-sizing: border-box;
 }
+
 body {
     font-family: sans-serif;
+    margin: 0;
 }
 
 main {
-	max-width: 70em;
+    max-width: 70em;
     margin: 0 auto;
 }
 
 .main-header {
     width: 100%;
+    padding: 0 1em;
     display: flex;
     align-items: center;
 }
@@ -19,6 +22,7 @@ main {
 .account {
     margin-left: auto;
     display: flex;
+	align-items: center;
 }
 
 .account img {
@@ -26,6 +30,10 @@ main {
     align-self: start;
     margin-left: 0.6em;
     border-radius: 50%;
+}
+
+.logout-button {
+	margin-left: 1em;
 }
 
 .playlist-currentusers {
@@ -79,4 +87,12 @@ main {
 .queue__track span {
     display: flex;
     align-items: center;
+}
+
+.add-track-overlay {
+	position: fixed;
+top: 0;
+left: 0;
+background-color: #fff;
+width: 100%;
 }

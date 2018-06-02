@@ -18,9 +18,10 @@
 				<span>Created by: <%= playlistData.createdBy %></span>
 			</header>
 
-			<h3 class="playlist-currentusers-amount"></h3>
-			<ul class="playlist-currentusers">
-				<!-- <% for(var i=0; i < playlistData.activeUsers.length; i++) { %>
+			<section>
+				<h3 class="playlist-currentusers-amount"></h3>
+				<ul class="playlist-currentusers">
+					<!-- <% for(var i=0; i < playlistData.activeUsers.length; i++) { %>
 			<h3 class="playlist-currentusers-amount"><%= playlistData.activeUsers.length %> Users</h3>
 					<li>
 						<img src="<%= playlistData.activeUsers[i].profilePic %>" alt="">
@@ -29,43 +30,47 @@
 						</p>
 					</li>
 					<% } %> -->
-			</ul>
-			<header class="queue-header">
-				<h3>Songs</h3>
-				<button class="show-add-tracks">Add songs</button>
-			</header>
+				</ul>
+			</section>
 
-			<ul class="queue">
-				<li class="queue__track--top">
-					<span>Name</span>
-					<span>Artist</span>
-					<span>Album</span>
-					<span>Added by</span>
+			<section>
+				<header class="queue-header">
+					<h3>Songs</h3>
+					<button class="show-add-tracks">Add songs</button>
+				</header>
 
-				</li>
-				<% for(var i=0; i < playlistData.tracks.length; i++) { %>
-					<li class="queue__track">
-						<span class="queue__track-name">
+				<ul class="queue">
+					<li class="queue__track--top">
+						<span>Name</span>
+						<span>Artist</span>
+						<span>Album</span>
+						<span>Added by</span>
+
+					</li>
+					<% for(var i=0; i < playlistData.tracks.length; i++) { %>
+						<li class="queue__track">
+							<span class="queue__track-name">
 							<%= playlistData.tracks[i].name %>
 						</span>
-						<span class="queue__track-artist">
+							<span class="queue__track-artist">
 							<%= playlistData.tracks[i].artists.map(a => a.name).join(', ') %>
 						</span>
-						<span class="queue__track-album">
+							<span class="queue__track-album">
 							<%= playlistData.tracks[i].album.name %>
 						</span>
-						<span class="queue__track-addedby">
+							<span class="queue__track-addedby">
 							<%= playlistData.tracks[i].addedBy %>
 						</span>
-						<span class="queue__track-likes">
+							<span class="queue__track-likes">
 							<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
-						<button class="track-like-button">Like</button>
-						</span>
-					</li>
-					<% } %>
-			</ul>
+							<button class="track-like-button">Like</button>
+							</span>
+						</li>
+						<% } %>
+				</ul>
+			</section>
 
-			<img src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt="">
+			<!-- <img src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt=""> -->
 
 		</main>
 

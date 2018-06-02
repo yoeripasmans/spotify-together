@@ -119,28 +119,29 @@ var returnRouter = function(io) {
 			});
 
 			socket.on('addTrack', function(trackData) {
+				var newTrackData = {
+					id: trackData.id,
+					uri: trackData.uri,
+					name: trackData.name,
+					artists: trackData.artists,
+					album: trackData.album,
+					duration_ms: trackData.duration_ms,
+					likes: 0,
+					addedBy: req.user.spotifyId,
+				};
 				console.log(trackData);
 				Playlist.update({
 						_id: req.params.id
 					}, {
 						$push: {
-							tracks: {
-								id: trackData.id,
-								uri: trackData.uri,
-								name: trackData.name,
-								artists: trackData.artists,
-								album: trackData.album,
-								duration_ms: trackData.duration_ms,
-								likes: 0,
-								addedBy: req.user.spotifyId,
-							}
+							tracks: newTrackData
 						}
 					},
 					function(err, raw) {
 						if (err) {
 							console.log(err);
 						} else {
-							io.to(req.params.id).emit('addTrack', trackData);
+							io.to(req.params.id).emit('addTrack', newTrackData);
 						}
 					});
 			});
@@ -227,13 +228,24 @@ var returnRouter = function(io) {
 
 	router.post('/create', ensureAuthenticated, function(req, res) {
 		var id = crypto.randomBytes(8).toString('hex');
-		console.log(id);
+		//Checkboxes
+		if(req.body.private === undefined){
+			req.body.private = false;
+		} else {
+			req.body.private = true;
+		}
+
+		if(req.body.restricted === undefined){
+			req.body.restricted = false;
+		} else {
+			req.body.restricted = true;
+		}
 
 		new Playlist({
 			name: req.body.name,
 			image: req.body.image,
 			description: req.body.description,
-			restrictions: req.body.restrictions,
+			restricted: req.body.restricted,
 			private: req.body.private,
 			password: req.body.password,
 			users: req.user.spotifyId,
