@@ -58,12 +58,14 @@
 							<%= playlistData.tracks[i].addedBy %>
 						</span>
 						<span class="queue__track-likes">
-							<%= playlistData.tracks[i].likes %>
-								<button class="track-like-button">Like</button>
+							<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
+						<button class="track-like-button">Like</button>
 						</span>
 					</li>
 					<% } %>
 			</ul>
+
+			<img src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData._id %>" alt="">
 
 		</main>
 

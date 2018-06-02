@@ -7,41 +7,42 @@
 
 <body>
 	<% include ./partials/header %>
+		<main>
+			<h1>Create playlist</h1>
+			<a href="/playlists">Back</a>
 
-		<h1>Create playlist</h1>
-		<a href="/playlists">Back</a>
+			<form name="create-playlist" method="POST" action="/create">
+				<label for="img">Image</label>
+				<input name="img" id="img" type="file">
 
-		<form name="create-playlist" method="POST" action="/create">
-			<label for="img">Image</label>
-			<input name="img" id="img" type="file">
+				<label for="name">Name</label>
+				<input type="text" name="name" id="name" required>
 
-			<label for="name">Name</label>
-			<input type="text" name="name" id="name" required>
+				<label for="description">Description</label>
+				<input type="text" name="description" id="description">
 
-			<label for="description">Description</label>
-			<input type="text" name="description" id="description">
+				<label for="private">Make playlist private</label>
+				<input id="private" name="private" type="checkbox">
 
-			<label for="private">Make playlist private</label>
-			<input id="private" name="private" type="checkbox">
+				<label for="restricted">Make playlist restricted</label>
+				<input id="restricted" name="restricted" type="checkbox">
 
-			<label for="restricted">Make playlist restricted</label>
-			<input id="restricted" name="restricted" type="checkbox">
+				<label for="password">Password</label>
+				<input id="password" name="password" type="password">
 
-			<label for="password">Password</label>
-			<input id="password" name="password" type="password">
+				<label for="artist">Artist</label>
+				<input id="text" name="artist" type="artist">
 
-			<label for="artist">Artist</label>
-			<input id="text" name="artist" type="artist">
-
-			<select>
+				<select>
 			  <option value="pop">Pop</option>
 			  <option value="hiphop">Hiphop</option>
 			  <option value="rock">Rock</option>
 			  <option value="classic">classic</option>
 			</select>
 
-			<input type="submit" value="Save">
-		</form>
+				<input type="submit" value="Save">
+			</form>
+		</main>
 
 		<% include ./partials/scripts %>
 </body>

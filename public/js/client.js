@@ -10,7 +10,6 @@ socket.on('connected', function() {
 });
 
 socket.on('ShowAddTracks', function(data) {
-	console.log(data);
 	var addTrackOverlay = document.createElement('ul');
 	var main = document.querySelector('main');
 	main.appendChild(addTrackOverlay);
