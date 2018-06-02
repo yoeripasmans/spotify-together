@@ -17,9 +17,17 @@
 				</p>
 			</header>
 
-			<h3 class="playlist-currentusers-amount"><%= playlistData.activeUsers.length %> Users</h3>
+			<h3 class="playlist-currentusers-amount"></h3>
 			<ul class="playlist-currentusers">
-
+				<!-- <% for(var i=0; i < playlistData.activeUsers.length; i++) { %>
+			<h3 class="playlist-currentusers-amount"><%= playlistData.activeUsers.length %> Users</h3>
+					<li>
+						<img src="<%= playlistData.activeUsers[i].profilePic %>" alt="">
+						<p>
+							<%= playlistData.activeUsers[i].name %>
+						</p>
+					</li>
+					<% } %> -->
 			</ul>
 
 			<h3>Songs</h3>

@@ -20,8 +20,7 @@ var returnRouter = function(io) {
 			showDialog: false
 		}),
 		function(req, res) {
-			// The request will be redirected to spotify for authentication, so this
-			// function will not be called.
+			// The request will be redirected to spotify for authentication, so this function will not be called.
 		});
 
 	router.get('/callback',
@@ -34,24 +33,6 @@ var returnRouter = function(io) {
 
 
 	router.get('/playlists', ensureAuthenticated, function(req, res, next) {
-
-
-		// spotifyApi.setAccessToken(req.user.accessToken);
-		// function getMyTopTracks() {
-		// 	//Get users top tracks and save it in variable
-		// 	spotifyApi.getMyTopTracks()
-		// 		.then(function(data) {
-		// 			topTracks = data.body.items;
-		// 			console.log(topTracks);
-		// 		}).then(function(data) {
-		// 			res.render('playlist');
-		// 		}).catch(function(error) {
-		// 			checkAccesToken(req, res, next, error, getMyTopTracks);
-		// 		});
-		// }
-		//
-		// getMyTopTracks();
-
 
 		Playlist.find({}).sort({
 			createdAt: 'desc'
@@ -71,8 +52,11 @@ var returnRouter = function(io) {
 		io.on('connection', function(socket) {
 			//Remove listeners
 			io.removeAllListeners('connection');
+			//Join room
+			socket.join(req.params.id);
+			socket.emit('connected');
 			//See who connected
-			console.log(req.user, 'Connected');
+			console.log(req.user.spotifyId, 'Connected');
 			//Update database with adding active user to database
 			var currentUser = {
 				"id": req.user.spotifyId,
@@ -81,23 +65,33 @@ var returnRouter = function(io) {
 			};
 
 			Playlist.update({
-					"_id": req.params.id
+					"_id": req.params.id,
+					'activeUsers.id': {
+						$ne: currentUser.id
+					}
 				}, {
 					"$push": {
 						"activeUsers": currentUser,
-						"users": req.user.spotifyId,
+						"users": currentUser,
 					}
 				},
 				function(err, raw) {
-					if (err) return handleError(err);
-					console.log('The raw response from Mongo was ', raw);
+					if (err) {
+						console.log(err);
+					} else {
+						//Get playlist from database
+						Playlist.findOne({
+							_id: req.params.id
+						}).then(function(results) {
+							var activeUsers = results.activeUsers;
+							socket.emit('showActiveUsers', activeUsers);
+							socket.broadcast.to(req.params.id).emit('joinPlaylist', currentUser, activeUsers);
+						}).catch(function(err) {
+
+						});
+					}
+
 				});
-			//Join room
-			socket.join(req.params.id);
-
-			io.to(req.params.id).emit('joinPlaylist', currentUser);
-
-			io.to(req.params.id).emit('showsocket', socket.adapter.rooms);
 
 			socket.on('ShowAddTracks', function() {
 				spotifyApi.setAccessToken(req.user.accessToken);
@@ -126,7 +120,17 @@ var returnRouter = function(io) {
 						}
 					},
 					function(err, raw) {
-						if (err) return handleError(err);
+						if (err) {
+							console.log(err);
+						} else {
+							Playlist.findOne({
+								_id: req.params.id
+							}).then(function(results) {
+								console.log(results);
+							}).catch(function(err) {
+								console.log(err);
+							});
+						}
 						// console.log('The raw response from Mongo was ', raw);
 					});
 				io.to(req.params.id).emit('addTrack', trackData);
@@ -137,23 +141,21 @@ var returnRouter = function(io) {
 						"_id": req.params.id
 					}, {
 						"$pull": {
-							"activeUsers": {
-								"id": req.user.spotifyId,
-								"name": req.user.spotifyId
-							},
+							"activeUsers": currentUser,
+							"users": currentUser,
 						}
 					},
 					function(err, raw) {
-						if (err) return handleError(err);
-						console.log('The raw response from Mongo was ', raw);
+						if (err) {
+							console.log(err);
+						} else {
+							io.to(req.params.id).emit('leavePlaylist', currentUser);
+						}
 					});
-				console.log('rooms after disconnect', socket.adapter);
-				console.log(req.user.spotifyId, 'Disconnected');
+				// console.log('rooms after disconnect', socket.adapter);
+				console.log('Disconnected');
 			});
 		});
-
-		//Set acces token
-		spotifyApi.setAccessToken(req.user.accessToken);
 
 		//Get playlist from database
 		Playlist.findOne({
