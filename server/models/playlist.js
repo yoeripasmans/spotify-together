@@ -28,6 +28,7 @@ var playlistSchema = new Schema(
 	admins: Array,
 	createdBy: Object,
 	rules: Object,
+	qrCodeId: String,
 
 }, {
 	timestamps: true

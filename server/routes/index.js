@@ -6,6 +6,7 @@ var refresh = require('passport-oauth2-refresh');
 var SpotifyWebApi = require('spotify-web-api-node');
 var Playlist = require('../models/playlist');
 var User = require('../models/user');
+var crypto = require("crypto");
 var spotifyApi = new SpotifyWebApi();
 
 var returnRouter = function(io) {
@@ -46,6 +47,10 @@ var returnRouter = function(io) {
 		});
 
 
+	});
+	//If playlist gets QR scanned link directly to playlist
+	router.get('/playlist/:qr/:id', ensureAuthenticated, function(req, res, next) {
+		res.redirect('/playlist/' + req.params.id);
 	});
 
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
@@ -221,6 +226,9 @@ var returnRouter = function(io) {
 	});
 
 	router.post('/create', ensureAuthenticated, function(req, res) {
+		var id = crypto.randomBytes(8).toString('hex');
+		console.log(id);
+
 		new Playlist({
 			name: req.body.name,
 			image: req.body.image,
@@ -231,6 +239,7 @@ var returnRouter = function(io) {
 			users: req.user.spotifyId,
 			admins: req.user.spotifyId,
 			createdBy: req.user.spotifyId,
+			qrCodeId: id
 		}).save();
 
 		res.redirect('playlists');

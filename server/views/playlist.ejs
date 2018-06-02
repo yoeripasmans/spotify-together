@@ -65,7 +65,7 @@
 					<% } %>
 			</ul>
 
-			<img src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData._id %>" alt="">
+			<img src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt="">
 
 		</main>
 

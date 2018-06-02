@@ -91,6 +91,7 @@ socket.on('showActiveUsers', function(activeUsers) {
 });
 
 socket.on('leavePlaylist', function(currentUser, activeUsers) {
+		console.log(currentUser.name, 'leaves');
 	var currentusers = document.querySelectorAll('.current-user');
 	var currentusersAmount = document.querySelector('.playlist-currentusers-amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
@@ -100,5 +101,8 @@ socket.on('leavePlaylist', function(currentUser, activeUsers) {
 			currentusers[i].parentNode.removeChild(currentusers[i]);
 		}
 	}
-	console.log(currentUser.name, 'leaves');
 });
+
+function leavePlaylist(){
+
+}
