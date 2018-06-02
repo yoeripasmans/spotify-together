@@ -27,7 +27,7 @@ var returnRouter = function(io) {
 		passport.authenticate('spotify', {
 			failureRedirect: '/'
 		}),
-		function(req, res) {
+		function(req, res, next) {
 			res.redirect('/playlists');
 		});
 

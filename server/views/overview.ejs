@@ -7,19 +7,21 @@
 
 <body>
 	<% include ./partials/header %>
-	<h1>All playlists</h1>
-	<ul>
-		<% for(var i=0; i < playlists.length; i++) { %>
-			<li>
-				<a href="playlist/<%= playlists[i]._id %>">
-					<%= playlists[i].name %>
-				</a>
-			</li>
-			<% } %>
-	</ul>
-	<a href="create">Create playlist</a>
+		<main>
+			<h1>All playlists</h1>
+			<ul>
+				<% for(var i=0; i < playlists.length; i++) { %>
+					<li>
+						<a href="playlist/<%= playlists[i]._id %>">
+							<%= playlists[i].name %>
+						</a>
+					</li>
+					<% } %>
+			</ul>
+			<a href="create">Create playlist</a>
+		</main>
 
-	<% include ./partials/scripts %>
+		<% include ./partials/scripts %>
 </body>
 
 </html>

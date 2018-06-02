@@ -1,5 +1,13 @@
+* {
+	box-sizing: border-box;
+}
 body {
     font-family: sans-serif;
+}
+
+main {
+	max-width: 70em;
+    margin: 0 auto;
 }
 
 .main-header {
@@ -10,14 +18,14 @@ body {
 
 .account {
     margin-left: auto;
-	display: flex;
+    display: flex;
 }
 
 .account img {
-	width: 2.4em;
-align-self: start;
-margin-left: 0.6em;
-border-radius: 50%;
+    width: 2.4em;
+    align-self: start;
+    margin-left: 0.6em;
+    border-radius: 50%;
 }
 
 .playlist-currentusers {
@@ -39,26 +47,36 @@ border-radius: 50%;
     text-align: center;
 }
 
+.queue-header {
+    display: flex;
+    align-items: center;
+}
+
+.show-add-tracks {
+    margin-left: auto;
+}
+
 .queue {
     padding: 0;
 }
 
 .queue__track--top {
-	text-transform: uppercase;
+    text-transform: uppercase;
 }
 
 .queue__track, .queue__track--top {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 10em 4em;
     grid-gap: 2em;
     list-style-type: none;
-	margin-bottom: 1em;
+    margin-bottom: 1em;
 }
+
 .queue__track {
-	height: 3em;
+    height: 3em;
 }
 
 .queue__track span {
-	display: flex;
-align-items: center;
+    display: flex;
+    align-items: center;
 }
