@@ -1,4 +1,12 @@
 <header class="main-header">
 	<h3>Spotify Together</h3>
-	<a href="/logout" class="logout-button">Log out</a>
+	<div class="account">
+		<div class="account__text">
+			<div>Account</div>
+			<div><%= user.spotifyId %></div>
+		</div>
+			<img class="account__profile-pic" src="<%= user.profilePic %>" alt="Profile picture of <%= user.profilePic %>">
+		<a href="/logout" class="logout-button">Log out</a>
+	</div>
+
 </header>

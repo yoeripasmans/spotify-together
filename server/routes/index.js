@@ -38,7 +38,8 @@ var returnRouter = function(io) {
 			createdAt: 'desc'
 		}).then(function(results) {
 			res.render('overview', {
-				playlists: results
+				playlists: results,
+				user: req.user
 			});
 		}).catch(function(error) {
 			console.log(error);
@@ -178,6 +179,7 @@ var returnRouter = function(io) {
 			// } else {
 			res.render('playlist', {
 				playlistData: results,
+				user: req.user
 			});
 
 
@@ -215,7 +217,7 @@ var returnRouter = function(io) {
 	});
 
 	router.get('/create', ensureAuthenticated, function(req, res) {
-		res.render('create');
+		res.render('create', {user: req.user});
 	});
 
 	router.post('/create', ensureAuthenticated, function(req, res) {

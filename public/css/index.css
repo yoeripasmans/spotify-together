@@ -8,8 +8,16 @@ body {
     align-items: center;
 }
 
-.logout-button {
+.account {
     margin-left: auto;
+	display: flex;
+}
+
+.account img {
+	width: 2.4em;
+align-self: start;
+margin-left: 0.6em;
+border-radius: 50%;
 }
 
 .playlist-currentusers {
@@ -36,7 +44,6 @@ body {
 }
 
 .queue__track--top {
-    margin-bottom: 1em;
 	text-transform: uppercase;
 }
 
@@ -45,6 +52,7 @@ body {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-gap: 2em;
     list-style-type: none;
+	margin-bottom: 1em;
 }
 .queue__track {
 	height: 3em;
