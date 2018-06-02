@@ -38,9 +38,9 @@ socket.on('ShowAddTracks', function(data) {
 });
 
 socket.on('addTrack', function(trackData) {
-	var playlist = document.querySelector('.playlist');
+	var queue = document.querySelector('.queue');
 	var li = document.createElement('li');
-	playlist.appendChild(li);
+	queue.appendChild(li);
 	var trackName = document.createElement('p');
 	li.appendChild(trackName);
 	trackName.textContent = trackData.name;
@@ -95,7 +95,7 @@ socket.on('leavePlaylist', function(currentUser, activeUsers) {
 	var currentusers = document.querySelectorAll('.current-user');
 	var currentusersAmount = document.querySelector('.playlist-currentusers-amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
-	
+
 	for (var i = 0; i < currentusers.length; i++) {
 		if (currentusers[i].getAttribute('data-id') === currentUser.id) {
 			currentusers[i].parentNode.removeChild(currentusers[i]);

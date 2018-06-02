@@ -53,7 +53,9 @@ var returnRouter = function(io) {
 			//Remove listeners
 			io.removeAllListeners('connection');
 			//Join room
+			if(req.params.id != undefined){
 			socket.join(req.params.id);
+			}
 			socket.emit('connected');
 			//See who connected
 			console.log(req.user.spotifyId, 'Connected');

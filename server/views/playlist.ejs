@@ -9,12 +9,13 @@
 	<% include ./partials/header %>
 
 		<main>
-			<header>
+			<header class="playlist-header">
 				<a href="/playlists">Back</a>
-				<h1 class="playlist-title"><%= playlistData.name %></h1>
-				<p class="playlist-description">
+				<h1 class="playlist-header__title"><%= playlistData.name %></h1>
+				<p class="playlist-header__description">
 					<%= playlistData.description %>
 				</p>
+				<span>Created by: <%= playlistData.createdBy %></span>
 			</header>
 
 			<h3 class="playlist-currentusers-amount"></h3>
@@ -29,19 +30,41 @@
 					</li>
 					<% } %> -->
 			</ul>
+			<header class="queue-header">
+				<h3>Songs</h3>
+				<button class="show-add-tracks">Add songs</button>
+			</header>
 
-			<h3>Songs</h3>
-			<ul class="playlist">
+			<ul class="queue">
+				<li class="queue__track--top">
+					<span>Name</span>
+					<span>Artist</span>
+					<span>Album</span>
+					<span>Added by</span>
+					<span>Likes</span>
+				</li>
 				<% for(var i=0; i < playlistData.tracks.length; i++) { %>
-					<li>
-						<p>
+					<li class="queue__track">
+						<span class="queue__track-name">
 							<%= playlistData.tracks[i].name %>
-						</p>
+						</span>
+						<span class="queue__track-artist">
+							<%= playlistData.tracks[i].artists.map(a => a.name).join(', ') %>
+						</span>
+						<span class="queue__track-album">
+							<%= playlistData.tracks[i].album.name %>
+						</span>
+						<span class="queue__track-addedby">
+							<%= playlistData.tracks[i].addedBy %>
+						</span>
+						<span class="queue__track-likes">
+							<%= playlistData.tracks[i].likes %>
+								<button class="track-like-button">Like</button>
+						</span>
 					</li>
 					<% } %>
 			</ul>
 
-			<button class="show-add-tracks">Add songs</button>
 		</main>
 
 		<% include ./partials/scripts %>
