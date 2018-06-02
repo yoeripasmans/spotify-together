@@ -1,16 +1,16 @@
 var socket = io('/');
 
-socket.on('connected', function(){
-var showAddTracksButton = document.querySelector('.show-add-tracks');
+socket.on('connected', function() {
+	var showAddTracksButton = document.querySelector('.show-add-tracks');
 
-showAddTracksButton.addEventListener('click', function(){
-	console.log('add');
-	socket.emit('ShowAddTracks');
-});
+	showAddTracksButton.addEventListener('click', function() {
+		console.log('add');
+		socket.emit('ShowAddTracks');
+	});
 });
 
-socket.on('ShowAddTracks', function(data){
-    console.log(data);
+socket.on('ShowAddTracks', function(data) {
+	console.log(data);
 	var addTrackOverlay = document.createElement('ul');
 	var main = document.querySelector('main');
 	main.appendChild(addTrackOverlay);
@@ -26,29 +26,29 @@ socket.on('ShowAddTracks', function(data){
 		var addTrackButton = document.createElement('button');
 		trackWrapper.appendChild(addTrackButton);
 		addTrackButton.textContent = "Add";
-		addTrackButton.addEventListener('click', function(){
+		addTrackButton.addEventListener('click', function() {
 			addTrack(i);
 		});
 	}
 
-	function addTrack(i){
+	function addTrack(i) {
 		console.log(i);
 		socket.emit('addTrack', data[i]);
 	}
 });
 
-socket.on('addTrack', function(trackData){
+socket.on('addTrack', function(trackData) {
 	var playlist = document.querySelector('.playlist');
 	var li = document.createElement('li');
 	playlist.appendChild(li);
 	var trackName = document.createElement('p');
 	li.appendChild(trackName);
 	trackName.textContent = trackData.name;
-    console.log('addTrack', trackData);
+	console.log('addTrack', trackData);
 });
 
 
-socket.on('joinPlaylist', function(currentUser, activeUsers){
+socket.on('joinPlaylist', function(currentUser, activeUsers) {
 	var currentusers = document.querySelector('.playlist-currentusers');
 	var currentusersAmount = document.querySelector('.playlist-currentusers-amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
@@ -68,7 +68,7 @@ socket.on('joinPlaylist', function(currentUser, activeUsers){
 	console.log(currentUser.name, 'joined');
 });
 
-socket.on('showActiveUsers', function(activeUsers){
+socket.on('showActiveUsers', function(activeUsers) {
 	var currentusers = document.querySelector('.playlist-currentusers');
 	var currentusersAmount = document.querySelector('.playlist-currentusers-amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
@@ -88,15 +88,18 @@ socket.on('showActiveUsers', function(activeUsers){
 		userName.textContent = activeUsers[i].name;
 		console.log(activeUsers[i].name, 'joined');
 	}
-    console.log('activeUsers', activeUsers);
+	console.log('activeUsers', activeUsers);
 });
 
-socket.on('leavePlaylist', function(currentUser){
+socket.on('leavePlaylist', function(currentUser, activeUsers) {
 	var currentusers = document.querySelectorAll('.current-user');
+	var currentusersAmount = document.querySelector('.playlist-currentusers-amount');
+	currentusersAmount.textContent = activeUsers.length + " Users";
+	
 	for (var i = 0; i < currentusers.length; i++) {
 		if (currentusers[i].getAttribute('data-id') === currentUser.id) {
-				currentusers[i].parentNode.removeChild(currentusers[i]);
+			currentusers[i].parentNode.removeChild(currentusers[i]);
 		}
 	}
-    console.log(currentUser.name, 'leaves');
+	console.log(currentUser.name, 'leaves');
 });

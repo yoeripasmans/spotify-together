@@ -11,3 +11,22 @@ body {
 .logout-button {
 	margin-left: auto;
 }
+
+.playlist-currentusers {
+	padding: 0;
+display: flex;
+}
+
+.current-user {
+	list-style-type: none;
+	margin-right: 1em;
+}
+
+.current-user img {
+	width: 6em;
+    border-radius: 50%;
+}
+
+.current-user p {
+	text-align: center;
+}

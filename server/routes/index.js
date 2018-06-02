@@ -87,7 +87,7 @@ var returnRouter = function(io) {
 							socket.emit('showActiveUsers', activeUsers);
 							socket.broadcast.to(req.params.id).emit('joinPlaylist', currentUser, activeUsers);
 						}).catch(function(err) {
-
+							console.log(err);
 						});
 					}
 
@@ -113,27 +113,28 @@ var returnRouter = function(io) {
 			socket.on('addTrack', function(trackData) {
 				console.log(trackData);
 				Playlist.update({
-						"_id": req.params.id
+						_id: req.params.id
 					}, {
-						"$push": {
-							"tracks": trackData
+						$push: {
+							tracks: {
+								id: trackData.id,
+								uri: trackData.uri,
+								name: trackData.name,
+								artists: trackData.artists,
+								album: trackData.album,
+								duration_ms: trackData.duration_ms,
+								likes: 0,
+								addedBy: req.user.spotifyId,
+							}
 						}
 					},
 					function(err, raw) {
 						if (err) {
 							console.log(err);
 						} else {
-							Playlist.findOne({
-								_id: req.params.id
-							}).then(function(results) {
-								console.log(results);
-							}).catch(function(err) {
-								console.log(err);
-							});
+							io.to(req.params.id).emit('addTrack', trackData);
 						}
-						// console.log('The raw response from Mongo was ', raw);
 					});
-				io.to(req.params.id).emit('addTrack', trackData);
 			});
 
 			socket.on('disconnect', function(socket) {
@@ -149,7 +150,14 @@ var returnRouter = function(io) {
 						if (err) {
 							console.log(err);
 						} else {
-							io.to(req.params.id).emit('leavePlaylist', currentUser);
+							Playlist.findOne({
+								_id: req.params.id
+							}).then(function(results) {
+								var activeUsers = results.activeUsers;
+								io.to(req.params.id).emit('leavePlaylist', currentUser, activeUsers);
+							}).catch(function(err) {
+								console.log(err);
+							});
 						}
 					});
 				// console.log('rooms after disconnect', socket.adapter);
@@ -218,6 +226,7 @@ var returnRouter = function(io) {
 			password: req.body.password,
 			users: req.user.spotifyId,
 			admins: req.user.spotifyId,
+			createdBy: req.user.spotifyId,
 		}).save();
 
 		res.redirect('playlists');
