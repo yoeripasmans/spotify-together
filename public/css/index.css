@@ -22,7 +22,7 @@ main {
 .account {
     margin-left: auto;
     display: flex;
-	align-items: center;
+    align-items: center;
 }
 
 .account img {
@@ -33,7 +33,7 @@ main {
 }
 
 .logout-button {
-	margin-left: 1em;
+    margin-left: 1em;
 }
 
 .playlist-currentusers {
@@ -89,10 +89,16 @@ main {
     align-items: center;
 }
 
-.add-track-overlay {
-	position: fixed;
-top: 0;
-left: 0;
-background-color: #fff;
-width: 100%;
+#add-track {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    width: 100%;
+	min-height: 100%;
+    display: none;
+}
+
+#add-track:target {
+    display: block;
 }

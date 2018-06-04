@@ -2,26 +2,47 @@ var socket = io('/');
 
 socket.on('connected', function() {
 	var showAddTracksButton = document.querySelector('.show-add-tracks');
+	var closeAddTracksButton = document.querySelector('.close-add-tracks');
+	var addTrackOverlay = document.querySelector('#add-track');
+	var fetchDevicesButton = document.querySelector('.fetch-devices-button');
 
-	showAddTracksButton.addEventListener('click', function() {
-		socket.emit('ShowAddTracks');
+	showAddTracksButton.addEventListener('click', function(e) {
+		socket.emit('showAddTracks');
 	});
+	fetchDevicesButton.addEventListener('click', function(e) {
+		socket.emit('fetchDevices');
+	});
+
+});
+socket.on('showDevices', function(devices) {
+	var fetchDevicesWrapper = document.querySelector('.fetch-devices-wrapper');
+
+	for (var i = 0; i < devices.length; i++) {
+		var li = document.createElement('li');
+		fetchDevicesWrapper.appendChild(li);
+
+		var deviceName = document.createElement('span');
+		li.appendChild(deviceName);
+		deviceName.textContent = devices[i].name;
+
+		var transferButton = document.createElement('button');
+		li.appendChild(transferButton);
+		transferButton.textContent = 'Transfer playback';
+	}
 });
 
-socket.on('ShowAddTracks', function(data) {
-	var addTrackOverlay = document.createElement('div');
-	addTrackOverlay.classList.add('add-track-overlay');
-	var main = document.querySelector('main');
-	main.appendChild(addTrackOverlay);
+socket.on('showAddTracks', function(data) {
+	var trackOverlay = document.querySelector('#add-track');
+
 
 	var addTrackList = document.createElement('ul');
-	addTrackOverlay.appendChild(addTrackList);
+	trackOverlay.appendChild(addTrackList);
 
 	for (let i = 0; i < data.length; i++) {
 		var trackWrapper = document.createElement('li');
 		addTrackList.appendChild(trackWrapper);
 
-		var trackName = document.createElement('p');
+		var trackName = document.createElement('span');
 		trackWrapper.appendChild(trackName);
 		trackName.textContent = data[i].name;
 
@@ -29,12 +50,8 @@ socket.on('ShowAddTracks', function(data) {
 		trackWrapper.appendChild(addTrackButton);
 		addTrackButton.textContent = "Add";
 		addTrackButton.addEventListener('click', function() {
-			addTrack(i);
+			socket.emit('addTrack', data[i]);
 		});
-	}
-
-	function addTrack(i) {
-		socket.emit('addTrack', data[i]);
 	}
 });
 

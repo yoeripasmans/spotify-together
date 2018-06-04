@@ -3,6 +3,7 @@ var router = express.Router();
 var passport = require('passport');
 var auth = require('../auth').auth();
 var refresh = require('passport-oauth2-refresh');
+var fetch = require('node-fetch');
 var SpotifyWebApi = require('spotify-web-api-node');
 var Playlist = require('../models/playlist');
 var User = require('../models/user');
@@ -59,8 +60,8 @@ var returnRouter = function(io) {
 			//Remove listeners
 			io.removeAllListeners('connection');
 			//Join room
-			if(req.params.id != undefined){
-			socket.join(req.params.id);
+			if (req.params.id != undefined) {
+				socket.join(req.params.id);
 			}
 			socket.emit('connected');
 			//See who connected
@@ -101,7 +102,7 @@ var returnRouter = function(io) {
 
 				});
 
-			socket.on('ShowAddTracks', function() {
+			socket.on('showAddTracks', function() {
 				spotifyApi.setAccessToken(req.user.accessToken);
 
 				function getTopTracks() {
@@ -109,7 +110,7 @@ var returnRouter = function(io) {
 						.then(function(data) {
 							topTracks = data.body.items;
 							console.log(topTracks);
-							socket.emit('ShowAddTracks', topTracks);
+							socket.emit('showAddTracks', topTracks);
 						}).catch(function(err) {
 							checkAccesToken(req, res, next, err, getTopTracks);
 						});
@@ -144,6 +145,18 @@ var returnRouter = function(io) {
 							io.to(req.params.id).emit('addTrack', newTrackData);
 						}
 					});
+			});
+			socket.on('fetchDevices', function() {
+				function fetchDevices() {
+				spotifyApi.getMyDevices()
+					.then(function(data) {
+						var devices = data.body.devices;
+						socket.emit('showDevices', devices);
+					}).catch(function(err) {
+						checkAccesToken(req, res, next, err, fetchDevices);
+					});
+				}
+				fetchDevices();
 			});
 
 			socket.on('disconnect', function(socket) {
@@ -223,19 +236,21 @@ var returnRouter = function(io) {
 	});
 
 	router.get('/create', ensureAuthenticated, function(req, res) {
-		res.render('create', {user: req.user});
+		res.render('create', {
+			user: req.user
+		});
 	});
 
 	router.post('/create', ensureAuthenticated, function(req, res) {
 		var id = crypto.randomBytes(8).toString('hex');
 		//Checkboxes
-		if(req.body.private === undefined){
+		if (req.body.private === undefined) {
 			req.body.private = false;
 		} else {
 			req.body.private = true;
 		}
 
-		if(req.body.restricted === undefined){
+		if (req.body.restricted === undefined) {
 			req.body.restricted = false;
 		} else {
 			req.body.restricted = true;

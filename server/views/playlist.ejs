@@ -36,7 +36,7 @@
 			<section>
 				<header class="queue-header">
 					<h3>Songs</h3>
-					<button class="show-add-tracks">Add songs</button>
+					<a href="#add-track" class="show-add-tracks">Add song</a>
 				</header>
 
 				<ul class="queue">
@@ -68,6 +68,19 @@
 						</li>
 						<% } %>
 				</ul>
+			</section>
+
+			<section id="add-track">
+				<header>
+					<h2>Add songs to <%= playlistData.name %></h2>
+					<a href="#" class="close-add-tracks">Close</a>
+				</header>
+
+			</section>
+
+			<section id="player">
+				<ul class="fetch-devices-wrapper"></ul>
+				<button class="fetch-devices-button">Fetch Devices</button>
 			</section>
 
 			<!-- <img src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt=""> -->
