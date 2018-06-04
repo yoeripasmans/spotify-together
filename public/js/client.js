@@ -17,7 +17,7 @@ socket.on('connected', function() {
 socket.on('showDevices', function(devices) {
 	var fetchDevicesWrapper = document.querySelector('.fetch-devices-wrapper');
 
-	for (var i = 0; i < devices.length; i++) {
+	for (let i = 0; i < devices.length; i++) {
 		var li = document.createElement('li');
 		fetchDevicesWrapper.appendChild(li);
 
@@ -28,6 +28,9 @@ socket.on('showDevices', function(devices) {
 		var transferButton = document.createElement('button');
 		li.appendChild(transferButton);
 		transferButton.textContent = 'Transfer playback';
+		transferButton.addEventListener('click', function() {
+			socket.emit('transferDevicePlayback', devices[i]);
+		});
 	}
 });
 

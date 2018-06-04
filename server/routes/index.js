@@ -159,6 +159,24 @@ var returnRouter = function(io) {
 				fetchDevices();
 			});
 
+			socket.on('transferDevicePlayback', function(device) {
+				var options = {
+					deviceIds: [device.id],
+					play: true
+				};
+
+				function transferDevicePlayback() {
+				spotifyApi.transferMyPlayback(options)
+					.then(function(data) {
+						console.log('transferd');
+					}).catch(function(err) {
+						console.log(err);
+						checkAccesToken(req, res, next, err, transferDevicePlayback);
+					});
+				}
+				transferDevicePlayback();
+			});
+
 			socket.on('disconnect', function(socket) {
 				Playlist.update({
 						"_id": req.params.id
