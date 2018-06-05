@@ -63,10 +63,20 @@
 						</span>
 							<span class="queue__track-likes">
 								<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
-							<button class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
+
+								<% if(playlistData.tracks[i].userLiked.length === 0){ %>
+									<button class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
+								<% } else {
+								 for(var j=0; j < playlistData.tracks[i].userLiked.length; j++) {
+								if(user.spotifyId ===  playlistData.tracks[i].userLiked[j]){ %>
+									<button type="button" disabled>Click Me!</button>
+								<% }
+								else { %>
+									<button class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
+								<% } } }%>
 							</span>
 						</li>
-						<% } %>
+					<% } %>
 				</ul>
 			</section>
 

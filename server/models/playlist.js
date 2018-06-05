@@ -9,6 +9,7 @@ var trackSchema = new Schema({
 	album: Object,
 	duration_ms: Number,
 	likes: Number,
+	userLiked: Array,
 	addedBy: Object,
 },{
 	timestamps: true

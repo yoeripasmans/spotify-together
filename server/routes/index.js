@@ -167,6 +167,7 @@ var returnRouter = function(io) {
 				}).then(function(results) {
 					var track = results.tracks.id(trackId);
 					track.likes++;
+					track.userLiked.push(req.user.spotifyId);
 					return results.save();
 
 				}).catch(function(err) {
