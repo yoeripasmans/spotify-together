@@ -166,7 +166,7 @@ var returnRouter = function(io) {
 					_id: req.params.id
 				}).then(function(results) {
 					var track = results.tracks.id(trackId);
-					track.likes = +1;
+					track.likes++;
 					return results.save();
 
 				}).catch(function(err) {
