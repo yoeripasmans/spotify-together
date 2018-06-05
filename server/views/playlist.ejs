@@ -70,22 +70,39 @@
 				</ul>
 			</section>
 
-			<section id="add-track">
-				<header>
-					<h2>Add songs to <%= playlistData.name %></h2>
-					<a href="#" class="close-add-tracks">Close</a>
-				</header>
-
-			</section>
-
-			<section id="player">
-				<ul class="fetch-devices-wrapper"></ul>
-				<button class="fetch-devices-button">Fetch Devices</button>
-			</section>
-
 			<!-- <img src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt=""> -->
-
 		</main>
+
+		<section id="add-track">
+			<header>
+				<h2>Add songs to <%= playlistData.name %></h2>
+				<a href="#" class="close-add-tracks">Close</a>
+			</header>
+
+		</section>
+
+
+		<ul class="fetch-devices-wrapper"></ul>
+		<section id="player">
+
+			<div class="player-details">
+				<img src="/" alt="" class="player-details__track-img">
+				<div class="player-details__text">
+					<p class="player-details__track-name"></p>
+					<p class="player-details__artist-name"></p>
+				</div>
+			</div>
+
+			<div class="player-controls">
+				<button class="prev-button">Back</button>
+				<button class="play-button">Play</button>
+				<button class="stop-button hidden">Pause</button>
+				<button class="next-button">Next</button>
+			</div>
+
+
+			<button class="fetch-devices-button">Fetch Devices</button>
+		</section>
 
 		<% include ./partials/scripts %>
 </body>

@@ -57,12 +57,13 @@ var returnRouter = function(io) {
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
 
 		io.on('connection', function(socket) {
+			//Set acces token
 			//Remove listeners
 			io.removeAllListeners('connection');
 			//Join room
-			if (req.params.id != undefined) {
-				socket.join(req.params.id);
-			}
+
+			socket.join(req.params.id);
+
 			socket.emit('connected');
 			//See who connected
 			console.log(req.user.spotifyId, 'Connected');
@@ -103,7 +104,6 @@ var returnRouter = function(io) {
 				});
 
 			socket.on('showAddTracks', function() {
-				spotifyApi.setAccessToken(req.user.accessToken);
 
 				function getTopTracks() {
 					spotifyApi.getMyTopTracks()
@@ -146,33 +146,74 @@ var returnRouter = function(io) {
 						}
 					});
 			});
+
+			socket.on('requestPlayTrack', function() {
+				Playlist.findOne({
+					_id: req.params.id
+				}).then(function(results) {
+					// console.log(results);
+					var firstTrack = results.tracks[0].uri;
+					console.log(req.user.spotifyId);
+					io.to(req.params.id).emit('requestPlayTrack', firstTrack, req.user);
+					// playTrack(firstTrack);
+				}).catch(function(err) {
+					console.log(err);
+				});
+			});
+
+			socket.on('playTrack', function() {
+				spotifyApi.setAccessToken(req.user.accessToken);
+
+				Playlist.findOne({
+					_id: req.params.id
+				}).then(function(results) {
+					// console.log(results);
+					var firstTrack = results.tracks[0].uri;
+					console.log(req.user.spotifyId);
+					// playTrack(firstTrack);
+				}).catch(function(err) {
+					console.log(err);
+				});
+
+				// function playTrack(track) {
+				// 	spotifyApi.play({
+				// 			uris: [track]
+				// 		})
+				// 		.then(function(data) {}).catch(function(err) {
+				// 			console.log(err);
+				// 			checkAccesToken(req, res, next, err, playTrack);
+				// 		});
+				// }
+
+			});
+
 			socket.on('fetchDevices', function() {
 				function fetchDevices() {
-				spotifyApi.getMyDevices()
-					.then(function(data) {
-						var devices = data.body.devices;
-						socket.emit('showDevices', devices);
-					}).catch(function(err) {
-						checkAccesToken(req, res, next, err, fetchDevices);
-					});
+					spotifyApi.getMyDevices()
+						.then(function(data) {
+							var devices = data.body.devices;
+							socket.emit('showDevices', devices);
+						}).catch(function(err) {
+
+							checkAccesToken(req, res, next, err, fetchDevices);
+						});
 				}
 				fetchDevices();
 			});
 
 			socket.on('transferDevicePlayback', function(device) {
-				var options = {
-					deviceIds: [device.id],
-					play: true
-				};
 
 				function transferDevicePlayback() {
-				spotifyApi.transferMyPlayback(options)
-					.then(function(data) {
-						console.log('transferd');
-					}).catch(function(err) {
-						console.log(err);
-						checkAccesToken(req, res, next, err, transferDevicePlayback);
-					});
+					spotifyApi.transferMyPlayback({
+							deviceIds: [device.id],
+							play: true
+						})
+						.then(function(data) {
+							console.log('transferd');
+						}).catch(function(err) {
+							console.log(err);
+							checkAccesToken(req, res, next, err, transferDevicePlayback);
+						});
 				}
 				transferDevicePlayback();
 			});

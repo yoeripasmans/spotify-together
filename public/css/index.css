@@ -102,3 +102,26 @@ main {
 #add-track:target {
     display: block;
 }
+
+#player {
+	width: 100%;
+	height: 4em;
+	position: fixed;
+	bottom: 0;
+	background-color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.fetch-devices-wrapper{
+	position: fixed;
+    bottom: 3em;
+    background-color: #fff;
+    padding: 0;
+    right: 1em;
+    min-height: 8em;
+    padding: 1em;
+    list-style-type: none;
+
+}

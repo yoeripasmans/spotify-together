@@ -5,15 +5,24 @@ socket.on('connected', function() {
 	var closeAddTracksButton = document.querySelector('.close-add-tracks');
 	var addTrackOverlay = document.querySelector('#add-track');
 	var fetchDevicesButton = document.querySelector('.fetch-devices-button');
+	var playButton = document.querySelector('.play-button');
 
-	showAddTracksButton.addEventListener('click', function(e) {
+	showAddTracksButton.addEventListener('click', function() {
 		socket.emit('showAddTracks');
 	});
-	fetchDevicesButton.addEventListener('click', function(e) {
+	fetchDevicesButton.addEventListener('click', function() {
 		socket.emit('fetchDevices');
+	});
+	playButton.addEventListener('click', function() {
+		socket.emit('requestPlayTrack');
 	});
 
 });
+socket.on('requestPlayTrack', function(firstTrack, user) {
+	console.log(user.accessToken);
+	socket.emit('playTrack');
+});
+
 socket.on('showDevices', function(devices) {
 	var fetchDevicesWrapper = document.querySelector('.fetch-devices-wrapper');
 
