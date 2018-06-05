@@ -25,18 +25,17 @@ socket.on('connected', function() {
 		likeButtons[i].addEventListener('click', likeTrack);
 	}
 
-	function likeTrack() {
-		if (this.getAttribute('liked') === 'false') {
-			var likeAmount = Number(this.previousElementSibling.textContent) + 1;
-			var trackId = this.getAttribute('data-id');
-			this.previousElementSibling.textContent = likeAmount;
-			this.setAttribute('liked', 'true');
-			socket.emit('likeTrack', trackId);
-		}
-	}
-
-
 });
+
+socket.on('likeTrack', function(trackId){
+	console.log(trackId);
+	// var likeButtons = document.querySelectorAll('.track-like-button');
+	var likeButton = document.querySelector('[data-id="' + trackId + '"]');
+	console.log(likeButton);
+	var likeAmount = Number(likeButton.previousElementSibling.textContent) + 1;
+	likeButton.previousElementSibling.textContent = likeAmount;
+});
+
 socket.on('requestPlayTrack', function(firstTrack, user) {
 	console.log(user.accessToken);
 	socket.emit('playTrack');
@@ -177,6 +176,16 @@ socket.on('leavePlaylist', function(currentUser, activeUsers) {
 		}
 	}
 });
+
+function likeTrack() {
+	if (this.getAttribute('liked') === 'false') {
+		var likeAmount = Number(this.previousElementSibling.textContent) + 1;
+		var trackId = this.getAttribute('data-id');
+		this.previousElementSibling.textContent = likeAmount;
+		this.setAttribute('liked', 'true');
+		socket.emit('likeTrack', trackId);
+	}
+}
 
 var checkboxes = document.querySelectorAll('input[type=checkbox]');
 

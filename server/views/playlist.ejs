@@ -73,13 +73,12 @@
 								if(user.spotifyId ===  playlistData.tracks[i].userLiked[j]){
 									liked = true;
 									break;
-
 								 }
 								else {
 									liked = false;
 								 } }
 								 if(liked === true){ %>
-								<button type="button" class="track-like-button" disabled>Like</button>
+								<button type="button" class="track-like-button--disabled" data-id="<%= playlistData.tracks[i]._id %>" disabled>Like</button>
 								<% } else {%>
 								<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
 								<% }} %>

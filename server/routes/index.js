@@ -170,6 +170,8 @@ var returnRouter = function(io) {
 					track.userLiked.push(req.user.spotifyId);
 					return results.save();
 
+				}).then(function() {
+					socket.broadcast.to(req.params.id).emit('likeTrack', trackId);
 				}).catch(function(err) {
 					console.log(err);
 				});
