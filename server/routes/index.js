@@ -161,6 +161,20 @@ var returnRouter = function(io) {
 				});
 			});
 
+			socket.on('likeTrack', function(trackId) {
+				Playlist.findOne({
+					_id: req.params.id
+				}).then(function(results) {
+					var track = results.tracks.id(trackId);
+					track.likes = +1;
+					return results.save();
+
+				}).catch(function(err) {
+					console.log(err);
+				});
+				console.log(trackId);
+			});
+
 			socket.on('playTrack', function() {
 				spotifyApi.setAccessToken(req.user.accessToken);
 

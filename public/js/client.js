@@ -22,15 +22,17 @@ socket.on('connected', function() {
 
 	for (var i = 0; i < likeButtons.length; i++) {
 		likeButtons[i].setAttribute('liked', 'false');
-		likeButtons[i].addEventListener('click', function() {
-			if (this.getAttribute('liked') === 'false') {
-				socket.emit('likeTrack');
-				console.log(this.previousSibling);
-				// this.previousSibling.textContent = +1;
-				this.setAttribute('liked', 'true');
-			}
-		});
+		likeButtons[i].addEventListener('click', likeTrack);
+	}
 
+	function likeTrack() {
+		if (this.getAttribute('liked') === 'false') {
+			var likeAmount = Number(this.previousElementSibling.textContent) + 1;
+			var trackId = this.getAttribute('data-id');
+			this.previousElementSibling.textContent = likeAmount;
+			this.setAttribute('liked', 'true');
+			socket.emit('likeTrack', trackId);
+		}
 	}
 
 

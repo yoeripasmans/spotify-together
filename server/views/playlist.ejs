@@ -62,8 +62,8 @@
 							<%= playlistData.tracks[i].addedBy %>
 						</span>
 							<span class="queue__track-likes">
-							<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
-							<button class="track-like-button">Like</button>
+								<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
+							<button class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
 							</span>
 						</li>
 						<% } %>
