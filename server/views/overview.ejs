@@ -8,17 +8,34 @@
 <body>
 	<% include ./partials/header %>
 		<main>
-			<h1>All playlists</h1>
-			<ul>
-				<% for(var i=0; i < playlists.length; i++) { %>
-					<li>
-						<a href="playlist/<%= playlists[i]._id %>">
-							<%= playlists[i].name %>
-						</a>
-					</li>
-					<% } %>
-			</ul>
-			<a href="create">Create playlist</a>
+			<header>
+				<h1>All playlists</h1>
+			</header>
+
+			<input class="playlist-search" type="search" name="search" placeholder="Search for playlist">
+			<section class="playlist-overview-section">
+				<header>
+					<h3>Playlists</h3>
+					<a href="create" class="button">Create playlist</a>
+				</header>
+				<ul class="playlist-overview-list">
+					<% for(var i=0; i < playlists.length; i++) { %>
+						<li>
+							<a href="playlist/<%= playlists[i]._id %>">
+								<% if(playlists[i].tracks[0]) { %>
+									<img src="<%= playlists[i].tracks[0].album.images[0].url %>" alt="">
+									<% } else { %>
+										<div class="gradient"></div>
+										<% } %>
+											<div>
+												<%= playlists[i].name %>
+											</div>
+
+							</a>
+						</li>
+						<% } %>
+				</ul>
+			</section>
 		</main>
 
 		<% include ./partials/scripts %>
