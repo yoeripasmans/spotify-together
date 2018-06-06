@@ -202,12 +202,35 @@ var returnRouter = function(io) {
 									if (err) {
 										console.log(err);
 									} else {
-										io.to(req.params.id).emit('likeTrack', trackId);
+										socket.broadcast.to(req.params.id).emit('likeTrack', trackId);
 									}
 								});
 
 
 
+						}
+					});
+			});
+
+			socket.on('deleteTrack', function(trackId) {
+				console.log(trackId);
+				Playlist.findOneAndUpdate({
+						_id: req.params.id,
+						"tracks._id": trackId
+					}, {
+						$pull: {
+							"tracks": {
+							"_id": trackId
+							}
+						},
+
+					},{upsert: true,new:true},
+					function(err, docs) {
+						if (err) {
+							console.log(err);
+						} else {
+							console.log(docs);
+							io.to(req.params.id).emit('delete', docs);
 						}
 					});
 			});

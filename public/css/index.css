@@ -239,6 +239,10 @@ main {
     min-height: 8em;
     padding: 1em;
     list-style-type: none;
+	display: none;
+}
+.fetch-devices-wrapper.active {
+	display: block;
 }
 
 .playlist-search {

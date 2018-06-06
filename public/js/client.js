@@ -7,6 +7,7 @@ socket.on('connected', function() {
 	var fetchDevicesButton = document.querySelector('.fetch-devices-button');
 	var playButton = document.querySelector('.play-button');
 	var likeButtons = document.querySelectorAll('.track-like-button');
+	var deleteButtons = document.querySelectorAll('.track-delete-button');
 
 
 	showAddTracksButton.addEventListener('click', function(e) {
@@ -22,6 +23,7 @@ socket.on('connected', function() {
 	});
 
 	fetchDevicesButton.addEventListener('click', function() {
+
 		socket.emit('fetchDevices');
 	});
 	playButton.addEventListener('click', function() {
@@ -33,14 +35,33 @@ socket.on('connected', function() {
 		likeButtons[i].setAttribute('liked', 'false');
 		likeButtons[i].addEventListener('click', likeTrack);
 	}
+	for (i = 0; i < deleteButtons.length; i++) {
+		deleteButtons[i].addEventListener('click', deleteTrack);
+	}
 
 });
+
+function deleteTrack(){
+	var trackId = this.getAttribute('data-id');
+	socket.emit('deleteTrack', trackId);
+}
 
 socket.on('likeTrack', function(trackId){
-	// var likeButton = document.querySelector('[data-id="' + trackId + '"]');
-	// var likeAmount = Number(likeButton.previousElementSibling.textContent) + 1;
-	// likeButton.previousElementSibling.textContent = likeAmount;
+	var likeButton = document.querySelector('[data-id="' + trackId + '"]');
+	var likeAmount = Number(likeButton.previousElementSibling.textContent) + 1;
+	likeButton.previousElementSibling.textContent = likeAmount;
 });
+
+function likeTrack() {
+	if (this.getAttribute('liked') === 'false') {
+		var likeAmount = Number(this.previousElementSibling.textContent) + 1;
+		var trackId = this.getAttribute('data-id');
+		this.previousElementSibling.textContent = likeAmount;
+		this.setAttribute('liked', 'true');
+		this.disabled = true;
+		socket.emit('likeTrack', trackId);
+	}
+}
 
 socket.on('requestPlayTrack', function(firstTrack, user) {
 	console.log(user.accessToken);
@@ -49,6 +70,7 @@ socket.on('requestPlayTrack', function(firstTrack, user) {
 
 socket.on('showDevices', function(devices) {
 	var fetchDevicesWrapper = document.querySelector('.fetch-devices-wrapper');
+	fetchDevicesWrapper.classList.add('active');
 
 	for (let i = 0; i < devices.length; i++) {
 		var li = document.createElement('li');
@@ -190,17 +212,6 @@ socket.on('leavePlaylist', function(currentUser, activeUsers) {
 		}
 	}
 });
-
-function likeTrack() {
-	if (this.getAttribute('liked') === 'false') {
-		var likeAmount = Number(this.previousElementSibling.textContent) + 1;
-		var trackId = this.getAttribute('data-id');
-		this.previousElementSibling.textContent = likeAmount;
-		this.setAttribute('liked', 'true');
-		this.disabled = true;
-		socket.emit('likeTrack', trackId);
-	}
-}
 
 var checkboxes = document.querySelectorAll('input[type=checkbox]');
 
