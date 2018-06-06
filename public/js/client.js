@@ -1,5 +1,5 @@
 var socket = io('/');
-
+var iso;
 socket.on('connected', function() {
 	var showAddTracksButton = document.querySelector('.show-add-tracks');
 	var closeAddTracksButton = document.querySelector('.close-add-tracks');
@@ -39,29 +39,57 @@ socket.on('connected', function() {
 		deleteButtons[i].addEventListener('click', deleteTrack);
 	}
 
+	var queue = document.querySelector('.queue');
+
+	iso = new Isotope(queue, {
+		// options
+		itemSelector: '.queue__track',
+		layoutMode: 'vertical',
+		getSortData: {
+			likes: '.like-amount parseInt',
+			date: function (el) {
+				console.log(Date.parse(el.getAttribute('data-created')));
+				return Date.parse(el.getAttribute('data-created'));
+			  // return Date.parse(el.find('[data-createdAt]').text());
+		  }
+		}
+	});
+
 });
 
-function deleteTrack(){
-	var trackId = this.getAttribute('data-id');
+function deleteTrack() {
+	var trackId = this.parentElement.getAttribute('data-id');
 	socket.emit('deleteTrack', trackId);
 }
 
-socket.on('likeTrack', function(trackId){
-	var likeButton = document.querySelector('[data-id="' + trackId + '"]');
-	var likeAmount = Number(likeButton.previousElementSibling.textContent) + 1;
-	likeButton.previousElementSibling.textContent = likeAmount;
+socket.on('deleteTrack', function(trackId) {
+	console.log('iets');
+	var element = document.querySelector('[data-id="' + trackId + '"]');
+	iso.remove(element);
+	iso.layout();
 });
 
 function likeTrack() {
 	if (this.getAttribute('liked') === 'false') {
-		var likeAmount = Number(this.previousElementSibling.textContent) + 1;
-		var trackId = this.getAttribute('data-id');
-		this.previousElementSibling.textContent = likeAmount;
+		// var likeAmount = Number(this.previousElementSibling.textContent) + 1;
+		var trackId = this.parentElement.parentElement.getAttribute('data-id');
+		// this.previousElementSibling.textContent = likeAmount;
 		this.setAttribute('liked', 'true');
 		this.disabled = true;
 		socket.emit('likeTrack', trackId);
 	}
 }
+
+socket.on('likeTrack', function(trackId) {
+	var queue = document.querySelectorAll('.queue__track');
+	var likeButton = document.querySelector('[data-id="' + trackId + '"]').children[4].children[1];
+	// console.log(likeButton.children[4].children[1]);
+	var likeAmount = Number(likeButton.previousElementSibling.textContent) + 1;
+	likeButton.previousElementSibling.textContent = likeAmount;
+
+	iso.updateSortData(queue);
+  	iso.arrange({ sortBy:  [ 'likes', 'date' ], sortAscending: false, });
+});
 
 socket.on('requestPlayTrack', function(firstTrack, user) {
 	console.log(user.accessToken);
@@ -151,9 +179,9 @@ socket.on('addTrack', function(trackData) {
 	likes.appendChild(likeButton);
 	likeButton.textContent = 'Like';
 	likeButton.setAttribute('liked', 'false');
-	likeButton.setAttribute('data-id', trackData._id);
 	likeButton.addEventListener('click', likeTrack);
 
+	iso.appended(li);
 });
 
 

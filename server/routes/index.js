@@ -202,7 +202,7 @@ var returnRouter = function(io) {
 									if (err) {
 										console.log(err);
 									} else {
-										socket.broadcast.to(req.params.id).emit('likeTrack', trackId);
+										io.to(req.params.id).emit('likeTrack', trackId);
 									}
 								});
 
@@ -230,7 +230,7 @@ var returnRouter = function(io) {
 							console.log(err);
 						} else {
 							console.log(docs);
-							io.to(req.params.id).emit('delete', docs);
+							io.to(req.params.id).emit('deleteTrack', trackId);
 						}
 					});
 			});
