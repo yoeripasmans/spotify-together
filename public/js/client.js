@@ -9,9 +9,18 @@ socket.on('connected', function() {
 	var likeButtons = document.querySelectorAll('.track-like-button');
 
 
-	showAddTracksButton.addEventListener('click', function() {
+	showAddTracksButton.addEventListener('click', function(e) {
+		// e.preventDefault();
+		// addTrackOverlay.classList.add('active');
 		socket.emit('showAddTracks');
 	});
+
+	closeAddTracksButton.addEventListener('click', function(e) {
+		// e.preventDefault();
+		// addTrackOverlay.classList.remove('active');
+		// socket.emit('showAddTracks');
+	});
+
 	fetchDevicesButton.addEventListener('click', function() {
 		socket.emit('fetchDevices');
 	});
@@ -28,9 +37,9 @@ socket.on('connected', function() {
 });
 
 socket.on('likeTrack', function(trackId){
-	var likeButton = document.querySelector('[data-id="' + trackId + '"]');
-	var likeAmount = Number(likeButton.previousElementSibling.textContent) + 1;
-	likeButton.previousElementSibling.textContent = likeAmount;
+	// var likeButton = document.querySelector('[data-id="' + trackId + '"]');
+	// var likeAmount = Number(likeButton.previousElementSibling.textContent) + 1;
+	// likeButton.previousElementSibling.textContent = likeAmount;
 });
 
 socket.on('requestPlayTrack', function(firstTrack, user) {
@@ -82,6 +91,7 @@ socket.on('showAddTracks', function(data) {
 });
 
 socket.on('addTrack', function(trackData) {
+	console.log(trackData);
 	var queue = document.querySelector('.queue');
 
 	var li = document.createElement('li');
@@ -119,6 +129,7 @@ socket.on('addTrack', function(trackData) {
 	likes.appendChild(likeButton);
 	likeButton.textContent = 'Like';
 	likeButton.setAttribute('liked', 'false');
+	likeButton.setAttribute('data-id', trackData._id);
 	likeButton.addEventListener('click', likeTrack);
 
 });

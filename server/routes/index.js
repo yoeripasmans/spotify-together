@@ -57,15 +57,13 @@ var returnRouter = function(io) {
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
 
 		io.on('connection', function(socket) {
-			//Set acces token
-			//Remove listeners
+			//Remove listeners to prevent multiple connections on refresh
 			io.removeAllListeners('connection');
 			//Join room
-
 			socket.join(req.params.id);
-
+			//Emit 'connected' to socket
 			socket.emit('connected');
-			//See who connected
+			//Logs who connected
 			console.log(req.user.spotifyId, 'Connected');
 			//Update database with adding active user to database
 			var currentUser = {
@@ -131,7 +129,7 @@ var returnRouter = function(io) {
 					addedBy: req.user.spotifyId,
 				};
 				console.log(trackData);
-				Playlist.update({
+				Playlist.findOneAndUpdate({
 						_id: req.params.id
 					}, {
 						$push: {
@@ -143,11 +141,13 @@ var returnRouter = function(io) {
 								}
 							}
 						},
-					},
-					function(err, raw) {
+
+					},{upsert: true,new:true},
+					function(err, docs) {
 						if (err) {
 							console.log(err);
 						} else {
+							console.log(docs);
 							io.to(req.params.id).emit('addTrack', newTrackData);
 						}
 					});
@@ -185,7 +185,6 @@ var returnRouter = function(io) {
 						if (err) {
 							console.log(err);
 						} else {
-
 							Playlist.update({
 									_id: req.params.id
 								}, {
@@ -203,7 +202,7 @@ var returnRouter = function(io) {
 									if (err) {
 										console.log(err);
 									} else {
-										socket.broadcast.to(req.params.id).emit('likeTrack', trackId);
+										io.to(req.params.id).emit('likeTrack', trackId);
 									}
 								});
 

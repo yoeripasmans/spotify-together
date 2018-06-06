@@ -59,23 +59,29 @@
 								<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
 								<%
 								var liked;
-								 if(playlistData.tracks[i].userLiked.length === 0){ %>
+								if(playlistData.tracks[i].userLiked.length === 0){ %>
 									<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
-								<% } else {
-								 for(var j=0; j < playlistData.tracks[i].userLiked.length; j++) {
-								if(user.spotifyId ===  playlistData.tracks[i].userLiked[j]){
-									liked = true;
-									break;
-								 }
+								<% }
 								else {
-									liked = false;
-								 } }
-								 if(liked === true){ %>
-									<button type="button" class="track-like-button--disabled" data-id="<%= playlistData.tracks[i]._id %>" disabled>Like</button>
-								<% } else {%>
-									<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
-								<% }} %>
+									 for(var j=0; j < playlistData.tracks[i].userLiked.length; j++) {
+										if(user.spotifyId ===  playlistData.tracks[i].userLiked[j]){
+											liked = true;
+											break;
+										 }
+										else {
+											liked = false;
+										 }
+									 }
+									 if(liked === true){ %>
+										<button type="button" class="track-like-button--disabled" data-id="<%= playlistData.tracks[i]._id %>" disabled>Like</button>
+									<% } else {%>
+										<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
+									<% }
+								} %>
 							</span>
+							<% if(playlistData.tracks[i].addedBy === user.spotifyId){ %>
+								<button type="button" class="track-delete-button" data-id="<%= playlistData.tracks[i]._id %>">Delete</button>
+							<% } %>
 						</li>
 					<% } %>
 				</ul>
@@ -98,12 +104,13 @@
 		<section id="player">
 
 			<div class="player-details">
-				<img src="/" alt="" class="player-details__track-img">
+				<img src="<%= playlistData.tracks[0].album.images[0].url %>" alt="" class="player-details__track-img">
 				<div class="player-details__text">
-					<p class="player-details__track-name"></p>
-					<p class="player-details__artist-name"></p>
+					<p class="player-details__track-name"><%= playlistData.tracks[0].name %></p>
+					<p class="player-details__artist-name"><%= playlistData.tracks[0].artists.map(a => a.name).join(', ') %></p>
 				</div>
 			</div>
+
 
 			<div class="player-controls">
 				<button class="prev-button">Back</button>
