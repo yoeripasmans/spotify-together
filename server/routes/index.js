@@ -135,8 +135,14 @@ var returnRouter = function(io) {
 						_id: req.params.id
 					}, {
 						$push: {
-							tracks: newTrackData
-						}
+							tracks: {
+								$each: [newTrackData],
+								$sort: {
+									likes: -1,
+									date: 1
+								}
+							}
+						},
 					},
 					function(err, raw) {
 						if (err) {
@@ -162,20 +168,49 @@ var returnRouter = function(io) {
 			});
 
 			socket.on('likeTrack', function(trackId) {
-				Playlist.findOne({
-					_id: req.params.id
-				}).then(function(results) {
-					var track = results.tracks.id(trackId);
-					track.likes++;
-					track.userLiked.push(req.user.spotifyId);
-					return results.save();
+				Playlist.findOneAndUpdate({
+						"_id": req.params.id,
+						"tracks._id": trackId
+					}, {
+						"$inc": {
+							"tracks.$.likes": 1
+						},
+						"$push": {
+							"tracks.$.userLiked": req.user.spotifyId
+						}
 
-				}).then(function() {
-					socket.broadcast.to(req.params.id).emit('likeTrack', trackId);
-				}).catch(function(err) {
-					console.log(err);
-				});
-				console.log(trackId);
+
+					},
+					function(err, doc) {
+						if (err) {
+							console.log(err);
+						} else {
+
+							Playlist.update({
+									_id: req.params.id
+								}, {
+									$push: {
+										tracks: {
+											$each: [],
+											$sort: {
+												likes: -1,
+												date: 1
+											}
+										}
+									},
+								},
+								function(err, raw) {
+									if (err) {
+										console.log(err);
+									} else {
+										socket.broadcast.to(req.params.id).emit('likeTrack', trackId);
+									}
+								});
+
+
+
+						}
+					});
 			});
 
 			socket.on('playTrack', function() {

@@ -36,34 +36,27 @@
 			<section>
 				<header class="queue-header">
 					<h3>Songs</h3>
-					<a href="#add-track" class="show-add-tracks">Add song</a>
+					<a href="#add-track" class="button show-add-tracks">Add song</a>
 				</header>
 
 				<ul class="queue">
 					<li class="queue__track--top">
-						<span>Name</span>
+						<span></span>
+						<span>Title</span>
 						<span>Artist</span>
-						<span>Album</span>
+						<!-- <span>Album</span> -->
 						<span>Added by</span>
 
 					</li>
 					<% for(var i=0; i < playlistData.tracks.length; i++) { %>
 						<li class="queue__track">
-							<span class="queue__track-name">
-							<%= playlistData.tracks[i].name %>
-						</span>
-							<span class="queue__track-artist">
-							<%= playlistData.tracks[i].artists.map(a => a.name).join(', ') %>
-						</span>
-							<span class="queue__track-album">
-							<%= playlistData.tracks[i].album.name %>
-						</span>
-							<span class="queue__track-addedby">
-							<%= playlistData.tracks[i].addedBy %>
-						</span>
+							<img class="queue__track-img" src="<%= playlistData.tracks[i].album.images[0].url %>" alt="Album cover of <%= playlistData.tracks[i].name %>">
+							<span class="queue__track-name"><%= playlistData.tracks[i].name %></span>
+							<span class="queue__track-artist"><%= playlistData.tracks[i].artists.map(a => a.name).join(', ') %></span>
+							<!-- <span class="queue__track-album"><%= playlistData.tracks[i].album.name %></span> -->
+							<span class="queue__track-addedby"><%= playlistData.tracks[i].addedBy %></span>
 							<span class="queue__track-likes">
 								<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
-
 								<%
 								var liked;
 								 if(playlistData.tracks[i].userLiked.length === 0){ %>
@@ -78,9 +71,9 @@
 									liked = false;
 								 } }
 								 if(liked === true){ %>
-								<button type="button" class="track-like-button--disabled" data-id="<%= playlistData.tracks[i]._id %>" disabled>Like</button>
+									<button type="button" class="track-like-button--disabled" data-id="<%= playlistData.tracks[i]._id %>" disabled>Like</button>
 								<% } else {%>
-								<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
+									<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
 								<% }} %>
 							</span>
 						</li>
