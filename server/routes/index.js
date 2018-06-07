@@ -13,7 +13,8 @@ var spotifyApi = new SpotifyWebApi();
 var returnRouter = function(io) {
 
 	router.get('/', function(req, res) {
-		res.render('index');
+		// res.render('index');
+		res.redirect('/login');
 	});
 
 	router.get('/login',
@@ -102,7 +103,7 @@ var returnRouter = function(io) {
 				});
 
 			socket.on('showAddTracks', function() {
-
+				spotifyApi.setAccessToken(req.user.accessToken);
 				function getTopTracks() {
 					spotifyApi.getMyTopTracks()
 						.then(function(data) {
@@ -137,7 +138,7 @@ var returnRouter = function(io) {
 								$each: [newTrackData],
 								$sort: {
 									likes: -1,
-									date: 1
+									date: -1
 								}
 							}
 						},
@@ -193,16 +194,16 @@ var returnRouter = function(io) {
 											$each: [],
 											$sort: {
 												likes: -1,
-												date: 1
+												date: -1
 											}
 										}
 									},
-								},
-								function(err, raw) {
+								},{new:true},
+								function(err, docs) {
 									if (err) {
 										console.log(err);
 									} else {
-										io.to(req.params.id).emit('likeTrack', trackId);
+										io.to(req.params.id).emit('likeTrack', trackId, docs);
 									}
 								});
 
@@ -262,6 +263,8 @@ var returnRouter = function(io) {
 			});
 
 			socket.on('fetchDevices', function() {
+				spotifyApi.setAccessToken(req.user.accessToken);
+
 				function fetchDevices() {
 					spotifyApi.getMyDevices()
 						.then(function(data) {

@@ -1,5 +1,7 @@
 var socket = io('/');
 var iso;
+var queue;
+
 socket.on('connected', function() {
 	var showAddTracksButton = document.querySelector('.show-add-tracks');
 	var closeAddTracksButton = document.querySelector('.close-add-tracks');
@@ -39,7 +41,7 @@ socket.on('connected', function() {
 		deleteButtons[i].addEventListener('click', deleteTrack);
 	}
 
-	var queue = document.querySelector('.queue');
+	queue = document.querySelector('.queue');
 
 	iso = new Isotope(queue, {
 		// options
@@ -51,8 +53,12 @@ socket.on('connected', function() {
 				console.log(Date.parse(el.getAttribute('data-created')));
 				return Date.parse(el.getAttribute('data-created'));
 			  // return Date.parse(el.find('[data-createdAt]').text());
-		  }
-		}
+		  },
+
+	  },
+
+	  // sortBy: [ 'likes' ],
+	  // sortAscending: false
 	});
 
 });
@@ -80,15 +86,17 @@ function likeTrack() {
 	}
 }
 
-socket.on('likeTrack', function(trackId) {
-	var queue = document.querySelectorAll('.queue__track');
+socket.on('likeTrack', function(trackId, docs) {
+	console.log(docs);
 	var likeButton = document.querySelector('[data-id="' + trackId + '"]').children[4].children[1];
 	// console.log(likeButton.children[4].children[1]);
 	var likeAmount = Number(likeButton.previousElementSibling.textContent) + 1;
 	likeButton.previousElementSibling.textContent = likeAmount;
 
 	iso.updateSortData(queue);
-  	iso.arrange({ sortBy:  [ 'likes', 'date' ], sortAscending: false, });
+	iso.reloadItems();
+  	iso.arrange({ sortBy:  [ 'likes', 'date' ], sortAscending: {likes:false, date:true} });
+
 });
 
 socket.on('requestPlayTrack', function(firstTrack, user) {
@@ -169,10 +177,12 @@ socket.on('addTrack', function(trackData) {
 	addedBy.textContent = trackData.addedBy;
 
 	var likes = document.createElement('span');
+	likes.classList.add('queue__track-likes');
 	li.appendChild(likes);
 
 	var likesAmount = document.createElement('span');
 	likes.appendChild(likesAmount);
+	likesAmount.classList.add('like-amount');
 	likesAmount.textContent = trackData.likes;
 
 	var likeButton = document.createElement('button');
@@ -180,6 +190,12 @@ socket.on('addTrack', function(trackData) {
 	likeButton.textContent = 'Like';
 	likeButton.setAttribute('liked', 'false');
 	likeButton.addEventListener('click', likeTrack);
+
+	var removeButton = document.createElement('button');
+	li.appendChild(removeButton);
+	removeButton.classList.add('track-delete-button');
+	removeButton.textContent = 'Remove';
+	removeButton.addEventListener('click', deleteTrack);
 
 	iso.appended(li);
 });
