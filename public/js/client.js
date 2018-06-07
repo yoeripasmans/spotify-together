@@ -99,6 +99,7 @@ socket.on('likeTrack', function(trackId, docs) {
 
 });
 
+
 socket.on('requestPlayTrack', function(firstTrack, user) {
 	console.log(user.accessToken);
 	socket.emit('playTrack');
