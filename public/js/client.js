@@ -3,6 +3,7 @@ var iso;
 var queue;
 
 socket.on('connected', function() {
+	console.log('v10');
 	var showAddTracksButton = document.querySelector('.show-add-tracks');
 	var closeAddTracksButton = document.querySelector('.close-add-tracks');
 	var addTrackOverlay = document.querySelector('#add-track');
