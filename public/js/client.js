@@ -51,7 +51,7 @@ socket.on('connected', function() {
 		getSortData: {
 			likes: '.like-amount parseInt',
 			date: function (el) {
-				console.log(Date.parse(el.getAttribute('data-created')));
+				console.log("name ",el.getAttribute('data-name'), "date ",el.getAttribute('data-created'));
 				return Date.parse(el.getAttribute('data-created'));
 			  // return Date.parse(el.find('[data-createdAt]').text());
 		  },

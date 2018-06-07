@@ -48,7 +48,7 @@
 				<ul class="queue">
 
 					<% for(var i=0; i < playlistData.tracks.length; i++) { %>
-						<li class="queue__track" data-id="<%= playlistData.tracks[i]._id %>" data-created="<%= playlistData.tracks[i].createdAt %>">
+						<li class="queue__track" data-id="<%= playlistData.tracks[i]._id %>" data-created="<%= playlistData.tracks[i].createdAt %>" data-name="<%= playlistData.tracks[i].name %>">
 							<img class="queue__track-img" src="<%= playlistData.tracks[i].album.images[0].url %>" alt="Album cover of <%= playlistData.tracks[i].name %>">
 							<span class="queue__track-name"><%= playlistData.tracks[i].name %></span>
 							<span class="queue__track-artist"><%= playlistData.tracks[i].artists.map(a => a.name).join(', ') %></span>
