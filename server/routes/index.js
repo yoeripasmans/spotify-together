@@ -138,7 +138,7 @@ var returnRouter = function(io) {
 								$each: [newTrackData],
 								$sort: {
 									likes: -1,
-									date: 1
+									createdAt: 1
 								}
 							}
 						},
@@ -194,7 +194,7 @@ var returnRouter = function(io) {
 											$each: [],
 											$sort: {
 												likes: -1,
-												date: 1
+												createdAt: 1
 											}
 										}
 									},
