@@ -11,6 +11,7 @@ var trackSchema = new Schema({
 	likes: Number,
 	userLiked: Array,
 	addedBy: Object,
+	currentTrack: Boolean
 },{
 	timestamps: true
 });

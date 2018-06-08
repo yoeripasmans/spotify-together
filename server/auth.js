@@ -35,7 +35,7 @@ function auth() {
 				if (err) {
 					return done(err);
 				}
-				//If no user is found create one
+				//If no user is found create one and save it in the database
 				if (!user) {
 					user = new User({
 						spotifyId: profile.id,

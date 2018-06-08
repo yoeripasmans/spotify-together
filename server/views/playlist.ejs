@@ -12,7 +12,9 @@
 			<header class="playlist-header">
 				<a href="/playlists" class="button">Leave playlist</a>
 				<h1 class="playlist-header__title"><%= playlistData.name %></h1>
-				<p class="playlist-header__description"><%= playlistData.description %></p>
+				<p class="playlist-header__description">
+					<%= playlistData.description %>
+				</p>
 				<span>Created by: <%= playlistData.createdBy %></span>
 			</header>
 
@@ -56,10 +58,10 @@
 							<span class="queue__track-addedby"><%= playlistData.tracks[i].addedBy %></span>
 							<span class="queue__track-likes">
 								<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
-								<%
+							<%
 								var liked;
 								if(playlistData.tracks[i].userLiked.length === 0){ %>
-									<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
+								<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
 								<% }
 								else {
 									 for(var j=0; j < playlistData.tracks[i].userLiked.length; j++) {
@@ -72,17 +74,17 @@
 										 }
 									 }
 									 if(liked === true){ %>
-										<button type="button" class="track-like-button--disabled" disabled>Like</button>
+									<button type="button" class="track-like-button--disabled" disabled>Like</button>
 									<% } else {%>
 										<button type="button" class="track-like-button">Like</button>
-									<% }
+										<% }
 								} %>
-							</span>
-							<% if(playlistData.tracks[i].addedBy === user.spotifyId){ %>
-								<button type="button" class="track-delete-button">Delete</button>
-							<% } %>
+											</span>
+											<% if(playlistData.tracks[i].addedBy === user.spotifyId){ %>
+												<button type="button" class="track-delete-button">Remove</button>
+												<% } %>
 						</li>
-					<% } %>
+						<% } %>
 				</ul>
 			</section>
 
@@ -93,8 +95,31 @@
 			<div class="add-track-wrapper">
 				<header>
 					<h2>Add songs to <%= playlistData.name %></h2>
-					<a href="#" class="close-add-tracks">Close</a>
+					<a href="#" class="close-add-tracks button">Close</a>
 				</header>
+				<input class="track-search" type="search" name="search" placeholder="Search for a song">
+
+				<section>
+				<div class="queue__track--top">
+					<span></span>
+					<span>Title</span>
+					<span>Artist</span>
+					<!-- <span>Album</span> -->
+
+
+				</div>
+				<ul class="queue fav-tracks">
+					<% for(var i=0; i < topTracks.length; i++) { %>
+						<li class="queue__track">
+							<img class="queue__track-img" src="<%= topTracks[i].album.images[0].url %>" alt="Album cover of <%= topTracks[i].name %>">
+							<span class="queue__track-name"><%= topTracks[i].name %></span>
+							<span class="queue__track-artist"><%= topTracks[i].artists.map(a => a.name).join(', ') %></span>
+							<button type="button" class="track-add-button">Add track</button>
+						</li>
+
+						<% } %>
+				</ul>
+				</section>
 			</div>
 		</section>
 
@@ -104,12 +129,16 @@
 
 			<div class="player-details">
 				<% if(playlistData.tracks.length > 0){ %>
-				<img src="<%= playlistData.tracks[0].album.images[0].url %>" alt="" class="player-details__track-img">
-				<div class="player-details__text">
-					<p class="player-details__track-name"><%= playlistData.tracks[0].name %></p>
-					<p class="player-details__artist-name"><%= playlistData.tracks[0].artists.map(a => a.name).join(', ') %></p>
-				</div>
-				<% } %>
+					<img src="<%= playlistData.tracks[0].album.images[0].url %>" alt="" class="player-details__track-img">
+					<div class="player-details__text">
+						<p class="player-details__track-name">
+							<%= playlistData.tracks[0].name %>
+						</p>
+						<p class="player-details__artist-name">
+							<%= playlistData.tracks[0].artists.map(a => a.name).join(', ') %>
+						</p>
+					</div>
+					<% } %>
 			</div>
 
 
@@ -123,7 +152,9 @@
 
 			<button type="button" class="fetch-devices-button">Fetch Devices</button>
 		</section>
-
+		<script type="text/javascript">
+			var topTracks = <%- JSON.stringify(topTracks) %>; // Get templates object (object of strings)
+		</script>
 		<% include ./partials/scripts %>
 </body>
 

@@ -104,6 +104,7 @@ var returnRouter = function(io) {
 
 			socket.on('showAddTracks', function() {
 				spotifyApi.setAccessToken(req.user.accessToken);
+
 				function getTopTracks() {
 					spotifyApi.getMyTopTracks()
 						.then(function(data) {
@@ -128,6 +129,7 @@ var returnRouter = function(io) {
 					duration_ms: trackData.duration_ms,
 					likes: 0,
 					addedBy: req.user.spotifyId,
+					currentTrack: false
 				};
 
 				Playlist.findOneAndUpdate({
@@ -143,29 +145,18 @@ var returnRouter = function(io) {
 							}
 						},
 
-					},{upsert: true,new:true},
+					}, {
+						upsert: true,
+						new: true
+					},
 					function(err, docs) {
 						if (err) {
 							console.log(err);
 						} else {
-							var databaseTrackData = docs.tracks[docs.tracks.length-1];
+							var databaseTrackData = docs.tracks[docs.tracks.length - 1];
 							io.to(req.params.id).emit('addTrack', databaseTrackData);
 						}
 					});
-			});
-
-			socket.on('requestPlayTrack', function() {
-				Playlist.findOne({
-					_id: req.params.id
-				}).then(function(results) {
-					// console.log(results);
-					var firstTrack = results.tracks[0].uri;
-					console.log(req.user.spotifyId);
-					io.to(req.params.id).emit('requestPlayTrack', firstTrack, req.user);
-					// playTrack(firstTrack);
-				}).catch(function(err) {
-					console.log(err);
-				});
 			});
 
 			socket.on('likeTrack', function(trackId) {
@@ -198,7 +189,9 @@ var returnRouter = function(io) {
 											}
 										}
 									},
-								},{new:true},
+								}, {
+									new: true
+								},
 								function(err, docs) {
 									if (err) {
 										console.log(err);
@@ -221,11 +214,14 @@ var returnRouter = function(io) {
 					}, {
 						$pull: {
 							"tracks": {
-							"_id": trackId
+								"_id": trackId
 							}
 						},
 
-					},{upsert: true,new:true},
+					}, {
+						upsert: true,
+						new: true
+					},
 					function(err, docs) {
 						if (err) {
 							console.log(err);
@@ -238,27 +234,29 @@ var returnRouter = function(io) {
 
 			socket.on('playTrack', function() {
 				spotifyApi.setAccessToken(req.user.accessToken);
-
+				console.log('play');
 				Playlist.findOne({
 					_id: req.params.id
 				}).then(function(results) {
-					// console.log(results);
 					var firstTrack = results.tracks[0].uri;
 					console.log(req.user.spotifyId);
-					// playTrack(firstTrack);
+
+					function playTrack() {
+						spotifyApi.play({
+								uris: [firstTrack]
+							})
+							.then(function(data) {}).catch(function(err) {
+								console.log(err);
+								checkAccesToken(req, res, next, err, playTrack);
+							});
+					}
+					playTrack(firstTrack);
+
 				}).catch(function(err) {
 					console.log(err);
 				});
 
-				// function playTrack(track) {
-				// 	spotifyApi.play({
-				// 			uris: [track]
-				// 		})
-				// 		.then(function(data) {}).catch(function(err) {
-				// 			console.log(err);
-				// 			checkAccesToken(req, res, next, err, playTrack);
-				// 		});
-				// }
+
 
 			});
 
@@ -279,6 +277,7 @@ var returnRouter = function(io) {
 			});
 
 			socket.on('transferDevicePlayback', function(device) {
+				spotifyApi.setAccessToken(req.user.accessToken);
 
 				function transferDevicePlayback() {
 					spotifyApi.transferMyPlayback({
@@ -327,15 +326,24 @@ var returnRouter = function(io) {
 		Playlist.findOne({
 			_id: req.params.id
 		}).then(function(results) {
-			// var tracks = results.tracks;
-			// console.log(tracks);
-			// if(tracks.length > 0) {
-			// 	getTracks();
-			// } else {
-			res.render('playlist', {
-				playlistData: results,
-				user: req.user
-			});
+			var topTracks;
+			spotifyApi.setAccessToken(req.user.accessToken);
+
+			function getTopTracks() {
+				spotifyApi.getMyTopTracks()
+					.then(function(data) {
+						topTracks = data.body.items;
+						res.render('playlist', {
+							playlistData: results,
+							user: req.user,
+							topTracks: topTracks
+						});
+					}).catch(function(err) {
+						checkAccesToken(req, res, next, err, getTopTracks);
+					});
+			}
+			getTopTracks();
+
 
 
 			// function getTopTracks() {
@@ -378,6 +386,7 @@ var returnRouter = function(io) {
 	});
 
 	router.post('/create', ensureAuthenticated, function(req, res) {
+		//Create QR code id
 		var id = crypto.randomBytes(8).toString('hex');
 		//Checkboxes
 		if (req.body.private === undefined) {
@@ -434,7 +443,9 @@ var returnRouter = function(io) {
 				}, {
 					accessToken: newAccessToken
 				});
+
 				spotifyApi.setAccessToken(newAccessToken);
+
 				// Save the new accessToken for future use
 				req.user.save({
 					accessToken: newAccessToken
@@ -445,7 +456,7 @@ var returnRouter = function(io) {
 			});
 
 		} else {
-			return next();
+			console.log(error);
 			// There was another error, handle it appropriately.
 		}
 

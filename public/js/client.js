@@ -3,7 +3,6 @@ var iso;
 var queue;
 
 socket.on('connected', function() {
-	console.log('v10');
 	var showAddTracksButton = document.querySelector('.show-add-tracks');
 	var closeAddTracksButton = document.querySelector('.close-add-tracks');
 	var addTrackOverlay = document.querySelector('#add-track');
@@ -11,13 +10,20 @@ socket.on('connected', function() {
 	var playButton = document.querySelector('.play-button');
 	var likeButtons = document.querySelectorAll('.track-like-button');
 	var deleteButtons = document.querySelectorAll('.track-delete-button');
+	var addTrackButton = document.querySelectorAll('.track-add-button');
+
+	for (let i = 0; i < addTrackButton.length; i++) {
+		addTrackButton[i].addEventListener('click', function() {
+			socket.emit('addTrack', topTracks[i]);
+		});
+	}
 
 
-	showAddTracksButton.addEventListener('click', function(e) {
-		// e.preventDefault();
-		// addTrackOverlay.classList.add('active');
-		socket.emit('showAddTracks');
-	});
+	// showAddTracksButton.addEventListener('click', function(e) {
+	// 	// e.preventDefault();
+	// 	// addTrackOverlay.classList.add('active');
+	// 	socket.emit('showAddTracks');
+	// });
 
 	closeAddTracksButton.addEventListener('click', function(e) {
 		// e.preventDefault();
@@ -30,7 +36,7 @@ socket.on('connected', function() {
 		socket.emit('fetchDevices');
 	});
 	playButton.addEventListener('click', function() {
-		socket.emit('requestPlayTrack');
+		socket.emit('playTrack');
 	});
 
 
@@ -53,13 +59,10 @@ socket.on('connected', function() {
 			date: function (el) {
 				console.log("name ",el.getAttribute('data-name'), "date ",el.getAttribute('data-created'));
 				return Date.parse(el.getAttribute('data-created'));
-			  // return Date.parse(el.find('[data-createdAt]').text());
 		  },
 
 	  },
 
-	  // sortBy: [ 'likes' ],
-	  // sortAscending: false
 	});
 
 });
@@ -70,7 +73,6 @@ function deleteTrack() {
 }
 
 socket.on('deleteTrack', function(trackId) {
-	console.log('iets');
 	var element = document.querySelector('[data-id="' + trackId + '"]');
 	iso.remove(element);
 	iso.layout();
@@ -88,7 +90,6 @@ function likeTrack() {
 }
 
 socket.on('likeTrack', function(trackId, docs) {
-	console.log(docs);
 	var likeButton = document.querySelector('[data-id="' + trackId + '"]').children[4].children[1];
 	// console.log(likeButton.children[4].children[1]);
 	var likeAmount = Number(likeButton.previousElementSibling.textContent) + 1;
@@ -102,7 +103,7 @@ socket.on('likeTrack', function(trackId, docs) {
 
 
 socket.on('requestPlayTrack', function(firstTrack, user) {
-	console.log(user.accessToken);
+	console.log(user);
 	socket.emit('playTrack');
 });
 
