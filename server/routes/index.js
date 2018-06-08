@@ -108,7 +108,6 @@ var returnRouter = function(io) {
 					spotifyApi.getMyTopTracks()
 						.then(function(data) {
 							topTracks = data.body.items;
-							console.log(topTracks);
 							socket.emit('showAddTracks', topTracks);
 						}).catch(function(err) {
 							checkAccesToken(req, res, next, err, getTopTracks);
@@ -119,6 +118,7 @@ var returnRouter = function(io) {
 			});
 
 			socket.on('addTrack', function(trackData) {
+
 				var newTrackData = {
 					id: trackData.id,
 					uri: trackData.uri,
@@ -129,7 +129,7 @@ var returnRouter = function(io) {
 					likes: 0,
 					addedBy: req.user.spotifyId,
 				};
-				console.log(trackData);
+
 				Playlist.findOneAndUpdate({
 						_id: req.params.id
 					}, {
@@ -148,8 +148,8 @@ var returnRouter = function(io) {
 						if (err) {
 							console.log(err);
 						} else {
-							console.log(docs);
-							io.to(req.params.id).emit('addTrack', newTrackData);
+							var databaseTrackData = docs.tracks[docs.tracks.length-1];
+							io.to(req.params.id).emit('addTrack', databaseTrackData);
 						}
 					});
 			});

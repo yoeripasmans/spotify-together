@@ -155,6 +155,9 @@ socket.on('addTrack', function(trackData) {
 	var queue = document.querySelector('.queue');
 
 	var li = document.createElement('li');
+	li.setAttribute('data-id', trackData._id);
+	li.setAttribute('data-name', trackData.name);
+	li.setAttribute('data-created', trackData.createdAt);
 	li.classList.add('queue__track');
 	queue.appendChild(li);
 
