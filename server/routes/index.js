@@ -102,22 +102,6 @@ var returnRouter = function(io) {
 
 				});
 
-			socket.on('showAddTracks', function() {
-				spotifyApi.setAccessToken(req.user.accessToken);
-
-				function getTopTracks() {
-					spotifyApi.getMyTopTracks()
-						.then(function(data) {
-							topTracks = data.body.items;
-							socket.emit('showAddTracks', topTracks);
-						}).catch(function(err) {
-							checkAccesToken(req, res, next, err, getTopTracks);
-						});
-				}
-				getTopTracks();
-				console.log('add track');
-			});
-
 			socket.on('addTrack', function(trackData) {
 
 				var newTrackData = {
@@ -129,7 +113,7 @@ var returnRouter = function(io) {
 					duration_ms: trackData.duration_ms,
 					likes: 0,
 					addedBy: req.user.spotifyId,
-					currentTrack: false
+					isPlaying: false
 				};
 
 				Playlist.findOneAndUpdate({
@@ -139,6 +123,7 @@ var returnRouter = function(io) {
 							tracks: {
 								$each: [newTrackData],
 								$sort: {
+									isPlaying: -1,
 									likes: -1,
 									createdAt: 1
 								}
@@ -184,6 +169,7 @@ var returnRouter = function(io) {
 										tracks: {
 											$each: [],
 											$sort: {
+												isPlaying: -1,
 												likes: -1,
 												createdAt: 1
 											}
@@ -226,31 +212,45 @@ var returnRouter = function(io) {
 						if (err) {
 							console.log(err);
 						} else {
-							console.log(docs);
 							io.to(req.params.id).emit('deleteTrack', trackId);
 						}
 					});
 			});
 
 			socket.on('playTrack', function() {
-				spotifyApi.setAccessToken(req.user.accessToken);
-				console.log('play');
+
+
 				Playlist.findOne({
 					_id: req.params.id
 				}).then(function(results) {
-					var firstTrack = results.tracks[0].uri;
+					//Set accestoken
+					spotifyApi.setAccessToken(req.user.accessToken);
+					//Save currentTrack and set playing to true
+					var currentTrack = results.tracks[0];
+					currentTrack.set('isPlaying', true);
+
+					//Save to database
+					results.save().then(function(savedPost) {
+						io.to(req.params.id).emit('playingTrack', currentTrack);
+						console.log(savedPost);
+					}).catch(function(err) {
+						console.log(err);
+					});
 					console.log(req.user.spotifyId);
 
 					function playTrack() {
+						console.log('Accestoken', req.user.accessToken);
 						spotifyApi.play({
-								uris: [firstTrack]
+								uris: [currentTrack.uri]
 							})
 							.then(function(data) {}).catch(function(err) {
 								console.log(err);
 								checkAccesToken(req, res, next, err, playTrack);
 							});
 					}
-					playTrack(firstTrack);
+
+
+					playTrack();
 
 				}).catch(function(err) {
 					console.log(err);
@@ -269,7 +269,7 @@ var returnRouter = function(io) {
 							var devices = data.body.devices;
 							socket.emit('showDevices', devices);
 						}).catch(function(err) {
-
+							console.log(err);
 							checkAccesToken(req, res, next, err, fetchDevices);
 						});
 				}
@@ -339,6 +339,7 @@ var returnRouter = function(io) {
 							topTracks: topTracks
 						});
 					}).catch(function(err) {
+						console.log(err);
 						checkAccesToken(req, res, next, err, getTopTracks);
 					});
 			}
@@ -438,13 +439,30 @@ var returnRouter = function(io) {
 				if (err || !newAccessToken) {
 					console.log('no accestoken');
 				}
-				User.update({
-					spotifyId: req.user.spotifyId
+				console.log('user', req.user.spotifyId);
+				console.log('new acces token', newAccessToken);
+
+				//Update token in database
+				User.findOneAndUpdate({
+					"spotifyId": req.user.spotifyId
 				}, {
-					accessToken: newAccessToken
+					$set: {
+						"accessToken": newAccessToken
+					}
+				},function(err, raw) {
+					if (err) {
+						console.log(err);
+					} else {
+						console.log('raw',raw);
+					}
 				});
 
+
 				spotifyApi.setAccessToken(newAccessToken);
+				// req.session.passport.user.accessToken = newAccessToken;
+				// req.session.save(function(err) {
+				// 	console.log(err);
+				// });
 
 				// Save the new accessToken for future use
 				req.user.save({
@@ -457,6 +475,7 @@ var returnRouter = function(io) {
 
 		} else {
 			console.log(error);
+			return next();
 			// There was another error, handle it appropriately.
 		}
 

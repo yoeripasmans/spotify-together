@@ -27,7 +27,7 @@ function auth() {
 			callbackURL: redirect_uri
 		},
 		function(accessToken, refreshToken, expires_in, profile, done) {
-			console.log('profile', profile);
+
 			//Search for user in database
 			User.findOne({
 				spotifyId: profile.id

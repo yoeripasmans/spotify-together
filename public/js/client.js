@@ -60,6 +60,9 @@ socket.on('connected', function() {
 				console.log("name ",el.getAttribute('data-name'), "date ",el.getAttribute('data-created'));
 				return Date.parse(el.getAttribute('data-created'));
 		  },
+		  isPlaying: function(el){
+			  return el.getAttribute('data-isplaying');
+		  }
 
 	  },
 
@@ -76,6 +79,12 @@ socket.on('deleteTrack', function(trackId) {
 	var element = document.querySelector('[data-id="' + trackId + '"]');
 	iso.remove(element);
 	iso.layout();
+});
+
+socket.on('playingTrack', function(currentTrack) {
+	var element = document.querySelector('[data-id="' + currentTrack._id + '"]');
+	element.setAttribute('isplaying', currentTrack.isPlaying);
+	console.log(currentTrack);
 });
 
 function likeTrack() {
@@ -97,7 +106,7 @@ socket.on('likeTrack', function(trackId, docs) {
 
 	iso.updateSortData(queue);
 	iso.reloadItems();
-  	iso.arrange({ sortBy:  [ 'likes', 'date' ], sortAscending: {likes:false, date:true} });
+  	iso.arrange({ sortBy:  [ 'isPlaying', 'likes', 'date' ], sortAscending: {isPlaying: false, likes:false, date:true} });
 
 });
 
@@ -159,6 +168,7 @@ socket.on('addTrack', function(trackData) {
 	li.setAttribute('data-id', trackData._id);
 	li.setAttribute('data-name', trackData.name);
 	li.setAttribute('data-created', trackData.createdAt);
+	li.setAttribute('data-isplaying', trackData.isPlaying);
 	li.classList.add('queue__track');
 	queue.appendChild(li);
 
