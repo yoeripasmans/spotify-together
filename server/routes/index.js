@@ -218,20 +218,21 @@ var returnRouter = function(io) {
 			});
 
 			socket.on('playTrack', function() {
-
+				//Set accestoken
+				spotifyApi.setAccessToken(req.user.accessToken);
 
 				Playlist.findOne({
 					_id: req.params.id
 				}).then(function(results) {
-					//Set accestoken
-					spotifyApi.setAccessToken(req.user.accessToken);
+
 					//Save currentTrack and set playing to true
 					var currentTrack = results.tracks[0];
 					currentTrack.set('isPlaying', true);
 
-					//Save to database
+					//Save to database and play track
 					results.save().then(function(savedPost) {
 						io.to(req.params.id).emit('playingTrack', currentTrack);
+						playTrack();
 						console.log(savedPost);
 					}).catch(function(err) {
 						console.log(err);
@@ -244,13 +245,10 @@ var returnRouter = function(io) {
 								uris: [currentTrack.uri]
 							})
 							.then(function(data) {}).catch(function(err) {
-								console.log(err);
+								console.log('play function',err);
 								checkAccesToken(req, res, next, err, playTrack);
 							});
 					}
-
-
-					playTrack();
 
 				}).catch(function(err) {
 					console.log(err);
@@ -449,11 +447,11 @@ var returnRouter = function(io) {
 					$set: {
 						"accessToken": newAccessToken
 					}
-				},function(err, raw) {
+				}, function(err, raw) {
 					if (err) {
 						console.log(err);
 					} else {
-						console.log('raw',raw);
+						console.log('raw', raw);
 					}
 				});
 
@@ -474,7 +472,7 @@ var returnRouter = function(io) {
 			});
 
 		} else {
-			console.log(error);
+			console.log('refresh function', error);
 			return next();
 			// There was another error, handle it appropriately.
 		}
