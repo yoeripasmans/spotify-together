@@ -34,11 +34,11 @@
 			</section>
 
 			<section>
-				<header class="queue-header">
+				<header class="tracklist-header">
 					<h3>Songs</h3>
 					<a href="#add-track" class="button show-add-tracks">Add song</a>
 				</header>
-				<div class="queue__track--top">
+				<div class="tracklist__track--top">
 					<span></span>
 					<span>Title</span>
 					<span>Artist</span>
@@ -47,16 +47,16 @@
 
 				</div>
 
-				<ul class="queue">
+				<ul class="tracklist">
 
 					<% for(var i=0; i < playlistData.tracks.length; i++) { %>
-						<li class="queue__track" data-id="<%= playlistData.tracks[i]._id %>" data-created="<%= playlistData.tracks[i].createdAt %>" data-name="<%= playlistData.tracks[i].name %>" data-isplaying="<%= playlistData.tracks[i].isPlaying %>">
-							<img class="queue__track-img" src="<%= playlistData.tracks[i].album.images[0].url %>" alt="Album cover of <%= playlistData.tracks[i].name %>">
-							<span class="queue__track-name"><%= playlistData.tracks[i].name %></span>
-							<span class="queue__track-artist"><%= playlistData.tracks[i].artists.map(a => a.name).join(', ') %></span>
-							<!-- <span class="queue__track-album"><%= playlistData.tracks[i].album.name %></span> -->
-							<span class="queue__track-addedby"><%= playlistData.tracks[i].addedBy %></span>
-							<span class="queue__track-likes">
+						<li class="tracklist__track" data-id="<%= playlistData.tracks[i]._id %>" data-created="<%= playlistData.tracks[i].createdAt %>" data-name="<%= playlistData.tracks[i].name %>" data-isplaying="<%= playlistData.tracks[i].isPlaying %>">
+							<img class="tracklist__track-img" src="<%= playlistData.tracks[i].album.images[0].url %>" alt="Album cover of <%= playlistData.tracks[i].name %>">
+							<span class="tracklist__track-name"><%= playlistData.tracks[i].name %></span>
+							<span class="tracklist__track-artist"><%= playlistData.tracks[i].artists.map(a => a.name).join(', ') %></span>
+							<!-- <span class="tracklist__track-album"><%= playlistData.tracks[i].album.name %></span> -->
+							<span class="tracklist__track-addedby"><%= playlistData.tracks[i].addedBy %></span>
+							<span class="tracklist__track-likes">
 								<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
 							<%
 								var liked;
@@ -99,26 +99,39 @@
 				</header>
 				<input class="track-search" type="search" name="search" placeholder="Search for a song">
 
-				<section>
-				<div class="queue__track--top">
-					<span></span>
-					<span>Title</span>
-					<span>Artist</span>
-					<!-- <span>Album</span> -->
+				<section class="search-results">
+					<h3>Search results</h3>
+					<div class="tracklist__track--top">
+						<span></span>
+						<span>Title</span>
+						<span>Artist</span>
+					</div>
+					<ul class="tracklist fav-tracks search-results-list">
+					</ul>
+				</section>
 
 
-				</div>
-				<ul class="queue fav-tracks">
-					<% for(var i=0; i < topTracks.length; i++) { %>
-						<li class="queue__track">
-							<img class="queue__track-img" src="<%= topTracks[i].album.images[0].url %>" alt="Album cover of <%= topTracks[i].name %>">
-							<span class="queue__track-name"><%= topTracks[i].name %></span>
-							<span class="queue__track-artist"><%= topTracks[i].artists.map(a => a.name).join(', ') %></span>
-							<button type="button" class="track-add-button">Add track</button>
-						</li>
 
-						<% } %>
-				</ul>
+				<section class="top-songs">
+					<div class="tracklist__track--top">
+						<span></span>
+						<span>Title</span>
+						<span>Artist</span>
+						<!-- <span>Album</span> -->
+
+
+					</div>
+					<ul class="tracklist fav-tracks">
+						<% for(var i=0; i < topTracks.length; i++) { %>
+							<li class="tracklist__track">
+								<img class="tracklist__track-img" src="<%= topTracks[i].album.images[0].url %>" alt="Album cover of <%= topTracks[i].name %>">
+								<span class="tracklist__track-name"><%= topTracks[i].name %></span>
+								<span class="tracklist__track-artist"><%= topTracks[i].artists.map(a => a.name).join(', ') %></span>
+								<button type="button" class="track-add-button">Add track</button>
+							</li>
+
+							<% } %>
+					</ul>
 				</section>
 			</div>
 		</section>

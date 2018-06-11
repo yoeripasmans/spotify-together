@@ -245,7 +245,7 @@ var returnRouter = function(io) {
 								uris: [currentTrack.uri]
 							})
 							.then(function(data) {}).catch(function(err) {
-								console.log('play function',err);
+								console.log('play function', err);
 								checkAccesToken(req, res, next, err, playTrack);
 							});
 					}
@@ -256,6 +256,21 @@ var returnRouter = function(io) {
 
 
 
+			});
+
+			socket.on('searchTrack', function(value) {
+				spotifyApi.setAccessToken(req.user.accessToken);
+
+				function searchTrack() {
+					spotifyApi.searchTracks(value)
+						.then(function(data) {
+							socket.emit('searchTrack', data.body.tracks.items);
+						}, function(err) {
+							console.error(err);
+							searchTrack(req, res, next, err, playTrack);
+						});
+				}
+				searchTrack();
 			});
 
 			socket.on('fetchDevices', function() {

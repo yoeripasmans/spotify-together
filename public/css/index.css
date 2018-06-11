@@ -104,7 +104,7 @@ main {
     text-align: center;
 }
 
-.queue-header {
+.tracklist-header {
     display: flex;
     align-items: center;
 }
@@ -113,18 +113,18 @@ main {
     margin-left: auto;
 }
 
-.queue {
+.tracklist {
     padding: 0;
     margin-bottom: 6em;
 }
 
-.queue__track--top span {
+.tracklist__track--top span {
     text-transform: uppercase;
     font-size: 0.9em;
     opacity: 0.8;
 }
 
-.queue__track, .queue__track--top {
+.tracklist__track, .tracklist__track--top {
     display: grid;
     grid-template-columns: 5em 1fr 1fr 10em 4em;
     grid-gap: 1em;
@@ -132,24 +132,24 @@ main {
     margin-bottom: 1em;
 }
 
-.queue__track {
+.tracklist__track {
     height: 3em;
 	width: 100%;
     position: relative;
 }
 
-.queue__track img {
+.tracklist__track img {
     width: 60%;
     height: auto;
     border-radius: 4px;
 }
 
-.queue__track span {
+.tracklist__track span {
     display: flex;
     align-items: center;
 }
 
-.queue__track-likes {
+.tracklist__track-likes {
     justify-content: flex-end;
 }
 
@@ -303,4 +303,16 @@ main {
     background: linear-gradient(to bottom, #31f7f4 0%, #6f8fce 100%);
     border-radius: 4px;
     margin-bottom: 5px;
+}
+
+.search-results {
+	display: none;
+}
+
+.search-results.active {
+	display: block;
+}
+
+.top-songs.hidden {
+	display: none;
 }

@@ -1,6 +1,6 @@
 var socket = io('/');
 var iso;
-var queue;
+var tracklist;
 
 socket.on('connected', function() {
 	var showAddTracksButton = document.querySelector('.show-add-tracks');
@@ -11,12 +11,26 @@ socket.on('connected', function() {
 	var likeButtons = document.querySelectorAll('.track-like-button');
 	var deleteButtons = document.querySelectorAll('.track-delete-button');
 	var addTrackButton = document.querySelectorAll('.track-add-button');
+	var searchTrackForm = document.querySelector('.track-search');
 
 	for (let i = 0; i < addTrackButton.length; i++) {
 		addTrackButton[i].addEventListener('click', function() {
 			socket.emit('addTrack', topTracks[i]);
 		});
 	}
+
+	searchTrackForm.addEventListener('keyup', function(e){
+		var topSongs = document.querySelector('.top-songs');
+		var searchResults = document.querySelector('.search-results');
+		if (this.value.length > 0) {
+			searchResults.classList.add('active');
+			topSongs.classList.add('hidden');
+		} else {
+			searchResults.classList.remove('active');
+			topSongs.classList.remove('hidden');
+		}
+		socket.emit('searchTrack', this.value);
+	});
 
 
 	// showAddTracksButton.addEventListener('click', function(e) {
@@ -35,6 +49,7 @@ socket.on('connected', function() {
 
 		socket.emit('fetchDevices');
 	});
+
 	playButton.addEventListener('click', function() {
 		socket.emit('playTrack');
 	});
@@ -48,11 +63,11 @@ socket.on('connected', function() {
 		deleteButtons[i].addEventListener('click', deleteTrack);
 	}
 
-	queue = document.querySelector('.queue');
+	tracklist = document.querySelector('.tracklist');
 
-	iso = new Isotope(queue, {
+	iso = new Isotope(tracklist, {
 		// options
-		itemSelector: '.queue__track',
+		itemSelector: '.tracklist__track',
 		layoutMode: 'vertical',
 		getSortData: {
 			likes: '.like-amount parseInt',
@@ -87,6 +102,44 @@ socket.on('playingTrack', function(currentTrack) {
 	console.log(currentTrack);
 });
 
+socket.on('searchTrack', function(trackData) {
+	var searchResults = document.querySelector('.search-results-list');
+	//Remove tracks from search data
+	for (var i = 0; i < searchResults.childNodes.length; i++) {
+		searchResults.removeChild(searchResults.childNodes[i]);
+	}
+
+	//Add tracks from search data
+	for (i = 0; i < trackData.length; i++) {
+
+		var li = document.createElement('li');
+		li.setAttribute('data-name', trackData[i].name);
+		li.classList.add('tracklist__track');
+		searchResults.appendChild(li);
+
+		var albumCover = document.createElement('img');
+		li.appendChild(albumCover);
+		albumCover.src = trackData[i].album.images[0].url;
+
+		var trackName = document.createElement('span');
+		li.appendChild(trackName);
+		trackName.textContent = trackData[i].name;
+
+		var artistName = document.createElement('span');
+		li.appendChild(artistName);
+		artistName.textContent = trackData[i].artists.map(a => a.name).join(', ');
+
+		var addTrackButton = document.createElement('button');
+		li.appendChild(addTrackButton);
+		addTrackButton.textContent = "Add";
+		addTrackButton.addEventListener('click', function() {
+			socket.emit('addTrack', trackData[i]);
+		});
+
+
+	}
+});
+
 function likeTrack() {
 	if (this.getAttribute('liked') === 'false') {
 		// var likeAmount = Number(this.previousElementSibling.textContent) + 1;
@@ -104,7 +157,7 @@ socket.on('likeTrack', function(trackId, docs) {
 	var likeAmount = Number(likeButton.previousElementSibling.textContent) + 1;
 	likeButton.previousElementSibling.textContent = likeAmount;
 
-	iso.updateSortData(queue);
+	iso.updateSortData(tracklist);
 	iso.reloadItems();
   	iso.arrange({ sortBy:  [ 'isPlaying', 'likes', 'date' ], sortAscending: {isPlaying: false, likes:false, date:true} });
 
@@ -162,15 +215,15 @@ socket.on('showAddTracks', function(data) {
 
 socket.on('addTrack', function(trackData) {
 	console.log(trackData);
-	var queue = document.querySelector('.queue');
+	var tracklist = document.querySelector('.tracklist');
 
 	var li = document.createElement('li');
 	li.setAttribute('data-id', trackData._id);
 	li.setAttribute('data-name', trackData.name);
 	li.setAttribute('data-created', trackData.createdAt);
 	li.setAttribute('data-isplaying', trackData.isPlaying);
-	li.classList.add('queue__track');
-	queue.appendChild(li);
+	li.classList.add('tracklist__track');
+	tracklist.appendChild(li);
 
 	var albumCover = document.createElement('img');
 	li.appendChild(albumCover);
@@ -193,7 +246,7 @@ socket.on('addTrack', function(trackData) {
 	addedBy.textContent = trackData.addedBy;
 
 	var likes = document.createElement('span');
-	likes.classList.add('queue__track-likes');
+	likes.classList.add('tracklist__track-likes');
 	li.appendChild(likes);
 
 	var likesAmount = document.createElement('span');
