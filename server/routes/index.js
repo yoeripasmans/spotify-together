@@ -340,25 +340,39 @@ var returnRouter = function(io) {
 			_id: req.params.id
 		}).then(function(results) {
 			var topTracks;
+			var userPlaylists;
 			spotifyApi.setAccessToken(req.user.accessToken);
 
-			function getTopTracks() {
+			function getUserTopTracks() {
 				spotifyApi.getMyTopTracks()
 					.then(function(data) {
 						topTracks = data.body.items;
+						getUserPlaylist();
+					}).catch(function(err) {
+						console.log(err);
+						checkAccesToken(req, res, next, err, getUserTopTracks);
+					});
+			}
+
+			function getUserPlaylist() {
+				spotifyApi.getUserPlaylists(req.user.spotifyId)
+					.then(function(data) {
+						var userPlaylists = data.body.items;
+						console.log('Retrieved playlists', data.body.items);
 						res.render('playlist', {
 							playlistData: results,
 							user: req.user,
-							topTracks: topTracks
+							topTracks: topTracks,
+							userPlaylists: userPlaylists
 						});
+
 					}).catch(function(err) {
 						console.log(err);
-						checkAccesToken(req, res, next, err, getTopTracks);
+						checkAccesToken(req, res, next, err, getUserPlaylist);
 					});
 			}
-			getTopTracks();
 
-
+			getUserTopTracks();
 
 			// function getTopTracks() {
 			// 	spotifyApi.getMyTopTracks()

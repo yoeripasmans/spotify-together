@@ -19,17 +19,29 @@ socket.on('connected', function() {
 		});
 	}
 
-	searchTrackForm.addEventListener('keyup', function(e){
+	searchTrackForm.addEventListener('keyup', function(e) {
 		var topSongs = document.querySelector('.top-songs');
 		var searchResults = document.querySelector('.search-results');
-		if (this.value.length > 0) {
-			searchResults.classList.add('active');
-			topSongs.classList.add('hidden');
-		} else {
+
+		if (e.keyCode === 13) {
+			if (this.value.length > 0) {
+				searchResults.classList.add('active');
+				topSongs.classList.add('hidden');
+			} else {
+				searchResults.classList.remove('active');
+				topSongs.classList.remove('hidden');
+			}
+
+			socket.emit('searchTrack', this.value);
+		}
+
+		if (this.value.length === 0) {
 			searchResults.classList.remove('active');
 			topSongs.classList.remove('hidden');
 		}
-		socket.emit('searchTrack', this.value);
+
+		return false;
+
 	});
 
 
@@ -71,15 +83,15 @@ socket.on('connected', function() {
 		layoutMode: 'vertical',
 		getSortData: {
 			likes: '.like-amount parseInt',
-			date: function (el) {
-				console.log("name ",el.getAttribute('data-name'), "date ",el.getAttribute('data-created'));
+			date: function(el) {
+				// console.log("name ", el.getAttribute('data-name'), "date ", el.getAttribute('data-created'));
 				return Date.parse(el.getAttribute('data-created'));
-		  },
-		  isPlaying: function(el){
-			  return el.getAttribute('data-isplaying');
-		  }
+			},
+			isPlaying: function(el) {
+				return el.getAttribute('data-isplaying');
+			}
 
-	  },
+		},
 
 	});
 
@@ -162,7 +174,14 @@ socket.on('likeTrack', function(trackId, docs) {
 
 	iso.updateSortData(tracklist);
 	iso.reloadItems();
-  	iso.arrange({ sortBy:  [ 'isPlaying', 'likes', 'date' ], sortAscending: {isPlaying: false, likes:false, date:true} });
+	iso.arrange({
+		sortBy: ['isPlaying', 'likes', 'date'],
+		sortAscending: {
+			isPlaying: false,
+			likes: false,
+			date: true
+		}
+	});
 
 });
 

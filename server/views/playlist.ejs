@@ -110,6 +110,18 @@
 					</ul>
 				</section>
 
+				<section class="user-playlists-wrapper">
+					<h3>Your playlists</h3>
+					<ul class="user-playlists">
+						<% for(var i=0; i < 4; i++) { %>
+							<li class="user-playlists__item">
+								<img class="tracklist__track-img" src="<%= userPlaylists[i].images[0].url %>" alt="Album cover of <%= userPlaylists[i].name %>">
+								<span class="tracklist__track-name"><%= userPlaylists[i].name %></span>
+							</li>
+							<% } %>
+					</ul>
+				</section>
+
 
 
 				<section class="top-songs">

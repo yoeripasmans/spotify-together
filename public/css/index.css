@@ -132,6 +132,10 @@ main {
     margin-bottom: 1em;
 }
 
+.top-songs .tracklist__track, .top-songs .tracklist__track--top , .search-results .tracklist__track, .search-results .tracklist__track--top    {
+    grid-template-columns: 5em 26em 1fr 4em;
+}
+
 .tracklist__track {
     height: 3em;
 	width: 100%;
@@ -173,6 +177,8 @@ main {
     width: 100%;
     min-height: 100%;
     display: none;
+	overflow-y: scroll;
+height: 100%;
 }
 
 .add-track-wrapper {
@@ -186,6 +192,35 @@ main {
 
 #add-track.active {
     display: block;
+}
+
+.search-results {
+	display: none;
+}
+
+.search-results.active {
+	display: block;
+}
+
+.top-songs.hidden {
+	display: none;
+}
+.user-playlists-wrapper {
+	margin: 2em 0 4em 0;
+}
+.user-playlists {
+	display: flex;
+	justify-content: space-between;
+}
+
+.user-playlists__item {
+	width: 23.5%;
+}
+
+.user-playlists img {
+	width: 100%;
+	display: block;
+	margin-bottom: 0.5em;
 }
 
 #player {
@@ -303,16 +338,4 @@ main {
     background: linear-gradient(to bottom, #31f7f4 0%, #6f8fce 100%);
     border-radius: 4px;
     margin-bottom: 5px;
-}
-
-.search-results {
-	display: none;
-}
-
-.search-results.active {
-	display: block;
-}
-
-.top-songs.hidden {
-	display: none;
 }
