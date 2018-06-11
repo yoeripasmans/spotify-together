@@ -103,18 +103,21 @@ socket.on('playingTrack', function(currentTrack) {
 });
 
 socket.on('searchTrack', function(trackData) {
+	console.log(trackData);
 	var searchResults = document.querySelector('.search-results-list');
+	var elements = document.querySelectorAll('.tracklist__track--search');
+
 	//Remove tracks from search data
-	for (var i = 0; i < searchResults.childNodes.length; i++) {
-		searchResults.removeChild(searchResults.childNodes[i]);
+	for (let i = 0; i < elements.length; i++) {
+		searchResults.removeChild(elements[i]);
 	}
 
 	//Add tracks from search data
-	for (i = 0; i < trackData.length; i++) {
+	for (let i = 0; i < trackData.length; i++) {
 
 		var li = document.createElement('li');
 		li.setAttribute('data-name', trackData[i].name);
-		li.classList.add('tracklist__track');
+		li.classList.add('tracklist__track', 'tracklist__track--search');
 		searchResults.appendChild(li);
 
 		var albumCover = document.createElement('img');

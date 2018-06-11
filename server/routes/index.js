@@ -267,7 +267,7 @@ var returnRouter = function(io) {
 							socket.emit('searchTrack', data.body.tracks.items);
 						}, function(err) {
 							console.error(err);
-							searchTrack(req, res, next, err, playTrack);
+							searchTrack(req, res, next, err, searchTrack);
 						});
 				}
 				searchTrack();
