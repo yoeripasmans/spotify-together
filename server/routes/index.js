@@ -304,9 +304,11 @@ var returnRouter = function(io) {
 			}
 
 			function cleartimer() {
-				if (timer != null) clearTimeout(timer);
-				timer = null;
-				console.log('clear');
+				if (timer != null) {
+					clearTimeout(timer);
+					timer = null;
+					console.log('clear');
+				}
 			}
 
 			function nextTrack(timer) {
