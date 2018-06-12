@@ -241,12 +241,13 @@ var returnRouter = function(io) {
 						//Save to database and play track
 						results.save().then(function() {
 							io.to(req.params.id).emit('playingTrack', currentTrack);
+							spotifyApi.setAccessToken(req.user.accessToken);
 							playTrack(currentTrack);
 						}).catch(function(err) {
 							console.log(err);
 						});
 					}
-					spotifyApi.setAccessToken(req.user.accessToken);
+
 
 					function playTrack(currentTrack) {
 						console.log(currentTrack.uri[0]);
@@ -313,10 +314,6 @@ var returnRouter = function(io) {
 
 			function nextTrack() {
 
-				console.log('timeout running');
-				//Set accestoken
-				spotifyApi.setAccessToken(req.user.accessToken);
-
 				Playlist.findOne({
 						_id: req.params.id,
 					},
@@ -342,6 +339,8 @@ var returnRouter = function(io) {
 
 									//Save new currentTrack to database and play track
 									newDocs.save().then(function(newDocs) {
+										//Set accestoken
+										spotifyApi.setAccessToken(req.user.accessToken);
 										playTrack();
 
 										function playTrack() {
