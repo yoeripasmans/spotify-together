@@ -311,7 +311,7 @@ var returnRouter = function(io) {
 				}
 			}
 
-			function nextTrack(timer) {
+			function nextTrack() {
 
 				console.log('timeout running');
 				//Set accestoken
