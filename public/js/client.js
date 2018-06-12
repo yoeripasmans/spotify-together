@@ -1,18 +1,24 @@
 var socket = io('/');
 var iso;
 var tracklist;
+var user;
 
-socket.on('connected', function() {
+socket.on('connected', function(userDetails) {
 	var showAddTracksButton = document.querySelector('.show-add-tracks');
 	var closeAddTracksButton = document.querySelector('.close-add-tracks');
 	var addTrackOverlay = document.querySelector('#add-track');
 	var fetchDevicesButton = document.querySelector('.fetch-devices-button');
 	var playButton = document.querySelector('.play-button');
+	var pauseButton = document.querySelector('.pause-button');
+	var nextButton = document.querySelector('.next-button');
+	var prevButton = document.querySelector('.prev-button');
 	var likeButtons = document.querySelectorAll('.track-like-button');
 	var deleteButtons = document.querySelectorAll('.track-delete-button');
 	var addTrackButton = document.querySelectorAll('.track-add-button');
 	var searchTrackForm = document.querySelector('.track-search');
+	user = userDetails;
 
+	//Eventlistener for adding tracks to the playlist
 	for (let i = 0; i < addTrackButton.length; i++) {
 		addTrackButton[i].addEventListener('click', function() {
 			socket.emit('addTrack', topTracks[i]);
@@ -62,8 +68,21 @@ socket.on('connected', function() {
 		socket.emit('fetchDevices');
 	});
 
+	//Player event listeners
 	playButton.addEventListener('click', function() {
 		socket.emit('playTrack');
+	});
+
+	pauseButton.addEventListener('click', function() {
+		socket.emit('pauseTrack');
+	});
+
+	nextButton.addEventListener('click', function() {
+		socket.emit('nextTrack');
+	});
+
+	prevButton.addEventListener('click', function() {
+		socket.emit('nextTrack');
 	});
 
 
@@ -76,7 +95,7 @@ socket.on('connected', function() {
 	}
 
 	tracklist = document.querySelector('.tracklist');
-
+	//Isotope setup
 	iso = new Isotope(tracklist, {
 		// options
 		itemSelector: '.tracklist__track',
@@ -98,7 +117,7 @@ socket.on('connected', function() {
 });
 
 function deleteTrack() {
-	var trackId = this.parentElement.getAttribute('data-id');
+	var trackId = this.parentElement.parentElement.getAttribute('data-id');
 	socket.emit('deleteTrack', trackId);
 }
 
@@ -109,8 +128,24 @@ socket.on('deleteTrack', function(trackId) {
 });
 
 socket.on('playingTrack', function(currentTrack) {
+	var tracklist = document.querySelectorAll('.queue li');
+	for (var i = 0; i < tracklist.length; i++) {
+		tracklist[i].setAttribute('data-isplaying', "false");
+	}
 	var element = document.querySelector('[data-id="' + currentTrack._id + '"]');
-	element.setAttribute('isplaying', currentTrack.isPlaying);
+	element.setAttribute('data-isplaying', currentTrack.isPlaying);
+	element.setAttribute('data-created', currentTrack.updatedAt);
+
+	iso.updateSortData(tracklist);
+	iso.reloadItems();
+	iso.arrange({
+		sortBy: ['isPlaying', 'likes', 'date'],
+		sortAscending: {
+			isPlaying: false,
+			likes: false,
+			date: true
+		}
+	});
 	console.log(currentTrack);
 });
 
@@ -185,12 +220,6 @@ socket.on('likeTrack', function(trackId, docs) {
 
 });
 
-
-socket.on('requestPlayTrack', function(firstTrack, user) {
-	console.log(user);
-	socket.emit('playTrack');
-});
-
 socket.on('showDevices', function(devices) {
 	var fetchDevicesWrapper = document.querySelector('.fetch-devices-wrapper');
 	fetchDevicesWrapper.classList.add('active');
@@ -235,7 +264,7 @@ socket.on('showAddTracks', function(data) {
 	}
 });
 
-socket.on('addTrack', function(trackData) {
+socket.on('addTrack', function(trackData, spotifyId) {
 	console.log(trackData);
 	var tracklist = document.querySelector('.tracklist');
 
@@ -276,17 +305,34 @@ socket.on('addTrack', function(trackData) {
 	likesAmount.classList.add('like-amount');
 	likesAmount.textContent = trackData.likes;
 
-	var likeButton = document.createElement('button');
-	likes.appendChild(likeButton);
-	likeButton.textContent = 'Like';
-	likeButton.setAttribute('liked', 'false');
-	likeButton.addEventListener('click', likeTrack);
+	if (trackData.addedBy === user.spotifyId) {
+		var removeButton = document.createElement('button');
+		likes.appendChild(removeButton);
+		removeButton.classList.add('track-delete-button');
+		removeButton.addEventListener('click', deleteTrack);
 
-	var removeButton = document.createElement('button');
-	li.appendChild(removeButton);
-	removeButton.classList.add('track-delete-button');
-	removeButton.textContent = 'Remove';
-	removeButton.addEventListener('click', deleteTrack);
+		var removeButtonSpan = document.createElement('span');
+		removeButton.appendChild(removeButtonSpan);
+		removeButtonSpan.textContent = 'Remove';
+
+		var removeButtonIcon = document.createElement('img');
+		removeButton.appendChild(removeButtonIcon);
+		removeButtonIcon.src = '/icons/icon_cross.svg';
+
+	} else {
+		var likeButton = document.createElement('button');
+		likes.appendChild(likeButton);
+		likeButton.setAttribute('liked', 'false');
+		likeButton.addEventListener('click', likeTrack);
+
+		var likeButtonSpan = document.createElement('span');
+		likeButton.appendChild(likeButtonSpan);
+		likeButtonSpan.textContent = 'Like';
+
+		var likeButtonIcon = document.createElement('img');
+		likeButton.appendChild(likeButtonIcon);
+		likeButtonIcon.src = '/icons/heart.svg';
+	}
 
 	iso.appended(li);
 });

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:none;stroke:#FFFFFF;stroke-linecap:round;stroke-miterlimit:10;}
+	.st2{fill:none;stroke:#FFFFFF;stroke-miterlimit:10;}
+	.st3{fill:none;stroke:#FFFFFF;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st4{fill:none;stroke:#FFFFFF;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st5{display:none;}
+	.st6{display:inline;}
+	.st7{display:inline;fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:10;}
+	.st8{display:inline;fill:#FFFFFF;}
+	.st9{display:inline;fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+</style>
+<g id="line">
+	<g>
+		<g>
+			<path class="st0" d="M8,7c0.6,0,1,0.4,1,1S8.6,9,8,9S7,8.6,7,8S7.4,7,8,7 M8,6C6.9,6,6,6.9,6,8s0.9,2,2,2s2-0.9,2-2S9.1,6,8,6
+				L8,6z"/>
+		</g>
+		<g>
+			<path class="st1" d="M4.8,11.2c-1.8-1.8-1.8-4.6,0-6.4"/>
+			<path class="st1" d="M11.2,4.8c1.8,1.8,1.8,4.6,0,6.4"/>
+		</g>
+		<g>
+			<path class="st1" d="M2.7,13.3c-2.9-2.9-2.9-7.7,0-10.6"/>
+			<path class="st1" d="M13.3,2.7c2.9,2.9,2.9,7.7,0,10.6"/>
+		</g>
+	</g>
+</g>
+<g id="filled" class="st5">
+</g>
+<g id="old" class="st5">
+</g>
+</svg>

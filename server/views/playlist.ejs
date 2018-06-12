@@ -47,7 +47,7 @@
 
 				</div>
 
-				<ul class="tracklist">
+				<ul class="tracklist queue">
 
 					<% for(var i=0; i < playlistData.tracks.length; i++) { %>
 						<li class="tracklist__track" data-id="<%= playlistData.tracks[i]._id %>" data-created="<%= playlistData.tracks[i].createdAt %>" data-name="<%= playlistData.tracks[i].name %>" data-isplaying="<%= playlistData.tracks[i].isPlaying %>">
@@ -58,10 +58,13 @@
 							<span class="tracklist__track-addedby"><%= playlistData.tracks[i].addedBy %></span>
 							<span class="tracklist__track-likes">
 								<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
+								<% if(playlistData.tracks[i].addedBy === user.spotifyId){ %>
+									<button type="button" class="track-delete-button"><span>Remove</span><img class="icon" src="/icons/icon_cross.svg" alt="Cross icon"></button>
+									<% } else {%>
 							<%
 								var liked;
 								if(playlistData.tracks[i].userLiked.length === 0){ %>
-								<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>">Like</button>
+								<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>"><span>Like</span><img class="icon" src="/icons/icon_heart.svg" alt="Heart icon"></button>
 								<% }
 								else {
 									 for(var j=0; j < playlistData.tracks[i].userLiked.length; j++) {
@@ -76,14 +79,13 @@
 									 if(liked === true){ %>
 									<button type="button" class="track-like-button--disabled" disabled>Like</button>
 									<% } else {%>
-										<button type="button" class="track-like-button">Like</button>
+										<button type="button" class="track-like-button"><span>Like</span><img class="icon" src="/icons/icon_heart.svg" alt="Heart icon"></button>
 										<% }
 								} %>
 											</span>
-											<% if(playlistData.tracks[i].addedBy === user.spotifyId){ %>
-												<button type="button" class="track-delete-button">Remove</button>
-												<% } %>
+
 						</li>
+						<% } %>
 						<% } %>
 				</ul>
 			</section>
@@ -139,7 +141,7 @@
 								<img class="tracklist__track-img" src="<%= topTracks[i].album.images[0].url %>" alt="Album cover of <%= topTracks[i].name %>">
 								<span class="tracklist__track-name"><%= topTracks[i].name %></span>
 								<span class="tracklist__track-artist"><%= topTracks[i].artists.map(a => a.name).join(', ') %></span>
-								<button type="button" class="track-add-button">Add track</button>
+								<button type="button" class="track-add-button"><span>Add track</span><img class="icon" src="/icons/icon_plus.svg" alt="Add icon"></button>
 							</li>
 
 							<% } %>
@@ -168,10 +170,10 @@
 
 
 			<div class="player-controls">
-				<button class="prev-button">Back</button>
-				<button class="play-button">Play</button>
-				<button class="stop-button hidden">Pause</button>
-				<button class="next-button">Next</button>
+				<button class="prev-button"><span>Back</span><img class="icon" src="/icons/icon_prev.svg" alt="Prev icon"></button>
+				<button class="play-button"><span>Play</span><img class="icon" src="/icons/icon_play.svg" alt="Play icon"></button>
+				<button class="pause-button hidden">Pause</button>
+				<button class="next-button"><span>Next</span><img class="icon" src="/icons/icon_next.svg" alt="Next icon"></button>
 			</div>
 
 
