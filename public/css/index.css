@@ -181,9 +181,9 @@ button, input[type="submit"], input[type="reset"] {
     justify-content: center;
     width: 2em;
 }
-.pause-button.hidden {
+/* .pause-button.hidden {
 	display: none;
-}
+} */
 
 
 .play-button img {

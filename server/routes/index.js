@@ -115,11 +115,18 @@ var returnRouter = function(io) {
 					addedBy: req.user.spotifyId,
 					isPlaying: false
 				};
+				console.log(newTrackData.id);
 
 				Playlist.findOneAndUpdate({
-						_id: req.params.id
+						_id: req.params.id,
+						'tracks.id': {
+							$ne: newTrackData.id
+						}
 					}, {
+						// 'tracks.uri': {$ne: newTrackData.id},
+						// 'tracks.uri': newTrackData.uri,
 						$push: {
+
 							tracks: {
 								$each: [newTrackData],
 								$sort: {
@@ -131,12 +138,14 @@ var returnRouter = function(io) {
 						},
 
 					}, {
-						upsert: true,
+						upsert: false,
 						new: true
 					},
 					function(err, docs) {
 						if (err) {
 							console.log(err);
+						} else if (docs === null) {
+							console.log('duplicate');
 						} else {
 							var databaseTrackData = docs.tracks[docs.tracks.length - 1];
 							io.to(req.params.id).emit('addTrack', databaseTrackData);
@@ -218,17 +227,17 @@ var returnRouter = function(io) {
 			});
 
 			socket.on('playTrack', function() {
-				//Set accestoken
-				spotifyApi.setAccessToken(req.user.accessToken);
 
 				Playlist.findOne({
 					_id: req.params.id
 				}).then(function(results) {
 					if (results.tracks.length > 0) {
+						//Set accestoken
 						//Save currentTrack and set playing to true
 						var currentTrack = results.tracks[0];
 						currentTrack.set('isPlaying', true);
-
+						console.log('currentrack-length:', currentTrack.duration_ms);
+						console.log('currentrack-uri:', currentTrack.uri);
 						//Save to database and play track
 						results.save().then(function() {
 							io.to(req.params.id).emit('playingTrack', currentTrack);
@@ -237,13 +246,18 @@ var returnRouter = function(io) {
 							console.log(err);
 						});
 					}
+					spotifyApi.setAccessToken(req.user.accessToken);
 
-					function playTrack() {
+					function playTrack(currentTrack) {
+						console.log(currentTrack.uri[0]);
 						console.log('Accestoken', req.user.accessToken);
 						spotifyApi.play({
-								uris: [currentTrack.uri]
+								"uris": [currentTrack.uri]
 							})
-							.then(function(data) {}).catch(function(err) {
+							.then(function(data) {
+								cleartimer();
+								timeout(currentTrack.duration_ms);
+							}).catch(function(err) {
 								console.log('play function', err);
 								checkAccesToken(req, res, next, err, playTrack);
 							});
@@ -265,7 +279,9 @@ var returnRouter = function(io) {
 					function pauseTrack() {
 						console.log('Accestoken', req.user.accessToken);
 						spotifyApi.pause()
-							.then(function(data) {}).catch(function(err) {
+							.then(function(data) {
+								cleartimer();
+							}).catch(function(err) {
 								console.log('play function', err);
 								checkAccesToken(req, res, next, err, pauseTrack);
 							});
@@ -277,6 +293,25 @@ var returnRouter = function(io) {
 
 			});
 			socket.on('nextTrack', function() {
+				nextTrack();
+			});
+
+			var timer = null;
+
+			function timeout(tracklength) {
+				timer = setTimeout(nextTrack, tracklength);
+				console.log('set timer with', tracklength);
+			}
+
+			function cleartimer() {
+				if (timer != null) clearTimeout(timer);
+				timer = null;
+				console.log('clear');
+			}
+
+			function nextTrack(timer) {
+
+				console.log('timeout running');
 				//Set accestoken
 				spotifyApi.setAccessToken(req.user.accessToken);
 
@@ -295,6 +330,7 @@ var returnRouter = function(io) {
 
 								currentTrack.set('isPlaying', false);
 								currentTrack.set('likes', 0);
+								currentTrack.set('createdAt', Date.now());
 								//Push old current track to bottom of array with reset values
 								docs.tracks.push(currentTrack);
 
@@ -304,9 +340,21 @@ var returnRouter = function(io) {
 
 									//Save new currentTrack to database and play track
 									newDocs.save().then(function(newDocs) {
-										playTrack(newCurrentTrack);
-										io.to(req.params.id).emit('playingTrack', newCurrentTrack);
-										console.log(newDocs);
+										playTrack();
+
+										function playTrack() {
+											spotifyApi.play({
+													uris: [newCurrentTrack.uri]
+												})
+												.then(function(data) {
+													cleartimer();
+													timeout(newCurrentTrack.duration_ms);
+													io.to(req.params.id).emit('playingTrack', newCurrentTrack);
+												}).catch(function(err) {
+													console.log('play function', err);
+													checkAccesToken(req, res, next, err, playTrack);
+												});
+										}
 									}).catch(function(err) {
 										console.log(err);
 									});
@@ -318,17 +366,7 @@ var returnRouter = function(io) {
 						}
 					});
 
-				function playTrack(newCurrentTrack) {
-					spotifyApi.play({
-							uris: [newCurrentTrack.uri]
-						})
-						.then(function(data) {}).catch(function(err) {
-							console.log('play function', err);
-							checkAccesToken(req, res, next, err, playTrack);
-						});
-				}
-
-			});
+			}
 
 			socket.on('searchTrack', function(value) {
 				spotifyApi.setAccessToken(req.user.accessToken);
@@ -430,7 +468,6 @@ var returnRouter = function(io) {
 				spotifyApi.getUserPlaylists(req.user.spotifyId)
 					.then(function(data) {
 						var userPlaylists = data.body.items;
-						console.log('Retrieved playlists', data.body.items);
 						res.render('playlist', {
 							playlistData: results,
 							user: req.user,
