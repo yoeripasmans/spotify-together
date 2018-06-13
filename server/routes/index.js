@@ -112,7 +112,7 @@ var returnRouter = function(io) {
 					album: trackData.album,
 					duration_ms: trackData.duration_ms,
 					likes: 0,
-					addedBy: req.user.spotifyId,
+					addedBy: req.user,
 					isPlaying: false
 				};
 				console.log(newTrackData.id);
@@ -323,15 +323,15 @@ var returnRouter = function(io) {
 						} else {
 							if (docs.tracks.length > 1) {
 								//Save first track
-								var currentTrack = docs.tracks[0];
+								var oldCurrentTrack = docs.tracks[0];
 								//Remove from array
-								currentTrack.remove();
+								oldCurrentTrack.remove();
 
-								currentTrack.set('isPlaying', false);
-								currentTrack.set('likes', 0);
-								currentTrack.set('createdAt', Date.now());
+								oldCurrentTrack.set('isPlaying', false);
+								oldCurrentTrack.set('likes', 0);
+								oldCurrentTrack.set('createdAt', Date.now());
 								//Push old current track to bottom of array with reset values
-								docs.tracks.push(currentTrack);
+								docs.tracks.push(oldCurrentTrack);
 
 								docs.save().then(function(newDocs) {
 									var newCurrentTrack = newDocs.tracks[0];
@@ -350,7 +350,7 @@ var returnRouter = function(io) {
 												.then(function(data) {
 													cleartimer();
 													timeout(newCurrentTrack.duration_ms);
-													io.to(req.params.id).emit('playingTrack', newCurrentTrack);
+													io.to(req.params.id).emit('playingTrack', newCurrentTrack, oldCurrentTrack);
 												}).catch(function(err) {
 													console.log('play function', err);
 													checkAccesToken(req, res, next, err, playTrack);
@@ -548,7 +548,7 @@ var returnRouter = function(io) {
 			password: req.body.password,
 			users: req.user.spotifyId,
 			admins: req.user.spotifyId,
-			createdBy: req.user.spotifyId,
+			createdBy: req.user,
 			qrCodeId: id
 		}).save();
 
