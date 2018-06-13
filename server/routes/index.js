@@ -75,13 +75,13 @@ var returnRouter = function(io) {
 
 			Playlist.update({
 					"_id": req.params.id,
-					'activeUsers.id': {
-						$ne: currentUser.id
+					'activeUsers.spotifyId': {
+						$ne: req.user.spotifyId
 					}
 				}, {
 					"$push": {
-						"activeUsers": currentUser,
-						"users": currentUser,
+						"activeUsers": req.user,
+						"users": req.user,
 					}
 				},
 				function(err, raw) {
@@ -94,7 +94,7 @@ var returnRouter = function(io) {
 						}).then(function(results) {
 							var activeUsers = results.activeUsers;
 							socket.emit('showActiveUsers', activeUsers);
-							socket.broadcast.to(req.params.id).emit('joinPlaylist', currentUser, activeUsers);
+							socket.broadcast.to(req.params.id).emit('joinPlaylist', req.user, activeUsers);
 						}).catch(function(err) {
 							console.log(err);
 						});
@@ -115,7 +115,6 @@ var returnRouter = function(io) {
 					addedBy: req.user,
 					isPlaying: false
 				};
-				console.log(newTrackData.id);
 
 				Playlist.findOneAndUpdate({
 						_id: req.params.id,
@@ -123,8 +122,6 @@ var returnRouter = function(io) {
 							$ne: newTrackData.id
 						}
 					}, {
-						// 'tracks.uri': {$ne: newTrackData.id},
-						// 'tracks.uri': newTrackData.uri,
 						$push: {
 
 							tracks: {
@@ -227,6 +224,7 @@ var returnRouter = function(io) {
 			});
 
 			socket.on('playTrack', function() {
+				console.log('play track');
 
 				Playlist.findOne({
 					_id: req.params.id
@@ -250,8 +248,6 @@ var returnRouter = function(io) {
 
 
 					function playTrack(currentTrack) {
-						console.log(currentTrack.uri[0]);
-						console.log('Accestoken', req.user.accessToken);
 						spotifyApi.play({
 								"uris": [currentTrack.uri]
 							})
@@ -278,7 +274,6 @@ var returnRouter = function(io) {
 				}).then(function(results) {
 
 					function pauseTrack() {
-						console.log('Accestoken', req.user.accessToken);
 						spotifyApi.pause()
 							.then(function(data) {
 								cleartimer();
@@ -313,7 +308,7 @@ var returnRouter = function(io) {
 			}
 
 			function nextTrack() {
-
+				console.log('next track');
 				Playlist.findOne({
 						_id: req.params.id,
 					},
@@ -423,8 +418,7 @@ var returnRouter = function(io) {
 						"_id": req.params.id
 					}, {
 						"$pull": {
-							"activeUsers": currentUser,
-							"users": currentUser,
+							"activeUsers": req.user,
 						}
 					},
 					function(err, raw) {
@@ -435,7 +429,7 @@ var returnRouter = function(io) {
 								_id: req.params.id
 							}).then(function(results) {
 								var activeUsers = results.activeUsers;
-								io.to(req.params.id).emit('leavePlaylist', currentUser, activeUsers);
+								io.to(req.params.id).emit('leavePlaylist', req.user, activeUsers);
 							}).catch(function(err) {
 								console.log(err);
 							});
@@ -550,9 +544,12 @@ var returnRouter = function(io) {
 			admins: req.user.spotifyId,
 			createdBy: req.user,
 			qrCodeId: id
-		}).save();
+		}).save().then(function(){
+			res.redirect('playlists');
+		}).catch(function(err){
+			console.log(err);
+		});
 
-		res.redirect('playlists');
 	});
 
 	router.get('/logout', function(req, res) {
@@ -590,7 +587,7 @@ var returnRouter = function(io) {
 					if (err) {
 						console.log(err);
 					} else {
-						console.log('raw', raw);
+						// console.log('raw', raw);
 					}
 				});
 

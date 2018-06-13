@@ -50,21 +50,7 @@ socket.on('connected', function(userDetails) {
 
 	});
 
-
-	// showAddTracksButton.addEventListener('click', function(e) {
-	// 	// e.preventDefault();
-	// 	// addTrackOverlay.classList.add('active');
-	// 	socket.emit('showAddTracks');
-	// });
-
-	closeAddTracksButton.addEventListener('click', function(e) {
-		// e.preventDefault();
-		// addTrackOverlay.classList.remove('active');
-		// socket.emit('showAddTracks');
-	});
-
 	fetchDevicesButton.addEventListener('click', function() {
-
 		socket.emit('fetchDevices');
 	});
 
@@ -135,9 +121,12 @@ socket.on('playingTrack', function(currentTrack, oldCurrentTrack) {
 	}
 	var newCurrentTrackEl = document.querySelector('[data-id="' + currentTrack._id + '"]');
 	newCurrentTrackEl.setAttribute('data-isplaying', currentTrack.isPlaying);
+
 	if (oldCurrentTrack) {
 		var oldCurrentTrackEl = document.querySelector('[data-id="' + oldCurrentTrack._id + '"]');
 		oldCurrentTrackEl.setAttribute('data-created', oldCurrentTrack.createdAt);
+		var likeButton = document.querySelector('[data-id="' + oldCurrentTrack._id + '"]').children[4].children[1];
+		likeButton.previousElementSibling.textContent = 0;
 	}
 
 	iso.updateSortData(tracklist);
@@ -150,9 +139,25 @@ socket.on('playingTrack', function(currentTrack, oldCurrentTrack) {
 			date: true
 		}
 	});
-	console.log('current', currentTrack);
-	console.log('old', oldCurrentTrack);
+	updatePlayer(currentTrack);
 });
+
+function updatePlayer(currentTrack) {
+
+	var img = document.querySelector('.player-details__track-img');
+	img.src = currentTrack.album.images[0].url;
+
+	var name = document.querySelector('.player-details__track-name');
+	name.textContent = currentTrack.name;
+
+	var artist = document.querySelector('.player-details__artist-name');
+	artist.textContent = currentTrack.artists.map(a => a.name).join(', ');
+
+	var addedBy = document.querySelector('.player-details__addedby');
+	addedBy.textContent = currentTrack.addedBy.spotifyId;
+
+	console.log(currentTrack);
+}
 
 socket.on('searchTrack', function(trackData) {
 	console.log(trackData);
@@ -246,32 +251,13 @@ socket.on('showDevices', function(devices) {
 	}
 });
 
-socket.on('showAddTracks', function(data) {
-	var trackOverlay = document.querySelector('.add-track-wrapper');
-
-	var addTrackList = document.createElement('ul');
-	trackOverlay.appendChild(addTrackList);
-
-	for (let i = 0; i < data.length; i++) {
-		var trackWrapper = document.createElement('li');
-		addTrackList.appendChild(trackWrapper);
-
-		var trackName = document.createElement('span');
-		trackWrapper.appendChild(trackName);
-		trackName.textContent = data[i].name;
-
-		var addTrackButton = document.createElement('button');
-		trackWrapper.appendChild(addTrackButton);
-		addTrackButton.textContent = "Add";
-		addTrackButton.addEventListener('click', function() {
-			socket.emit('addTrack', data[i]);
-		});
-	}
-});
-
 socket.on('addTrack', function(trackData, spotifyId) {
 	console.log(trackData);
 	var tracklist = document.querySelector('.tracklist');
+	console.log(tracklist.childNodes.length);
+	// if (tracklist.childNodes.length <= 1) {
+	// 	updatePlayer(trackData);
+	// }
 
 	var li = document.createElement('li');
 	li.setAttribute('data-id', trackData._id);
@@ -345,13 +331,14 @@ socket.on('addTrack', function(trackData, spotifyId) {
 
 
 socket.on('joinPlaylist', function(currentUser, activeUsers) {
+	console.log(currentUser);
 	var currentusers = document.querySelector('.playlist-currentusers');
 	var currentusersAmount = document.querySelector('.playlist-currentusers-amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
 
 	var li = document.createElement('li');
 	li.classList.add('current-user');
-	li.setAttribute("data-id", currentUser.id);
+	li.setAttribute("data-id", currentUser.spotifyId);
 	currentusers.appendChild(li);
 
 	var profilePic = document.createElement('img');
@@ -360,8 +347,8 @@ socket.on('joinPlaylist', function(currentUser, activeUsers) {
 
 	var userName = document.createElement('p');
 	li.appendChild(userName);
-	userName.textContent = currentUser.name;
-	console.log(currentUser.name, 'joined');
+	userName.textContent = currentUser.spotifyId;
+	console.log(currentUser.username, 'joined');
 });
 
 socket.on('showActiveUsers', function(activeUsers) {
@@ -372,7 +359,7 @@ socket.on('showActiveUsers', function(activeUsers) {
 	for (var i = 0; i < activeUsers.length; i++) {
 		var li = document.createElement('li');
 		li.classList.add('current-user');
-		li.setAttribute('data-id', activeUsers[i].id);
+		li.setAttribute('data-id', activeUsers[i].spotifyId);
 		currentusers.appendChild(li);
 
 		var profilePic = document.createElement('img');
@@ -381,20 +368,20 @@ socket.on('showActiveUsers', function(activeUsers) {
 
 		var userName = document.createElement('p');
 		li.appendChild(userName);
-		userName.textContent = activeUsers[i].name;
-		console.log(activeUsers[i].name, 'joined');
+		userName.textContent = activeUsers[i].spotifyId;
+		console.log(activeUsers[i].spotifyId, 'joined');
 	}
 	console.log('activeUsers', activeUsers);
 });
 
 socket.on('leavePlaylist', function(currentUser, activeUsers) {
-	console.log(currentUser.name, 'leaves');
+	console.log(currentUser.spotifyId, 'leaves');
 	var currentusers = document.querySelectorAll('.current-user');
 	var currentusersAmount = document.querySelector('.playlist-currentusers-amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
 
 	for (var i = 0; i < currentusers.length; i++) {
-		if (currentusers[i].getAttribute('data-id') === currentUser.id) {
+		if (currentusers[i].getAttribute('data-id') === currentUser.spotifyId) {
 			currentusers[i].parentNode.removeChild(currentusers[i]);
 		}
 	}

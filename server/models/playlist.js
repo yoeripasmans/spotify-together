@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var trackSchema = new Schema({
 	name: String,
-	id: [{ type: String, unique: true }],
+	id: String,
 	uri: String,
 	artists: Array,
 	album: Object,
@@ -38,7 +38,7 @@ var playlistSchema = new Schema(
 });
 
 // Attach the plugin to the schema
- trackSchema.plugin(arrayUniquePlugin);
+ // trackSchema.plugin(arrayUniquePlugin);
 
 // Set to user model
 var Playlists = mongoose.model('Playlists', playlistSchema);
