@@ -277,6 +277,7 @@ var returnRouter = function(io) {
 						spotifyApi.pause()
 							.then(function(data) {
 								cleartimer();
+								io.to(req.params.id).emit('pauseTrack', results);
 							}).catch(function(err) {
 								console.log('play function', err);
 								checkAccesToken(req, res, next, err, pauseTrack);

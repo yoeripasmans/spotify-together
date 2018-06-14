@@ -51,7 +51,7 @@
 
 					<% for(var i=0; i < playlistData.tracks.length; i++) { %>
 						<li class="tracklist__track" data-id="<%= playlistData.tracks[i]._id %>" data-created="<%= playlistData.tracks[i].createdAt %>" data-name="<%= playlistData.tracks[i].name %>" data-isplaying="<%= playlistData.tracks[i].isPlaying %>">
-							<img class="tracklist__track-img" src="<%= playlistData.tracks[i].album.images[0].url %>" alt="Album cover of <%= playlistData.tracks[i].name %>">
+							<img class="tracklist__track-img" src="<%= playlistData.tracks[i].album.images[1].url %>" alt="Album cover of <%= playlistData.tracks[i].name %>">
 							<span class="tracklist__track-name"><%= playlistData.tracks[i].name %></span>
 							<span class="tracklist__track-artist"><%= playlistData.tracks[i].artists.map(a => a.name).join(', ') %></span>
 							<!-- <span class="tracklist__track-album"><%= playlistData.tracks[i].album.name %></span> -->
@@ -138,7 +138,7 @@
 					<ul class="tracklist fav-tracks">
 						<% for(var i=0; i < topTracks.length; i++) { %>
 							<li class="tracklist__track">
-								<img class="tracklist__track-img" src="<%= topTracks[i].album.images[0].url %>" alt="Album cover of <%= topTracks[i].name %>">
+								<img class="tracklist__track-img" src="<%= topTracks[i].album.images[1].url %>" alt="Album cover of <%= topTracks[i].name %>">
 								<span class="tracklist__track-name"><%= topTracks[i].name %></span>
 								<span class="tracklist__track-artist"><%= topTracks[i].artists.map(a => a.name).join(', ') %></span>
 								<button type="button" class="track-add-button"><span>Add track</span><img class="icon" src="/icons/icon_plus.svg" alt="Add icon"></button>
@@ -156,7 +156,7 @@
 
 			<div class="player-details">
 				<% if(playlistData.tracks.length > 0 ){ %>
-					<img src="<%= playlistData.tracks[0].album.images[0].url %>" alt="" class="player-details__track-img">
+					<img src="<%= playlistData.tracks[0].album.images[1].url %>" alt="" class="player-details__track-img">
 					<div class="player-details__text">
 						<p class="player-details__track-name">
 							<%= playlistData.tracks[0].name %>

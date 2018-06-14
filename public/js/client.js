@@ -3,15 +3,16 @@ var iso;
 var tracklist;
 var user;
 
+var playButton = document.querySelector('.play-button');
+var pauseButton = document.querySelector('.pause-button');
+var nextButton = document.querySelector('.next-button');
+var prevButton = document.querySelector('.prev-button');
+
 socket.on('connected', function(userDetails) {
 	var showAddTracksButton = document.querySelector('.show-add-tracks');
 	var closeAddTracksButton = document.querySelector('.close-add-tracks');
 	var addTrackOverlay = document.querySelector('#add-track');
 	var fetchDevicesButton = document.querySelector('.fetch-devices-button');
-	var playButton = document.querySelector('.play-button');
-	var pauseButton = document.querySelector('.pause-button');
-	var nextButton = document.querySelector('.next-button');
-	var prevButton = document.querySelector('.prev-button');
 	var likeButtons = document.querySelectorAll('.track-like-button');
 	var deleteButtons = document.querySelectorAll('.track-delete-button');
 	var addTrackButton = document.querySelectorAll('.track-add-button');
@@ -69,7 +70,7 @@ socket.on('connected', function(userDetails) {
 		});
 
 		prevButton.addEventListener('click', function() {
-			socket.emit('nextTrack');
+			socket.emit('prevTrack');
 		});
 	}
 
@@ -129,6 +130,9 @@ socket.on('playingTrack', function(currentTrack, oldCurrentTrack) {
 		likeButton.previousElementSibling.textContent = 0;
 	}
 
+	playButton.classList.add('hidden');
+	pauseButton.classList.remove('hidden');
+
 	iso.updateSortData(tracklist);
 	iso.reloadItems();
 	iso.arrange({
@@ -142,10 +146,15 @@ socket.on('playingTrack', function(currentTrack, oldCurrentTrack) {
 	updatePlayer(currentTrack);
 });
 
+socket.on('pauseTrack', function(results) {
+	playButton.classList.remove('hidden');
+	pauseButton.classList.add('hidden');
+});
+
 function updatePlayer(currentTrack) {
 
 	var img = document.querySelector('.player-details__track-img');
-	img.src = currentTrack.album.images[0].url;
+	img.src = currentTrack.album.images[1].url;
 
 	var name = document.querySelector('.player-details__track-name');
 	name.textContent = currentTrack.name;
@@ -160,7 +169,6 @@ function updatePlayer(currentTrack) {
 }
 
 socket.on('searchTrack', function(trackData) {
-	console.log(trackData);
 	var searchResults = document.querySelector('.search-results-list');
 	var elements = document.querySelectorAll('.tracklist__track--search');
 
@@ -179,7 +187,7 @@ socket.on('searchTrack', function(trackData) {
 
 		var albumCover = document.createElement('img');
 		li.appendChild(albumCover);
-		albumCover.src = trackData[i].album.images[0].url;
+		albumCover.src = trackData[i].album.images[1].url;
 
 		var trackName = document.createElement('span');
 		li.appendChild(trackName);
@@ -269,7 +277,7 @@ socket.on('addTrack', function(trackData, spotifyId) {
 
 	var albumCover = document.createElement('img');
 	li.appendChild(albumCover);
-	albumCover.src = trackData.album.images[0].url;
+	albumCover.src = trackData.album.images[1].url;
 
 	var trackName = document.createElement('span');
 	li.appendChild(trackName);

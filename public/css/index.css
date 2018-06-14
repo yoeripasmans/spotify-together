@@ -43,6 +43,10 @@ main {
     margin: 0 auto;
 }
 
+.hidden {
+	display: none!important;
+}
+
 button, input[type="submit"], input[type="reset"] {
     background: none;
     color: inherit;
