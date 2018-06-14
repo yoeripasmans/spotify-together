@@ -293,6 +293,10 @@ var returnRouter = function(io) {
 				nextTrack();
 			});
 
+			socket.on('prevTrack', function(value) {
+				prevTrack();
+			});
+
 			var timer = null;
 
 			function timeout(tracklength) {
@@ -363,6 +367,62 @@ var returnRouter = function(io) {
 						}
 					});
 
+			}
+			function prevTrack(){
+				console.log('prev');
+				Playlist.findOne({
+						_id: req.params.id,
+					},
+					function(err, docs) {
+						if (err) {
+							console.log(err);
+						} else {
+							if (docs.tracks.length > 1) {
+								var oldCurrentTrack = docs.tracks[0];
+
+								oldCurrentTrack.set('isPlaying', false);
+
+
+								docs.save().then(function(newDocs) {
+									var newCurrentTrack = newDocs.tracks[newDocs.tracks.length-1];
+									newCurrentTrack.remove();
+									newCurrentTrack.set('isPlaying', true);
+									newCurrentTrack.set('likes', 0);
+									newCurrentTrack.set('createdAt', Date.now());
+									newDocs.tracks.unshift(newCurrentTrack);
+
+									// var newCurrentTrack = newDocs.tracks[0];
+									// newCurrentTrack.set('isPlaying', true);
+
+									//Save new currentTrack to database and play track
+									newDocs.save().then(function(newDocs) {
+										//Set accestoken
+										spotifyApi.setAccessToken(req.user.accessToken);
+										playTrack();
+
+										function playTrack() {
+											spotifyApi.play({
+													uris: [newCurrentTrack.uri]
+												})
+												.then(function(data) {
+													cleartimer();
+													timeout(newCurrentTrack.duration_ms);
+													io.to(req.params.id).emit('playingTrack', newCurrentTrack, oldCurrentTrack);
+												}).catch(function(err) {
+													console.log('play function', err);
+													checkAccesToken(req, res, next, err, playTrack);
+												});
+										}
+									}).catch(function(err) {
+										console.log(err);
+									});
+
+								}).catch(function(err) {
+									console.log(err);
+								});
+							}
+						}
+					});
 			}
 
 			socket.on('searchTrack', function(value) {
