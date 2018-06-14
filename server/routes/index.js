@@ -420,6 +420,7 @@ var returnRouter = function(io) {
 					}, {
 						"$pull": {
 							"activeUsers": req.user,
+							"users": req.user
 						}
 					},
 					function(err, raw) {
