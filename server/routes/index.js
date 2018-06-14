@@ -57,7 +57,7 @@ var returnRouter = function(io) {
 
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
 
-
+		var timer;
 
 		io.on('connection', function(socket) {
 			//Remove listeners to prevent multiple connections on refresh
@@ -69,7 +69,7 @@ var returnRouter = function(io) {
 			//Logs who connected
 			console.log(req.user.spotifyId, 'Connected');
 			//Update database with adding active user to database
-			var timer;
+
 			var currentUser = {
 				"id": req.user.spotifyId,
 				"name": req.user.username,
@@ -299,7 +299,7 @@ var returnRouter = function(io) {
 			socket.on('prevTrack', function(value) {
 				prevTrack();
 			});
-			console.log('before', timer);
+			// console.log('before', timer);
 
 			function timeout(tracklength) {
 				timer = setTimeout(nextTrack, tracklength);
@@ -307,11 +307,8 @@ var returnRouter = function(io) {
 			}
 
 			function cleartimer() {
-				if (timer != null) {
-					clearTimeout(timer);
-					timer = null;
-					console.log('clear');
-				}
+				clearTimeout(timer);
+				console.log('clear');
 			}
 			console.log('after', timer);
 
