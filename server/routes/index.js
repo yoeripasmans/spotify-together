@@ -57,6 +57,8 @@ var returnRouter = function(io) {
 
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
 
+		var timer = null;
+
 		io.on('connection', function(socket) {
 			//Remove listeners to prevent multiple connections on refresh
 			io.removeAllListeners('connection');
@@ -298,8 +300,6 @@ var returnRouter = function(io) {
 			});
 			console.log('before', timer);
 
-			var timer = null;
-
 			function timeout(tracklength) {
 				timer = setTimeout(nextTrack, tracklength);
 				console.log('set timer with', tracklength);
@@ -370,7 +370,8 @@ var returnRouter = function(io) {
 					});
 
 			}
-			function prevTrack(){
+
+			function prevTrack() {
 				console.log('prev');
 				Playlist.findOne({
 						_id: req.params.id,
@@ -386,7 +387,7 @@ var returnRouter = function(io) {
 
 
 								docs.save().then(function(newDocs) {
-									var newCurrentTrack = newDocs.tracks[newDocs.tracks.length-1];
+									var newCurrentTrack = newDocs.tracks[newDocs.tracks.length - 1];
 									newCurrentTrack.remove();
 									newCurrentTrack.set('isPlaying', true);
 									newCurrentTrack.set('likes', 0);
@@ -608,9 +609,9 @@ var returnRouter = function(io) {
 			admins: req.user.spotifyId,
 			createdBy: req.user,
 			qrCodeId: id
-		}).save().then(function(){
+		}).save().then(function() {
 			res.redirect('playlists');
-		}).catch(function(err){
+		}).catch(function(err) {
 			console.log(err);
 		});
 
