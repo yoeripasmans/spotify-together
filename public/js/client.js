@@ -129,9 +129,10 @@ socket.on('playingTrack', function(currentTrack, oldCurrentTrack) {
 		var likeButton = document.querySelector('[data-id="' + oldCurrentTrack._id + '"]').children[4].children[1];
 		likeButton.previousElementSibling.textContent = 0;
 	}
-
-	playButton.classList.add('hidden');
-	pauseButton.classList.remove('hidden');
+	if (playButton) {
+		playButton.classList.add('hidden');
+		pauseButton.classList.remove('hidden');
+	}
 
 	iso.updateSortData(tracklist);
 	iso.reloadItems();
@@ -147,8 +148,10 @@ socket.on('playingTrack', function(currentTrack, oldCurrentTrack) {
 });
 
 socket.on('pauseTrack', function(results) {
-	playButton.classList.remove('hidden');
-	pauseButton.classList.add('hidden');
+	if (playButton) {
+		playButton.classList.remove('hidden');
+		pauseButton.classList.add('hidden');
+	}
 });
 
 function updatePlayer(currentTrack) {
