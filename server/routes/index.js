@@ -296,6 +296,7 @@ var returnRouter = function(io) {
 			socket.on('prevTrack', function(value) {
 				prevTrack();
 			});
+			console.log('before', timer);
 
 			var timer = null;
 
@@ -311,6 +312,7 @@ var returnRouter = function(io) {
 					console.log('clear');
 				}
 			}
+			console.log('after', timer);
 
 			function nextTrack() {
 				console.log('next track');
