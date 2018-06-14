@@ -57,7 +57,7 @@ var returnRouter = function(io) {
 
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
 
-		var timer = null;
+		var timer;
 
 		io.on('connection', function(socket) {
 			//Remove listeners to prevent multiple connections on refresh
