@@ -57,7 +57,7 @@ var returnRouter = function(io) {
 
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
 
-		var timer;
+
 
 		io.on('connection', function(socket) {
 			//Remove listeners to prevent multiple connections on refresh
@@ -69,6 +69,7 @@ var returnRouter = function(io) {
 			//Logs who connected
 			console.log(req.user.spotifyId, 'Connected');
 			//Update database with adding active user to database
+			var timer;
 			var currentUser = {
 				"id": req.user.spotifyId,
 				"name": req.user.username,
