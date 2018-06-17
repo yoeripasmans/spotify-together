@@ -8,6 +8,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var Playlist = require('../models/playlist');
 var User = require('../models/user');
 var crypto = require("crypto");
+var nodeTimers = require('node-timers');
 var spotifyApi = new SpotifyWebApi();
 
 var returnRouter = function(io) {
@@ -257,6 +258,7 @@ var returnRouter = function(io) {
 							.then(function(data) {
 								cleartimer();
 								timeout(currentTrack.duration_ms);
+									// timeout(3000);
 							}).catch(function(err) {
 								console.log('play function', err);
 								checkAccesToken(req, res, next, err, playTrack);
@@ -304,13 +306,29 @@ var returnRouter = function(io) {
 			function timeout(tracklength) {
 				timer = setTimeout(nextTrack, tracklength);
 				console.log('set timer with', tracklength);
+				//Update player in database
+				Playlist.findOneAndUpdate({
+					_id: req.params.id
+				}).then(function(results) {
+					results.set('isPlaying', true).save();
+				}).catch(function(err){
+					console.log(err);
+				});
+
 			}
 
 			function cleartimer() {
 				clearTimeout(timer);
+
+				Playlist.findOneAndUpdate({
+					_id: req.params.id
+				}).then(function(results) {
+					results.set('isPlaying', false).save();
+				}).catch(function(err){
+					console.log(err);
+				});
 				console.log('clear');
 			}
-			console.log('after', timer);
 
 			function nextTrack() {
 				console.log('next track');
@@ -350,6 +368,7 @@ var returnRouter = function(io) {
 												.then(function(data) {
 													cleartimer();
 													timeout(newCurrentTrack.duration_ms);
+
 													io.to(req.params.id).emit('playingTrack', newCurrentTrack, oldCurrentTrack);
 												}).catch(function(err) {
 													console.log('play function', err);
@@ -606,7 +625,8 @@ var returnRouter = function(io) {
 			users: req.user.spotifyId,
 			admins: req.user.spotifyId,
 			createdBy: req.user,
-			qrCodeId: id
+			qrCodeId: id,
+			isPlaying: false
 		}).save().then(function() {
 			res.redirect('playlists');
 		}).catch(function(err) {

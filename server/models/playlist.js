@@ -32,6 +32,7 @@ var playlistSchema = new Schema(
 	createdBy: Object,
 	rules: Object,
 	qrCodeId: String,
+	isPlaying: Boolean
 
 }, {
 	timestamps: true

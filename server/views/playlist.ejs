@@ -175,8 +175,13 @@
 			<% if(user.spotifyId === playlistData.admins[0]){ %>
 			<div class="player-controls">
 				<button class="prev-button"><span>Back</span><img class="icon" src="/icons/icon_prev.svg" alt="Prev icon"></button>
+				<% if(playlistData.isPlaying == true){ %>
+				<button class="play-button hidden"><span>Play</span><img class="icon" src="/icons/icon_play.svg" alt="Play icon"></button>
+				<button class="pause-button">Pause</button>
+				<% } else {%>
 				<button class="play-button"><span>Play</span><img class="icon" src="/icons/icon_play.svg" alt="Play icon"></button>
 				<button class="pause-button hidden">Pause</button>
+				<% } %>
 				<button class="next-button"><span>Next</span><img class="icon" src="/icons/icon_next.svg" alt="Next icon"></button>
 			</div>
 			<% } %>
@@ -185,7 +190,7 @@
 			<button type="button" class="fetch-devices-button">Fetch Devices</button>
 		</section>
 		<script type="text/javascript">
-			var topTracks = <%- JSON.stringify(topTracks) %>; // Get templates object (object of strings)
+			var topTracks = <%- JSON.stringify(topTracks) %>; //Make toptracks avaialbe inside client javascript
 		</script>
 		<% include ./partials/scripts %>
 </body>
