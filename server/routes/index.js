@@ -257,13 +257,13 @@ var returnRouter = function(io) {
 							spotifyApi.play({
 									"uris": [currentTrack.uri]
 								})
-								.then(function(data) {
+								.then(function() {
 									cleartimer();
 									timeout(currentTrack.duration_ms);
 									// timeout(3000);
 								}).catch(function(err) {
 									console.log('play function', err);
-									checkAccesToken(req, res, next, err, playTrack, data);
+									checkAccesToken(req, res, next, err, playTrack, currentTrack);
 								});
 						}
 					}).catch(function(err) {
@@ -282,7 +282,7 @@ var returnRouter = function(io) {
 
 						function pauseTrack() {
 							spotifyApi.pause()
-								.then(function(data) {
+								.then(function() {
 
 									io.to(req.params.id).emit('pauseTrack', results);
 								}).catch(function(err) {
@@ -373,14 +373,14 @@ var returnRouter = function(io) {
 												spotifyApi.play({
 														uris: [newCurrentTrack.uri]
 													})
-													.then(function(data) {
+													.then(function() {
 														cleartimer();
 														timeout(newCurrentTrack.duration_ms);
 														io.to(req.params.id).emit('nextTrack', oldCurrentTrack);
 														io.to(req.params.id).emit('playingTrack', newCurrentTrack, oldCurrentTrack);
 													}).catch(function(err) {
 														console.log('play function', err);
-														checkAccesToken(req, res, next, err, playTrack);
+														checkAccesToken(req, res, next, err, playTrack, newCurrentTrack);
 													});
 											}
 										}).catch(function(err) {
