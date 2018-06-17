@@ -277,9 +277,9 @@ socket.on('addTrack', function(trackData, spotifyId) {
 	console.log(trackData);
 	var tracklist = document.querySelector('.tracklist');
 	console.log(tracklist.childNodes.length);
-	// if (tracklist.childNodes.length <= 1) {
-	// 	updatePlayer(trackData);
-	// }
+	if (tracklist.childNodes.length <= 1) {
+		updatePlayer(trackData);
+	}
 
 	var li = document.createElement('li');
 	li.setAttribute('data-id', trackData._id);

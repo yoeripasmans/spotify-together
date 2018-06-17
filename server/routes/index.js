@@ -234,6 +234,7 @@ var returnRouter = function(io) {
 					Playlist.findOne({
 						_id: req.params.id
 					}).then(function(results) {
+						console.log(results);
 						if (results.tracks.length > 0) {
 							//Set accestoken
 							//Save currentTrack and set playing to true
@@ -282,7 +283,7 @@ var returnRouter = function(io) {
 						function pauseTrack() {
 							spotifyApi.pause()
 								.then(function(data) {
-									cleartimer();
+
 									io.to(req.params.id).emit('pauseTrack', results);
 								}).catch(function(err) {
 									console.log('play function', err);
@@ -290,6 +291,7 @@ var returnRouter = function(io) {
 								});
 						}
 						pauseTrack();
+						stoptimer();
 					}).catch(function(err) {
 						console.log(err);
 					});
@@ -308,7 +310,7 @@ var returnRouter = function(io) {
 					timer = setTimeout(nextTrack, tracklength);
 					console.log('set timer with', tracklength);
 					//Update player in database
-					Playlist.findOneAndUpdate({
+					Playlist.findOne({
 						_id: req.params.id
 					}).then(function(results) {
 						results.set('isPlaying', true).save();
@@ -320,15 +322,20 @@ var returnRouter = function(io) {
 
 				function cleartimer() {
 					clearTimeout(timer);
+					console.log('clear');
+				}
 
-					Playlist.findOneAndUpdate({
+				function stoptimer() {
+					clearTimeout(timer);
+
+					Playlist.findOne({
 						_id: req.params.id
 					}).then(function(results) {
 						results.set('isPlaying', false).save();
 					}).catch(function(err) {
 						console.log(err);
 					});
-					console.log('clear');
+					console.log('stopped');
 				}
 
 				function nextTrack() {
@@ -369,7 +376,7 @@ var returnRouter = function(io) {
 													.then(function(data) {
 														cleartimer();
 														timeout(newCurrentTrack.duration_ms);
-														socket.emit('nextTrack', oldCurrentTrack);
+														io.to(req.params.id).emit('nextTrack', oldCurrentTrack);
 														io.to(req.params.id).emit('playingTrack', newCurrentTrack, oldCurrentTrack);
 													}).catch(function(err) {
 														console.log('play function', err);

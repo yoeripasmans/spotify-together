@@ -59,14 +59,14 @@
 							<span class="tracklist__track-addedby"><%= playlistData.tracks[i].addedBy.spotifyId %></span>
 							<span class="tracklist__track-likes">
 								<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
-								<% if(playlistData.tracks[i].addedBy.spotifyId === user.spotifyId){ %>
-									<button type="button" class="track-delete-button"><span>Remove</span><img class="icon" src="/icons/icon_cross.svg" alt="Cross icon"></button>
-									<% } else {%>
-							<%
+							<% if(playlistData.tracks[i].addedBy.spotifyId === user.spotifyId){ %>
+								<button type="button" class="track-delete-button"><span>Remove</span><img class="icon" src="/icons/icon_cross.svg" alt="Cross icon"></button>
+								<% } else {%>
+									<%
 								var liked;
 								if(playlistData.tracks[i].userLiked.length === 0){ %>
-								<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>"><span>Like</span><img class="icon" src="/icons/icon_heart.svg" alt="Heart icon"></button>
-								<% }
+										<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>"><span>Like</span><img class="icon" src="/icons/icon_heart.svg" alt="Heart icon"></button>
+										<% }
 								else {
 									 for(var j=0; j < playlistData.tracks[i].userLiked.length; j++) {
 										if(user.spotifyId ===  playlistData.tracks[i].userLiked[j]){
@@ -78,16 +78,16 @@
 										 }
 									 }
 									 if(liked === true){ %>
-									<button type="button" class="track-like-button track-like-button--disabled" disabled>Like</button>
-									<% } else {%>
-										<button type="button" class="track-like-button"><span>Like</span><img class="icon" src="/icons/icon_heart.svg" alt="Heart icon"></button>
-										<% }
+											<button type="button" class="track-like-button track-like-button--disabled" disabled><span>Like</span><img class="icon" src="/icons/icon_heart.svg" alt="Heart icon"></button>
+											<% } else {%>
+												<button type="button" class="track-like-button"><span>Like</span><img class="icon" src="/icons/icon_heart.svg" alt="Heart icon"></button>
+												<% }
 								} %>
-											</span>
+													</span>
 
 						</li>
 						<% } %>
-						<% } %>
+							<% } %>
 				</ul>
 			</section>
 
@@ -159,35 +159,41 @@
 				<% if(playlistData.tracks.length > 0 ){ %>
 					<img src="<%= playlistData.tracks[0].album.images[1].url %>" alt="" class="player-details__track-img">
 					<div class="player-details__text">
-						<p class="player-details__track-name">
-							<%= playlistData.tracks[0].name %>
-						</p>
-						<p class="player-details__artist-name">
-							<%= playlistData.tracks[0].artists.map(a => a.name).join(', ') %>
-						</p>
+						<p class="player-details__track-name"><%= playlistData.tracks[0].name %></p>
+						<p class="player-details__artist-name"><%= playlistData.tracks[0].artists.map(a => a.name).join(', ') %></p>
 						<div class="player-details__addedby">
 							<span><%= playlistData.tracks[0].addedBy.spotifyId%></span>
 						</div>
 					</div>
-					<% } %>
+					<% } else { %>
+						<img src="/" alt="" class="player-details__track-img">
+						<div class="player-details__text">
+							<p class="player-details__track-name"></p>
+							<p class="player-details__artist-name"></p>
+							<div class="player-details__addedby">
+								<span></span>
+							</div>
+						</div>
+						<% }  %>
+
 			</div>
 
 			<% if(user.spotifyId === playlistData.admins[0]){ %>
-			<div class="player-controls">
-				<button class="prev-button"><span>Back</span><img class="icon" src="/icons/icon_prev.svg" alt="Prev icon"></button>
-				<% if(playlistData.isPlaying == true){ %>
-				<button class="play-button hidden"><span>Play</span><img class="icon" src="/icons/icon_play.svg" alt="Play icon"></button>
-				<button class="pause-button">Pause</button>
-				<% } else {%>
-				<button class="play-button"><span>Play</span><img class="icon" src="/icons/icon_play.svg" alt="Play icon"></button>
-				<button class="pause-button hidden">Pause</button>
+				<div class="player-controls">
+					<button class="prev-button"><span>Back</span><img class="icon" src="/icons/icon_prev.svg" alt="Prev icon"></button>
+					<% if(playlistData.isPlaying == true){ %>
+						<button class="play-button hidden"><span>Play</span><img class="icon" src="/icons/icon_play.svg" alt="Play icon"></button>
+						<button class="pause-button">Pause</button>
+						<% } else {%>
+							<button class="play-button"><span>Play</span><img class="icon" src="/icons/icon_play.svg" alt="Play icon"></button>
+							<button class="pause-button hidden">Pause</button>
+							<% } %>
+								<button class="next-button"><span>Next</span><img class="icon" src="/icons/icon_next.svg" alt="Next icon"></button>
+				</div>
 				<% } %>
-				<button class="next-button"><span>Next</span><img class="icon" src="/icons/icon_next.svg" alt="Next icon"></button>
-			</div>
-			<% } %>
 
 
-			<button type="button" class="fetch-devices-button">Fetch Devices</button>
+					<button type="button" class="fetch-devices-button">Fetch Devices</button>
 		</section>
 		<script type="text/javascript">
 			var topTracks = <%- JSON.stringify(topTracks) %>; //Make toptracks avaialbe inside client javascript
