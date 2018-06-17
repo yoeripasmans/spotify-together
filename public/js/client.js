@@ -218,9 +218,20 @@ function likeTrack() {
 		// this.previousElementSibling.textContent = likeAmount;
 		this.setAttribute('liked', 'true');
 		this.disabled = true;
+		this.classList.add('track-like-button--disabled');
 		socket.emit('likeTrack', trackId);
 	}
 }
+
+socket.on('nextTrack', function(oldCurrentTrack) {
+	var oldCurrentTrackEl = document.querySelector('[data-id="' + oldCurrentTrack._id + '"]');
+	var likeButton = oldCurrentTrackEl.querySelector('.track-like-button');
+	if(likeButton){
+		likeButton.disabled = false;
+		likeButton.setAttribute('liked', 'false');
+		likeButton.classList.remove('track-like-button--disabled');
+	}
+});
 
 socket.on('likeTrack', function(trackId, docs) {
 	var likeButton = document.querySelector('[data-id="' + trackId + '"]').children[4].children[1];
