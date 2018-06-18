@@ -193,7 +193,6 @@ var returnRouter = function(io) {
 										if (err) {
 											console.log(err);
 										} else {
-											console.log(docs);
 											io.to(req.params.id).emit('likeTrack', trackId, docs.tracks[0]);
 										}
 									});
@@ -218,14 +217,24 @@ var returnRouter = function(io) {
 
 						}, {
 							upsert: true,
-							new: true
+							new: false
 						},
 						function(err, docs) {
 							if (err) {
 								console.log(err);
 							} else {
-								console.log(docs.tracks);
-								io.to(req.params.id).emit('deleteTrack', trackId, docs.tracks[0]);
+								console.log(docs);
+								if(trackId === docs.tracks[0].id && docs.isPlaying === true){
+									playTrack(docs.tracks[1]);
+									io.to(req.params.id).emit('deleteTrack', trackId, docs.tracks[1]);
+								} else if(trackId === docs.tracks[0].id && docs.isPlaying === false) {
+									io.to(req.params.id).emit('deleteTrack', trackId, docs.tracks[1]);
+								} else {
+									io.to(req.params.id).emit('deleteTrack', trackId);
+								}
+
+
+								// console.log(docs.tracks);
 							}
 						});
 				});
@@ -236,13 +245,12 @@ var returnRouter = function(io) {
 						_id: req.params.id
 					}).then(function(results) {
 						if (results.tracks.length > 0) {
-							//Set accestoken
 							//Save currentTrack and set playing to true
 							var currentTrack = results.tracks[0];
 							currentTrack.set('isPlaying', true);
 							//Save to database and play track
 							results.save().then(function() {
-
+								//Set accestoken
 								spotifyApi.setAccessToken(req.user.accessToken);
 								playTrack(currentTrack);
 							}).catch(function(err) {
@@ -250,52 +258,39 @@ var returnRouter = function(io) {
 							});
 						}
 
-
-						function playTrack(currentTrack) {
-							spotifyApi.play({
-									"uris": [currentTrack.uri]
-								})
-								.then(function() {
-									// cleartimer();
-									// timeout(currentTrack.duration_ms);
-									// trackTimer = timer({finishTime: currentTrack.duration_ms});
-									// trackTimer.start();
-									console.log('started playing in', req.params.id);
-									console.log('currentrack-name:', currentTrack.name);
-									console.log('currentrack-length:', currentTrack.duration_ms);
-
-									io.to(req.params.id).emit('playingTrack', currentTrack);
-
-									timeouts[req.params.id] = setTimeout(nextTrack, currentTrack.duration_ms);
-									console.log('play', timeouts);
-									// timer = new Timer(function(timer, nextTrack) {
-									// 	nextTrack();
-									// }, currentTrack.duration_ms, {async: true}).start();
-									// req.timer = timers.create(nextTrack, 5000, {
-									// 	repeat: true
-									// });
-									// req.timer.id = req.params.id;
-									// console.log(req.timer.id);
-									// req.timer.start();
-
-
-									Playlist.findOne({
-										_id: req.params.id
-									}).then(function(results) {
-										results.set('isPlaying', true).save();
-									}).catch(function(err) {
-										console.log(err);
-									});
-								}).catch(function(err) {
-									console.log('play function', err);
-									checkAccesToken(req, res, next, err, playTrack, currentTrack);
-								});
-						}
 					}).catch(function(err) {
 						console.log(err);
 					});
 
 				});
+
+				function playTrack(currentTrack) {
+					spotifyApi.play({
+							"uris": [currentTrack.uri]
+						})
+						.then(function() {
+
+							console.log('started playing in', req.params.id);
+							console.log('currentrack-name:', currentTrack.name);
+							console.log('currentrack-length:', currentTrack.duration_ms);
+
+							io.to(req.params.id).emit('playingTrack', currentTrack);
+
+							timeouts[req.params.id] = setTimeout(nextTrack, currentTrack.duration_ms);
+							console.log('play', timeouts);
+
+							Playlist.findOne({
+								_id: req.params.id
+							}).then(function(results) {
+								results.set('isPlaying', true).save();
+							}).catch(function(err) {
+								console.log(err);
+							});
+						}).catch(function(err) {
+							console.log('play function', err);
+							checkAccesToken(req, res, next, err, playTrack, currentTrack);
+						});
+				}
 
 				socket.on('pauseTrack', function() {
 					//Set accestoken
@@ -318,6 +313,7 @@ var returnRouter = function(io) {
 										// req.timer.stop();
 										clearTimeout(timeouts[req.params.id]);
 										delete timeouts[req.params.id];
+
 										console.log('pause', timeouts);
 									}).catch(function(err) {
 										console.log(err);
@@ -347,9 +343,6 @@ var returnRouter = function(io) {
 				// console.log('before', timer);
 
 				function timeout(tracklength) {
-					// timer = setTimeout(nextTrack, tracklength);
-					// console.log('started timer', timer);
-					// console.log('set timer with', tracklength);
 					//Update player in database
 					Playlist.findOne({
 						_id: req.params.id
@@ -699,7 +692,7 @@ var returnRouter = function(io) {
 			restricted: req.body.restricted,
 			private: req.body.private,
 			password: req.body.password,
-			users: req.user.spotifyId,
+			users: req.user,
 			admins: req.user.spotifyId,
 			createdBy: req.user,
 			qrCodeId: id,

@@ -111,7 +111,11 @@ function deleteTrack() {
 socket.on('deleteTrack', function(trackId, currentTrack) {
 	var element = document.querySelector('[data-id="' + trackId + '"]');
 	checkmarkToggle(trackId, false);
-	updatePlayer(currentTrack);
+
+	if(currentTrack){
+		updatePlayer(currentTrack);
+	}
+
 	iso.remove(element);
 	iso.layout();
 });
@@ -373,6 +377,7 @@ socket.on('addTrack', function(trackData, spotifyId) {
 	}
 
 	iso.appended(li);
+	iso.layout();
 	checkmarkToggle(trackData.id, true);
 
 
