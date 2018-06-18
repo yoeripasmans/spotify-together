@@ -108,9 +108,10 @@ function deleteTrack() {
 	socket.emit('deleteTrack', trackId);
 }
 
-socket.on('deleteTrack', function(trackId) {
+socket.on('deleteTrack', function(trackId, currentTrack) {
 	var element = document.querySelector('[data-id="' + trackId + '"]');
 	checkmarkToggle(trackId, false);
+	updatePlayer(currentTrack);
 	iso.remove(element);
 	iso.layout();
 });
@@ -256,11 +257,13 @@ socket.on('nextTrack', function(oldCurrentTrack) {
 	}
 });
 
-socket.on('likeTrack', function(trackId, docs) {
+socket.on('likeTrack', function(trackId, currentTrack) {
 	var likeButton = document.querySelector('[data-id="' + trackId + '"]').children[4].children[1];
 	// console.log(likeButton.children[4].children[1]);
 	var likeAmount = Number(likeButton.previousElementSibling.textContent) + 1;
 	likeButton.previousElementSibling.textContent = likeAmount;
+
+	updatePlayer(currentTrack);
 
 	iso.updateSortData(tracklist);
 	iso.reloadItems();

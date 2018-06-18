@@ -172,7 +172,7 @@ var returnRouter = function(io) {
 							if (err) {
 								console.log(err);
 							} else {
-								Playlist.update({
+								Playlist.findOneAndUpdate({
 										_id: req.params.id
 									}, {
 										$push: {
@@ -186,13 +186,15 @@ var returnRouter = function(io) {
 											}
 										},
 									}, {
+										upsert: true,
 										new: true
 									},
 									function(err, docs) {
 										if (err) {
 											console.log(err);
 										} else {
-											io.to(req.params.id).emit('likeTrack', trackId, docs);
+											console.log(docs);
+											io.to(req.params.id).emit('likeTrack', trackId, docs.tracks[0]);
 										}
 									});
 
@@ -222,7 +224,8 @@ var returnRouter = function(io) {
 							if (err) {
 								console.log(err);
 							} else {
-								io.to(req.params.id).emit('deleteTrack', trackId);
+								console.log(docs.tracks);
+								io.to(req.params.id).emit('deleteTrack', trackId, docs.tracks[0]);
 							}
 						});
 				});
