@@ -303,6 +303,7 @@ button, input[type="submit"], input[type="reset"] {
     flex-direction: column;
     justify-content: center;
     padding-left: 1em;
+	min-width: 20em;
 }
 
 .player-details__track-name {
