@@ -17,12 +17,21 @@ socket.on('connected', function(userDetails) {
 	var deleteButtons = document.querySelectorAll('.track-delete-button');
 	var addTrackButton = document.querySelectorAll('.track-add-button');
 	var searchTrackForm = document.querySelector('.track-search');
+	var showPlaylistButton = document.querySelectorAll('.show-playlist-button');
 	user = userDetails;
 
 	//Eventlistener for adding tracks to the playlist
 	for (let i = 0; i < addTrackButton.length; i++) {
 		addTrackButton[i].addEventListener('click', function() {
 			socket.emit('addTrack', topTracks[i]);
+		});
+	}
+
+	//Eventlistener for showing personal playlist track in the add section
+	for (let i = 0; i < showPlaylistButton.length; i++) {
+		showPlaylistButton[i].addEventListener('click', function() {
+			console.log(this.parentElement.getAttribute('data-playlistid'));
+			socket.emit('showPlaylist', this.parentElement.getAttribute('data-playlistid'));
 		});
 	}
 
@@ -160,6 +169,8 @@ socket.on('pauseTrack', function(results) {
 });
 
 function updatePlayer(currentTrack) {
+	var backgroundImage = document.querySelector('.background-image');
+	backgroundImage.style.backgroundImage = "url(" + currentTrack.album.images[0].url + ")";
 
 	var img = document.querySelector('.player-details__track-img');
 	img.src = currentTrack.album.images[1].url;
@@ -224,10 +235,10 @@ socket.on('searchTrack', function(trackData, playlistData) {
 			if(trackData[i].id === playlistData[j].id){
 				console.log('true');
 				addTrackButton.disabled = true;
-				addTrackButtonIcon.src = "/icons/icon_check.svg";
+				addTrackButtonIcon.src = "/icons/check.svg";
 			 } else {
 				 addTrackButton.disabled = false;
- 				addTrackButtonIcon.src = "/icons/icon_plus.svg";
+ 				addTrackButtonIcon.src = "/icons/add.svg";
 			 }
 		 }
 
@@ -358,7 +369,7 @@ socket.on('addTrack', function(trackData, spotifyId) {
 
 		var removeButtonIcon = document.createElement('img');
 		removeButton.appendChild(removeButtonIcon);
-		removeButtonIcon.src = '/icons/icon_cross.svg';
+		removeButtonIcon.src = '/icons/close.svg';
 
 	} else {
 		var likeButton = document.createElement('button');
@@ -373,7 +384,7 @@ socket.on('addTrack', function(trackData, spotifyId) {
 
 		var likeButtonIcon = document.createElement('img');
 		likeButton.appendChild(likeButtonIcon);
-		likeButtonIcon.src = '/icons/icon_heart.svg';
+		likeButtonIcon.src = '/icons/heart.svg';
 	}
 
 	iso.appended(li);
@@ -393,10 +404,10 @@ function checkmarkToggle(trackId, state){
 		if(state === true){
 			//Add check to added track
 			addedTrackButton.disabled = true;
-			addedTrackButtonIcon.src = "/icons/icon_check.svg";
+			addedTrackButtonIcon.src = "/icons/check.svg";
 		} else {
 			addedTrackButton.disabled = false;
-			addedTrackButtonIcon.src = "/icons/icon_plus.svg";
+			addedTrackButtonIcon.src = "/icons/add.svg";
 		}
 	}
 }
@@ -425,10 +436,27 @@ socket.on('joinPlaylist', function(currentUser, activeUsers) {
 
 socket.on('showActiveUsers', function(activeUsers) {
 	var currentusers = document.querySelector('.playlist-currentusers');
+	var currentusersElements = document.querySelectorAll('.current-user');
 	var currentusersAmount = document.querySelector('.playlist-currentusers-amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
 
 	for (var i = 0; i < activeUsers.length; i++) {
+		for (var j = 0; j < currentusersElements.length; j++) {
+			if(activeUsers[i].spotifyId === currentusersElements[j].getAttribute('data-id')){
+				console.log('same');
+			}else {
+				createEl(i);
+			}
+		}
+
+		console.log(activeUsers[i].spotifyId, 'joined');
+	}
+
+	for (let i = 0; i < activeUsers.length; i++) {
+		createEl(i);
+	}
+
+	function createEl(i){
 		var li = document.createElement('li');
 		li.classList.add('current-user');
 		li.setAttribute('data-id', activeUsers[i].spotifyId);
@@ -441,8 +469,8 @@ socket.on('showActiveUsers', function(activeUsers) {
 		var userName = document.createElement('p');
 		li.appendChild(userName);
 		userName.textContent = activeUsers[i].spotifyId;
-		console.log(activeUsers[i].spotifyId, 'joined');
 	}
+
 	console.log('activeUsers', activeUsers);
 });
 

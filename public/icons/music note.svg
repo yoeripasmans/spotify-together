@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>music note</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="music-note" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Page-1" stroke="#FFFFFF">
+            <g id="Group-8">
+                <path d="M5.5,13 C5.5,11.619 4.381,10.5 3,10.5 C1.619,10.5 0.5,11.619 0.5,13 C0.5,14.381 1.619,15.5 3,15.5 C4.381,15.5 5.5,14.381 5.5,13 Z" id="Stroke-2"></path>
+                <path d="M15.5,11 C15.5,9.619 14.381,8.5 13,8.5 C11.619,8.5 10.5,9.619 10.5,11 C10.5,12.381 11.619,13.5 13,13.5 C14.381,13.5 15.5,12.381 15.5,11 Z" id="Stroke-4"></path>
+                <path d="M5.5,12.5 L5.5,3.319 C5.5,2.843 5.837,2.433 6.304,2.339 L14.304,0.739 C14.923,0.615 15.5,1.089 15.5,1.72 L15.5,10.5" id="Stroke-6" stroke-linecap="square" stroke-linejoin="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

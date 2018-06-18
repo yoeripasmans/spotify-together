@@ -44,7 +44,7 @@ main {
 }
 
 .hidden {
-	display: none!important;
+    display: none !important;
 }
 
 button, input[type="submit"], input[type="reset"] {
@@ -175,38 +175,37 @@ button, input[type="submit"], input[type="reset"] {
     margin-right: 0.5em;
 }
 
-.track-delete-button span, .track-like-button span, .track-add-button span, .play-button span, .next-button span, .prev-button span   {
+.track-delete-button span, .track-like-button span, .track-like-button span, .track-add-button span, .play-button span,.pause-button span, .next-button span, .prev-button span {
     display: none;
 }
 
-.track-delete-button, .track-like-button, .track-add-button, .play-button, .prev-button, .next-button {
+.track-delete-button, .track-like-button, .track-add-button, .play-button, .pause-button, .prev-button, .next-button {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 2em;
 }
+
+
 /* .pause-button.hidden {
 	display: none;
 } */
-@media(max-width: 750px){
-	main {
-		padding: 1em;
-	}
-	.tracklist__track {
-		    grid-template-columns: 5em 1fr 1fr 4em;
-	}
-	.tracklist__track-addedby {
-		display: none!important;
-	}
+
+@media(max-width: 750px) {
+    main {
+        padding: 1em;
+    }
+    .tracklist__track {
+        grid-template-columns: 5em 1fr 1fr 4em;
+    }
+    .tracklist__track-addedby {
+        display: none !important;
+    }
 }
 
-
-.play-button img {
-	width: 1.5em;
-}
 
 .prev-button img, .next-button img {
-	width: 1.1em;
+    width: 1.1em;
 }
 
 #add-track {
@@ -257,7 +256,8 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 .user-playlists__item {
-    width: 23.5%;
+    width: 14.33%;
+    position: relative;
 }
 
 .user-playlists img {
@@ -266,13 +266,28 @@ button, input[type="submit"], input[type="reset"] {
     margin-bottom: 0.5em;
 }
 
+.show-playlist-button {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.show-playlist-button span {
+    display: none;
+}
+
 #player {
     width: 100%;
-    height: 5em;
+    height: 6.5em;
     position: fixed;
     padding: 0 1em;
     bottom: 0;
-    background-color: #191919;
+    background-color: #000;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -288,6 +303,21 @@ button, input[type="submit"], input[type="reset"] {
     flex-direction: column;
     justify-content: center;
     padding-left: 1em;
+}
+
+.player-details__track-name {
+	font-size: 1.1em;
+	font-family: "Poppins";
+}
+.player-details__artist-name {
+	font-size: 0.9em;
+	opacity: 0.8;
+}
+
+.player-details__addedby {
+	margin-top: 0.5em;
+	font-size: 0.9em;
+	opacity: 0.8;
 }
 
 .player-details p {
@@ -306,7 +336,7 @@ button, input[type="submit"], input[type="reset"] {
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-	width: 8em;
+    width: 10em;
     justify-content: space-around;
 }
 
@@ -386,4 +416,27 @@ input[type=search] {
     background: linear-gradient(to bottom, #31f7f4 0%, #6f8fce 100%);
     border-radius: 4px;
     margin-bottom: 5px;
+}
+
+.background-image {
+    background-size: cover;
+    display: block;
+    filter: blur(5px);
+    -webkit-filter: blur(2.5em);
+    height: 100%;
+	width: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    z-index: -1;
+}
+
+.background-image:after {
+	content: "";
+	display: block;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.2);
+	z-index: 1;
 }

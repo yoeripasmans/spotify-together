@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>prev</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="prev" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Page-1" transform="translate(1.000000, 0.000000)">
+            <path d="M12.998,0.7881 C12.823,0.7881 12.644,0.8351 12.476,0.9371 L2.384,7.1481 C1.749,7.5391 1.749,8.4611 2.384,8.8511 L12.476,15.0621 C12.644,15.1651 12.823,15.2121 12.998,15.2121 C13.519,15.2121 14,14.7961 14,14.2101 L14,1.7901 C14,1.2041 13.519,0.7881 12.998,0.7881 M13,1.7901 L13,14.2101 L2.908,8.0001 L13,1.7901" id="Fill-3" fill="#FFFFFF"></path>
+            <path d="M0.5,1.5 L0.5,14.5" id="Stroke-5" stroke="#FFFFFF" stroke-linecap="round"></path>
+        </g>
+    </g>
+</svg>

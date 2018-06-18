@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>stream2</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="stream2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Page-1" transform="translate(1.000000, 0.000000)">
+            <path d="M6,12 C4.896,12 4,12.896 4,14 C4,15.104 4.896,16 6,16 C7.104,16 8,15.104 8,14 C8,12.896 7.104,12 6,12 M6,13 C6.552,13 7,13.448 7,14 C7,14.552 6.552,15 6,15 C5.448,15 5,14.552 5,14 C5,13.448 5.448,13 6,13" id="Fill-1" fill="#FFFFFF"></path>
+            <path d="M12,10 C10.896,10 10,10.896 10,12 C10,13.104 10.896,14 12,14 C13.104,14 14,13.104 14,12 C14,10.896 13.104,10 12,10 M12,11 C12.552,11 13,11.448 13,12 C13,12.552 12.552,13 12,13 C11.448,13 11,12.552 11,12 C11,11.448 11.448,11 12,11" id="Fill-3" fill="#FFFFFF"></path>
+            <polyline id="Stroke-5" stroke="#FFFFFF" stroke-linecap="square" stroke-linejoin="round" points="7.5 13.5 7.5 7.5 13.5 5.5 13.5 11.5"></polyline>
+            <path d="M0.5,8 C0.5,3.857 3.857,0.5 8,0.5" id="Stroke-7" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M3.5,8 C3.5,5.515 5.515,3.5 8,3.5" id="Stroke-9" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round"></path>
+        </g>
+    </g>
+</svg>

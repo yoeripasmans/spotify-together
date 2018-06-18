@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>stream</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="stream" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Page-1" transform="translate(0.000000, 2.000000)">
+            <path d="M8,4 C6.896,4 6,4.896 6,6 C6,7.104 6.896,8 8,8 C9.104,8 10,7.104 10,6 C10,4.896 9.104,4 8,4 M8,5 C8.552,5 9,5.448 9,6 C9,6.552 8.552,7 8,7 C7.448,7 7,6.552 7,6 C7,5.448 7.448,5 8,5" id="Fill-3" fill="#FFFFFF"></path>
+            <path d="M4.8184,9.1816 C3.0604,7.4246 3.0604,4.5756 4.8184,2.8186" id="Stroke-5" stroke="#FFFFFF" stroke-linecap="round"></path>
+            <path d="M11.1816,2.8184 C12.9396,4.5754 12.9396,7.4244 11.1816,9.1814" id="Stroke-7" stroke="#FFFFFF" stroke-linecap="round"></path>
+            <path d="M2.6963,11.3037 C-0.2327,8.3737 -0.2327,3.6257 2.6963,0.6967" id="Stroke-9" stroke="#FFFFFF" stroke-linecap="round"></path>
+            <path d="M13.3037,0.6963 C16.2327,3.6263 16.2327,8.3743 13.3037,11.3033" id="Stroke-11" stroke="#FFFFFF" stroke-linecap="round"></path>
+        </g>
+    </g>
+</svg>

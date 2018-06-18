@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>request</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="request" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Page-1" transform="translate(1.000000, 0.000000)">
+            <path d="M0.5,10.5 L10.5,10.5" id="Stroke-2" stroke="#FFFFFF" stroke-linecap="round"></path>
+            <path d="M5.5,5.5 L5.5,15.5" id="Stroke-4" stroke="#FFFFFF" stroke-linecap="round"></path>
+            <path d="M8.5,2.5 C8.5,1.396 9.396,0.5 10.5,0.5 C11.604,0.5 12.5,1.396 12.5,2.5 C12.5,3.383 11.929,4.132 11.136,4.397 C10.739,4.529 10.5,4.937 10.5,5.354 L10.5,5.5" id="Stroke-6" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M11,7.5 C11,7.776 10.776,8 10.5,8 C10.224,8 10,7.776 10,7.5 C10,7.224 10.224,7 10.5,7 C10.776,7 11,7.224 11,7.5" id="Fill-8" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>

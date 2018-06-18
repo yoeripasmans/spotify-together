@@ -64,7 +64,7 @@ var returnRouter = function(io) {
 
 				//Remove listeners to prevent multiple connections on refresh
 				io.removeAllListeners('connection');
-				//Join room
+				//Join room with the parameter of the url
 				socket.join(req.params.id);
 				//Emit 'connected' to socket with user object
 				socket.emit('connected', req.user);
@@ -614,6 +614,7 @@ var returnRouter = function(io) {
 					spotifyApi.getUserPlaylists(req.user.spotifyId)
 						.then(function(data) {
 							var userPlaylists = data.body.items;
+							console.log(userPlaylists);
 							res.render('playlist', {
 								playlistData: results,
 								user: req.user,

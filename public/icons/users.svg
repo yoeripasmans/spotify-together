@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>users</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="users" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="Page-1" transform="translate(0.000000, 1.000000)" stroke="#FFFFFF">
+            <g id="Group-10">
+                <path d="M15.5,13.5 C15.381,12.145 14.271,10.797 12.624,10.064" id="Stroke-2"></path>
+                <path d="M0.5,13.5 C0.674,11.508 2.963,9.5 6,9.5 C9.037,9.5 11.326,11.508 11.5,13.5" id="Stroke-4"></path>
+                <path d="M9.5,4 C9.5,5.933 7.933,7.5 6,7.5 C4.067,7.5 2.5,5.933 2.5,4 C2.5,2.067 4.067,0.5 6,0.5 C7.933,0.5 9.5,2.067 9.5,4 Z" id="Stroke-6"></path>
+                <path d="M10.9502,7.3525 C12.4182,6.9365 13.5002,5.6015 13.5002,3.9995 C13.5002,2.4095 12.4322,1.0815 10.9782,0.6565" id="Stroke-8"></path>
+            </g>
+        </g>
+    </g>
+</svg>
