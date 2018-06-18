@@ -9,7 +9,9 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
+var mongoose = require('mongoose');
 var db = require('./models/index');
 
 // view engine setup
@@ -31,6 +33,10 @@ app.use(session({
   secret: 'keyboard cat',
   resave: true,
   saveUninitialized: true,
+  store: new MongoStore({
+          mongooseConnection: mongoose.connection,
+          collection: 'session',
+      })
 }));
 
 app.use(passport.initialize());

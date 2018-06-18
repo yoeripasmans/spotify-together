@@ -91,7 +91,6 @@ socket.on('connected', function(userDetails) {
 		getSortData: {
 			likes: '.like-amount parseInt',
 			date: function(el) {
-				// console.log("name ", el.getAttribute('data-name'), "date ", el.getAttribute('data-created'));
 				return Date.parse(el.getAttribute('data-created'));
 			},
 			isPlaying: function(el) {
@@ -111,6 +110,7 @@ function deleteTrack() {
 
 socket.on('deleteTrack', function(trackId) {
 	var element = document.querySelector('[data-id="' + trackId + '"]');
+	checkmarkToggle(trackId, false);
 	iso.remove(element);
 	iso.layout();
 });
@@ -120,13 +120,13 @@ socket.on('playingTrack', function(currentTrack, oldCurrentTrack) {
 	for (var i = 0; i < tracklist.length; i++) {
 		tracklist[i].setAttribute('data-isplaying', "false");
 	}
-	var newCurrentTrackEl = document.querySelector('[data-id="' + currentTrack._id + '"]');
+	var newCurrentTrackEl = document.querySelector('[data-id="' + currentTrack.id + '"]');
 	newCurrentTrackEl.setAttribute('data-isplaying', currentTrack.isPlaying);
 
 	if (oldCurrentTrack) {
-		var oldCurrentTrackEl = document.querySelector('[data-id="' + oldCurrentTrack._id + '"]');
+		var oldCurrentTrackEl = document.querySelector('[data-id="' + oldCurrentTrack.id + '"]');
 		oldCurrentTrackEl.setAttribute('data-created', oldCurrentTrack.createdAt);
-		var likeButton = document.querySelector('[data-id="' + oldCurrentTrack._id + '"]').children[4].children[1];
+		var likeButton = document.querySelector('[data-id="' + oldCurrentTrack.id + '"]').children[4].children[1];
 		likeButton.previousElementSibling.textContent = 0;
 	}
 	if (playButton) {
@@ -171,7 +171,9 @@ function updatePlayer(currentTrack) {
 	console.log(currentTrack);
 }
 
-socket.on('searchTrack', function(trackData) {
+socket.on('searchTrack', function(trackData, playlistData) {
+
+	console.log(playlistData);
 	var searchResults = document.querySelector('.search-results-list');
 	var elements = document.querySelectorAll('.tracklist__track--search');
 
@@ -185,6 +187,7 @@ socket.on('searchTrack', function(trackData) {
 
 		var li = document.createElement('li');
 		li.setAttribute('data-name', trackData[i].name);
+		li.setAttribute('data-trackid', trackData[i].id);
 		li.classList.add('tracklist__track', 'tracklist__track--search');
 		searchResults.appendChild(li);
 
@@ -202,7 +205,27 @@ socket.on('searchTrack', function(trackData) {
 
 		var addTrackButton = document.createElement('button');
 		li.appendChild(addTrackButton);
-		addTrackButton.textContent = "Add";
+		addTrackButton.classList.add('track-add-button');
+
+		var addTrackButtonSpan = document.createElement('span');
+		addTrackButtonSpan.textContent = "Add track";
+		addTrackButton.appendChild(addTrackButtonSpan);
+
+		var addTrackButtonIcon = document.createElement('img');
+		addTrackButtonIcon.classList.add('icon');
+		addTrackButton.appendChild(addTrackButtonIcon);
+
+		for(let j=0; j < playlistData.length; j++) {
+			if(trackData[i].id === playlistData[j].id){
+				console.log('true');
+				addTrackButton.disabled = true;
+				addTrackButtonIcon.src = "/icons/icon_check.svg";
+			 } else {
+				 addTrackButton.disabled = false;
+ 				addTrackButtonIcon.src = "/icons/icon_plus.svg";
+			 }
+		 }
+
 		addTrackButton.addEventListener('click', function() {
 			socket.emit('addTrack', trackData[i]);
 		});
@@ -224,7 +247,7 @@ function likeTrack() {
 }
 
 socket.on('nextTrack', function(oldCurrentTrack) {
-	var oldCurrentTrackEl = document.querySelector('[data-id="' + oldCurrentTrack._id + '"]');
+	var oldCurrentTrackEl = document.querySelector('[data-id="' + oldCurrentTrack.id + '"]');
 	var likeButton = oldCurrentTrackEl.querySelector('.track-like-button');
 	if(likeButton){
 		likeButton.disabled = false;
@@ -274,15 +297,13 @@ socket.on('showDevices', function(devices) {
 });
 
 socket.on('addTrack', function(trackData, spotifyId) {
-	console.log(trackData);
 	var tracklist = document.querySelector('.tracklist');
-	console.log(tracklist.childNodes.length);
 	if (tracklist.childNodes.length <= 1) {
 		updatePlayer(trackData);
 	}
-
+	//Create new element
 	var li = document.createElement('li');
-	li.setAttribute('data-id', trackData._id);
+	li.setAttribute('data-id', trackData.id);
 	li.setAttribute('data-name', trackData.name);
 	li.setAttribute('data-created', trackData.createdAt);
 	li.setAttribute('data-isplaying', trackData.isPlaying);
@@ -349,7 +370,28 @@ socket.on('addTrack', function(trackData, spotifyId) {
 	}
 
 	iso.appended(li);
+	checkmarkToggle(trackData.id, true);
+
+
 });
+
+function checkmarkToggle(trackId, state){
+	console.log(trackId);
+	var addedTrack = document.querySelectorAll('[data-trackid="' + trackId + '"]');
+	console.log(addedTrack);
+	for (var i = 0; i < addedTrack.length; i++) {
+		var addedTrackButton = addedTrack[i].querySelector('.track-add-button');
+		var addedTrackButtonIcon = addedTrackButton.querySelector('.icon');
+		if(state === true){
+			//Add check to added track
+			addedTrackButton.disabled = true;
+			addedTrackButtonIcon.src = "/icons/icon_check.svg";
+		} else {
+			addedTrackButton.disabled = false;
+			addedTrackButtonIcon.src = "/icons/icon_plus.svg";
+		}
+	}
+}
 
 
 socket.on('joinPlaylist', function(currentUser, activeUsers) {

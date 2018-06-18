@@ -51,7 +51,7 @@
 				<ul class="tracklist queue">
 
 					<% for(var i=0; i < playlistData.tracks.length; i++) { %>
-						<li class="tracklist__track" data-id="<%= playlistData.tracks[i]._id %>" data-created="<%= playlistData.tracks[i].createdAt %>" data-name="<%= playlistData.tracks[i].name %>" data-isplaying="<%= playlistData.tracks[i].isPlaying %>">
+						<li class="tracklist__track" data-id="<%= playlistData.tracks[i].id %>" data-created="<%= playlistData.tracks[i].createdAt %>" data-name="<%= playlistData.tracks[i].name %>" data-isplaying="<%= playlistData.tracks[i].isPlaying %>">
 							<img class="tracklist__track-img" src="<%= playlistData.tracks[i].album.images[1].url %>" alt="Album cover of <%= playlistData.tracks[i].name %>">
 							<span class="tracklist__track-name"><%= playlistData.tracks[i].name %></span>
 							<span class="tracklist__track-artist"><%= playlistData.tracks[i].artists.map(a => a.name).join(', ') %></span>
@@ -59,13 +59,13 @@
 							<span class="tracklist__track-addedby"><%= playlistData.tracks[i].addedBy.spotifyId %></span>
 							<span class="tracklist__track-likes">
 								<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
-							<% if(playlistData.tracks[i].addedBy.spotifyId === user.spotifyId){ %>
+							<% if(playlistData.tracks[i].addedBy.spotifyId === user.spotifyId || user.spotifyId === playlistData.admins[0]){ %>
 								<button type="button" class="track-delete-button"><span>Remove</span><img class="icon" src="/icons/icon_cross.svg" alt="Cross icon"></button>
 								<% } else {%>
 									<%
 								var liked;
 								if(playlistData.tracks[i].userLiked.length === 0){ %>
-										<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i]._id %>"><span>Like</span><img class="icon" src="/icons/icon_heart.svg" alt="Heart icon"></button>
+										<button type="button" class="track-like-button" data-id="<%= playlistData.tracks[i].id %>"><span>Like</span><img class="icon" src="/icons/icon_heart.svg" alt="Heart icon"></button>
 										<% }
 								else {
 									 for(var j=0; j < playlistData.tracks[i].userLiked.length; j++) {
@@ -109,7 +109,7 @@
 						<span>Title</span>
 						<span>Artist</span>
 					</div>
-					<ul class="tracklist fav-tracks search-results-list">
+					<ul class="tracklist add-tracks search-results-list">
 					</ul>
 				</section>
 
@@ -136,17 +136,33 @@
 
 
 					</div>
-					<ul class="tracklist fav-tracks">
-						<% for(var i=0; i < topTracks.length; i++) { %>
-							<li class="tracklist__track">
-								<img class="tracklist__track-img" src="<%= topTracks[i].album.images[1].url %>" alt="Album cover of <%= topTracks[i].name %>">
-								<span class="tracklist__track-name"><%= topTracks[i].name %></span>
-								<span class="tracklist__track-artist"><%= topTracks[i].artists.map(a => a.name).join(', ') %></span>
-								<button type="button" class="track-add-button"><span>Add track</span><img class="icon" src="/icons/icon_plus.svg" alt="Add icon"></button>
-							</li>
 
-							<% } %>
-					</ul>
+						<ul class="tracklist add-tracks">
+							<% for(var i=0; i < topTracks.length; i++) { %>
+								<li class="tracklist__track" data-trackid="<%= topTracks[i].id %>">
+									<img class="tracklist__track-img" src="<%= topTracks[i].album.images[1].url %>" alt="Album cover of <%= topTracks[i].name %>">
+									<span class="tracklist__track-name"><%= topTracks[i].name %></span>
+									<span class="tracklist__track-artist"><%= topTracks[i].artists.map(a => a.name).join(', ') %></span>
+									<%
+									var duplicate = false;
+									for(var j=0; j < playlistData.tracks.length; j++) {
+										if(playlistData.tracks[j].id === topTracks[i].id){
+											duplicate = true;
+											break;
+										 } else {
+ 											duplicate = false;
+ 										 }
+									 }
+									 if(duplicate === false){
+									%>
+									<button type="button" class="track-add-button"><span>Add track</span><img class="icon" src="/icons/icon_plus.svg" alt="Add icon"></button>
+									<% } else { %>
+									<button type="button" class="track-add-button" disabled><span>Add track</span><img class="icon" src="/icons/icon_check.svg" alt="Add icon"></button>
+										<% } %>
+								</li>
+
+								<% } %>
+						</ul>
 				</section>
 			</div>
 		</section>
@@ -159,8 +175,12 @@
 				<% if(playlistData.tracks.length > 0 ){ %>
 					<img src="<%= playlistData.tracks[0].album.images[1].url %>" alt="" class="player-details__track-img">
 					<div class="player-details__text">
-						<p class="player-details__track-name"><%= playlistData.tracks[0].name %></p>
-						<p class="player-details__artist-name"><%= playlistData.tracks[0].artists.map(a => a.name).join(', ') %></p>
+						<p class="player-details__track-name">
+							<%= playlistData.tracks[0].name %>
+						</p>
+						<p class="player-details__artist-name">
+							<%= playlistData.tracks[0].artists.map(a => a.name).join(', ') %>
+						</p>
 						<div class="player-details__addedby">
 							<span><%= playlistData.tracks[0].addedBy.spotifyId%></span>
 						</div>

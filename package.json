@@ -16,6 +16,8 @@
     "license": "ISC",
     "dependencies": {
         "body-parser": "^1.18.3",
+        "clockmaker": "^2.0.0",
+        "connect-mongo": "^2.0.1",
         "cookie-parser": "^1.4.3",
         "crypto": "^1.0.1",
         "dotenv": "^5.0.1",

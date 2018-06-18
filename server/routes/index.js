@@ -8,7 +8,9 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var Playlist = require('../models/playlist');
 var User = require('../models/user');
 var crypto = require("crypto");
-// var nodeTimers = require('node-timers');
+// var timer = require('node-timers/timer');
+var Timer = require('clockmaker').Timer,
+	Timers = require('clockmaker').Timers;
 var spotifyApi = new SpotifyWebApi();
 
 var returnRouter = function(io) {
@@ -56,10 +58,19 @@ var returnRouter = function(io) {
 		res.redirect('/playlist/' + req.params.id);
 	});
 
+	// var timer;
+
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
 		if (req.params !== 'undefined' && req.params.id !== 'undefined') {
 
-			var timer;
+			// var trackTimer;
+			//
+			// console.log(trackTimer.time());
+			// trackTimer.on('done', function(){
+			// 	console.log(trackTimer.state());
+			// 	console.log('yo');
+			// });
+
 
 			io.on('connection', function(socket) {
 				//Remove listeners to prevent multiple connections on refresh
@@ -108,7 +119,6 @@ var returnRouter = function(io) {
 					});
 
 				socket.on('addTrack', function(trackData) {
-
 					var newTrackData = {
 						id: trackData.id,
 						uri: trackData.uri,
@@ -158,7 +168,7 @@ var returnRouter = function(io) {
 				socket.on('likeTrack', function(trackId) {
 					Playlist.findOneAndUpdate({
 							"_id": req.params.id,
-							"tracks._id": trackId
+							"tracks.id": trackId
 						}, {
 							"$inc": {
 								"tracks.$.likes": 1
@@ -207,11 +217,11 @@ var returnRouter = function(io) {
 					console.log(trackId);
 					Playlist.findOneAndUpdate({
 							_id: req.params.id,
-							"tracks._id": trackId
+							"tracks.id": trackId
 						}, {
 							$pull: {
 								"tracks": {
-									"_id": trackId
+									"id": trackId
 								}
 							},
 
@@ -234,7 +244,6 @@ var returnRouter = function(io) {
 					Playlist.findOne({
 						_id: req.params.id
 					}).then(function(results) {
-						console.log(results);
 						if (results.tracks.length > 0) {
 							//Set accestoken
 							//Save currentTrack and set playing to true
@@ -258,9 +267,21 @@ var returnRouter = function(io) {
 									"uris": [currentTrack.uri]
 								})
 								.then(function() {
-									cleartimer();
-									timeout(currentTrack.duration_ms);
-									// timeout(3000);
+									// cleartimer();
+									// timeout(currentTrack.duration_ms);
+									// trackTimer = timer({finishTime: currentTrack.duration_ms});
+									// trackTimer.start();
+									timer = Timer(function(timer) {
+										nextTrack();
+									}, currentTrack.duration_ms).start();
+
+									Playlist.findOne({
+										_id: req.params.id
+									}).then(function(results) {
+										results.set('isPlaying', true).save();
+									}).catch(function(err) {
+										console.log(err);
+									});
 								}).catch(function(err) {
 									console.log('play function', err);
 									checkAccesToken(req, res, next, err, playTrack, currentTrack);
@@ -283,17 +304,28 @@ var returnRouter = function(io) {
 						function pauseTrack() {
 							spotifyApi.pause()
 								.then(function() {
-
+									//Save state to database
+									Playlist.findOne({
+										_id: req.params.id
+									}).then(function(results) {
+										results.set('isPlaying', false).save();
+									}).catch(function(err) {
+										console.log(err);
+									});
+									//Stop timer
+									timer.stop();
 									io.to(req.params.id).emit('pauseTrack', results);
 								}).catch(function(err) {
+									stoptimer();
 									console.log('play function', err);
 									checkAccesToken(req, res, next, err, pauseTrack);
 								});
 						}
 						pauseTrack();
-						stoptimer();
+
 					}).catch(function(err) {
 						console.log(err);
+						next();
 					});
 
 				});
@@ -307,8 +339,9 @@ var returnRouter = function(io) {
 				// console.log('before', timer);
 
 				function timeout(tracklength) {
-					timer = setTimeout(nextTrack, tracklength);
-					console.log('set timer with', tracklength);
+					// timer = setTimeout(nextTrack, tracklength);
+					// console.log('started timer', timer);
+					// console.log('set timer with', tracklength);
 					//Update player in database
 					Playlist.findOne({
 						_id: req.params.id
@@ -320,13 +353,13 @@ var returnRouter = function(io) {
 
 				}
 
-				function cleartimer() {
-					clearTimeout(timer);
-					console.log('clear');
-				}
+				// function cleartimer() {
+				// 	clearTimeout(timer);
+				// 	console.log('clear', timer);
+				// }
 
 				function stoptimer() {
-					clearTimeout(timer);
+					// clearTimeout(timer);
 
 					Playlist.findOne({
 						_id: req.params.id
@@ -374,8 +407,19 @@ var returnRouter = function(io) {
 														uris: [newCurrentTrack.uri]
 													})
 													.then(function() {
-														cleartimer();
-														timeout(newCurrentTrack.duration_ms);
+														// cleartimer();
+														// timeout(newCurrentTrack.duration_ms);
+														Playlist.findOne({
+															_id: req.params.id
+														}).then(function(results) {
+															results.set('isPlaying', true).save();
+														}).catch(function(err) {
+															console.log(err);
+														});
+
+														timer = Timer(function(timer) {
+															nextTrack();
+														}, newCurrentTrack.duration_ms).start();
 														io.to(req.params.id).emit('nextTrack', oldCurrentTrack);
 														io.to(req.params.id).emit('playingTrack', newCurrentTrack, oldCurrentTrack);
 													}).catch(function(err) {
@@ -456,16 +500,27 @@ var returnRouter = function(io) {
 				socket.on('searchTrack', function(value) {
 					spotifyApi.setAccessToken(req.user.accessToken);
 
-					function searchTrack() {
+					Playlist.findOne({
+							_id: req.params.id,
+						},
+						function(err, docs) {
+							if (err) {
+								console.log(err);
+							} else {
+								searchTrack(value, docs);
+							}
+						});
+
+					function searchTrack(value, playlistData) {
 						spotifyApi.searchTracks(value)
 							.then(function(data) {
-								socket.emit('searchTrack', data.body.tracks.items);
+								socket.emit('searchTrack', data.body.tracks.items, playlistData.tracks);
 							}, function(err) {
 								console.error(err);
 								searchTrack(req, res, next, err, searchTrack);
 							});
 					}
-					searchTrack();
+
 				});
 
 				socket.on('fetchDevices', function() {
@@ -514,6 +569,7 @@ var returnRouter = function(io) {
 						function(err, raw) {
 							if (err) {
 								console.log(err);
+								next();
 							} else {
 								Playlist.findOne({
 									_id: req.params.id
@@ -521,7 +577,7 @@ var returnRouter = function(io) {
 									var activeUsers = results.activeUsers;
 									io.to(req.params.id).emit('leavePlaylist', req.user, activeUsers);
 								}).catch(function(err) {
-									console.log(err);
+									console.log('dissconnect',err);
 								});
 							}
 						});
