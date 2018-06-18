@@ -8,9 +8,6 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var Playlist = require('../models/playlist');
 var User = require('../models/user');
 var crypto = require("crypto");
-// var timer = require('node-timers/timer');
-var Timer = require('clockmaker').Timer,
-	Timers = require('clockmaker').Timers;
 var spotifyApi = new SpotifyWebApi();
 
 var returnRouter = function(io) {
@@ -58,21 +55,13 @@ var returnRouter = function(io) {
 		res.redirect('/playlist/' + req.params.id);
 	});
 
-	// var timer;
+	var timeouts = {};
 
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
 		if (req.params !== 'undefined' && req.params.id !== 'undefined') {
 
-			// var trackTimer;
-			//
-			// console.log(trackTimer.time());
-			// trackTimer.on('done', function(){
-			// 	console.log(trackTimer.state());
-			// 	console.log('yo');
-			// });
-
-
 			io.on('connection', function(socket) {
+
 				//Remove listeners to prevent multiple connections on refresh
 				io.removeAllListeners('connection');
 				//Join room
@@ -239,7 +228,6 @@ var returnRouter = function(io) {
 				});
 
 				socket.on('playTrack', function() {
-					console.log('play track');
 
 					Playlist.findOne({
 						_id: req.params.id
@@ -249,11 +237,9 @@ var returnRouter = function(io) {
 							//Save currentTrack and set playing to true
 							var currentTrack = results.tracks[0];
 							currentTrack.set('isPlaying', true);
-							console.log('currentrack-length:', currentTrack.duration_ms);
-							console.log('currentrack-uri:', currentTrack.uri);
 							//Save to database and play track
 							results.save().then(function() {
-								io.to(req.params.id).emit('playingTrack', currentTrack);
+
 								spotifyApi.setAccessToken(req.user.accessToken);
 								playTrack(currentTrack);
 							}).catch(function(err) {
@@ -271,9 +257,24 @@ var returnRouter = function(io) {
 									// timeout(currentTrack.duration_ms);
 									// trackTimer = timer({finishTime: currentTrack.duration_ms});
 									// trackTimer.start();
-									timer = Timer(function(timer) {
-										nextTrack();
-									}, currentTrack.duration_ms).start();
+									console.log('started playing in', req.params.id);
+									console.log('currentrack-name:', currentTrack.name);
+									console.log('currentrack-length:', currentTrack.duration_ms);
+
+									io.to(req.params.id).emit('playingTrack', currentTrack);
+
+									timeouts[req.params.id] = setTimeout(nextTrack, currentTrack.duration_ms);
+									console.log('play', timeouts);
+									// timer = new Timer(function(timer, nextTrack) {
+									// 	nextTrack();
+									// }, currentTrack.duration_ms, {async: true}).start();
+									// req.timer = timers.create(nextTrack, 5000, {
+									// 	repeat: true
+									// });
+									// req.timer.id = req.params.id;
+									// console.log(req.timer.id);
+									// req.timer.start();
+
 
 									Playlist.findOne({
 										_id: req.params.id
@@ -304,19 +305,23 @@ var returnRouter = function(io) {
 						function pauseTrack() {
 							spotifyApi.pause()
 								.then(function() {
+									console.log('pause track');
 									//Save state to database
 									Playlist.findOne({
 										_id: req.params.id
 									}).then(function(results) {
 										results.set('isPlaying', false).save();
+										//Stop timer
+										// req.timer.stop();
+										clearTimeout(timeouts[req.params.id]);
+										delete timeouts[req.params.id];
+										console.log('pause', timeouts);
 									}).catch(function(err) {
 										console.log(err);
 									});
-									//Stop timer
-									timer.stop();
 									io.to(req.params.id).emit('pauseTrack', results);
 								}).catch(function(err) {
-									stoptimer();
+									// stoptimer();
 									console.log('play function', err);
 									checkAccesToken(req, res, next, err, pauseTrack);
 								});
@@ -353,11 +358,6 @@ var returnRouter = function(io) {
 
 				}
 
-				// function cleartimer() {
-				// 	clearTimeout(timer);
-				// 	console.log('clear', timer);
-				// }
-
 				function stoptimer() {
 					// clearTimeout(timer);
 
@@ -372,7 +372,6 @@ var returnRouter = function(io) {
 				}
 
 				function nextTrack() {
-					console.log('next track');
 					Playlist.findOne({
 							_id: req.params.id,
 						},
@@ -407,6 +406,9 @@ var returnRouter = function(io) {
 														uris: [newCurrentTrack.uri]
 													})
 													.then(function() {
+														console.log('next track in', req.params.id);
+														console.log('currentrack-name:', newCurrentTrack.name);
+														console.log('currentrack-length:', newCurrentTrack.duration_ms);
 														// cleartimer();
 														// timeout(newCurrentTrack.duration_ms);
 														Playlist.findOne({
@@ -416,10 +418,10 @@ var returnRouter = function(io) {
 														}).catch(function(err) {
 															console.log(err);
 														});
+														clearTimeout(timeouts[req.params.id]);
+														timeouts[req.params.id] = setTimeout(nextTrack, newCurrentTrack.duration_ms);
+														console.log('next track', timeouts);
 
-														timer = Timer(function(timer) {
-															nextTrack();
-														}, newCurrentTrack.duration_ms).start();
 														io.to(req.params.id).emit('nextTrack', oldCurrentTrack);
 														io.to(req.params.id).emit('playingTrack', newCurrentTrack, oldCurrentTrack);
 													}).catch(function(err) {
@@ -577,12 +579,19 @@ var returnRouter = function(io) {
 									var activeUsers = results.activeUsers;
 									io.to(req.params.id).emit('leavePlaylist', req.user, activeUsers);
 								}).catch(function(err) {
-									console.log('dissconnect',err);
+									console.log('dissconnect', err);
 								});
 							}
 						});
 					// console.log('rooms after disconnect', socket.adapter);
 					console.log('Disconnected');
+				});
+				socket.on('error', function(err) {
+					if (err === 'handshake error') {
+						console.log('handshake error', err);
+					} else {
+						console.log('io error', err);
+					}
 				});
 			});
 
