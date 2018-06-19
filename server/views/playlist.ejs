@@ -10,22 +10,31 @@
 
 		<main>
 			<header class="playlist-header">
-				<a href="/playlists" class="button">Leave playlist</a>
-				<h1 class="playlist-header__title"><%= playlistData.name %></h1>
-				<p class="playlist-header__description">
-					<%= playlistData.description %>
-				</p>
-				<% if(playlistData.createdBy.displayName){ %>
-				<span>Created by: <%= playlistData.createdBy.displayName %></span>
-				<% } else {%>
-				<span>Created by: <%= playlistData.createdBy.username %></span>
-				<% } %>
+				<div class="playlist-header__currentrack">
+					<% if(playlistData.tracks.length > 0 ){ %>
+					<img class="header-currenttrack-img" src="<%= playlistData.tracks[0].album.images[1].url %>" alt="">
+					<% } else {%>
+						<img class="header-currenttrack-img" src="//:0" alt="">
+					<% } %>
+				</div>
+				<div class="playlist-header__details">
+					<a href="/playlists" class="leave-playlist-button"><img src="/icons/back.svg" alt="" class="icon"><span>Leave playlist</span></a>
+					<h1 class="playlist-header__title"><%= playlistData.name %></h1>
+					<div class="playlist-header__user-created">
+						<% if(playlistData.createdBy.displayName){ %>
+						<span>Created by <%= playlistData.createdBy.displayName %></span>
+						<% } else {%>
+						<span>Created by <%= playlistData.createdBy.username %></span>
+						<% } %>
+						<img src="<%= playlistData.createdBy.profilePic %>" alt="">
+					</div>
+				</div>
 			</header>
 
-			<section>
+			<section class="playlist-currentusers">
 				<!-- <img src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt=""> -->
-				<h3 class="playlist-currentusers-amount"><%= playlistData.activeUsers.length %> Users</h3>
-				<ul class="playlist-currentusers">
+				<h3 class="playlist-currentusers__amount"><%= playlistData.activeUsers.length %> Users</h3>
+				<ul class="playlist-currentusers__list">
 					<!-- <% for(var i=0; i < playlistData.activeUsers.length; i++) { %>
 
 						<li class="current-user" data-id="<%= playlistData.activeUsers[i].spotifyId %>">
@@ -38,7 +47,7 @@
 				</ul>
 			</section>
 
-			<section>
+			<section class="playlist-queue">
 				<header class="tracklist-header">
 					<h3>Songs</h3>
 					<a href="#add-track" class="button show-add-tracks">Add song</a>
@@ -179,6 +188,7 @@
 					</ul>
 				</section>
 			</div>
+			<div class="background-image" style="background-image: url(<%= user.profilePic %> )"></div>
 		</section>
 
 
@@ -235,9 +245,9 @@
 					<button type="button" class="fetch-devices-button">Fetch Devices</button>
 		</section>
 		<% if(playlistData.tracks.length > 0 ){ %>
-		<div class="background-image" style="background-image: url(<%= playlistData.tracks[0].album.images[1].url %>)"></div>
+		<div class="background-image background-image--playlist" style="background-image: url(<%= playlistData.tracks[0].album.images[1].url %>)"></div>
 		<% } else {%>
-		<div class="background-image"></div>
+		<div class="background-image background-image--playlist"></div>
 			<% } %>
 		<script type="text/javascript">
 			var topTracks = <%- JSON.stringify(topTracks) %>; //Make toptracks avaialbe inside client javascript

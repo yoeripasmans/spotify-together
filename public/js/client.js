@@ -169,7 +169,10 @@ socket.on('pauseTrack', function(results) {
 });
 
 function updatePlayer(currentTrack) {
-	var backgroundImage = document.querySelector('.background-image');
+	var playlistheaderImg = document.querySelector('.header-currenttrack-img');
+	playlistheaderImg.src = currentTrack.album.images[1].url;
+
+	var backgroundImage = document.querySelector('.background-image--playlist');
 	backgroundImage.style.backgroundImage = "url(" + currentTrack.album.images[0].url + ")";
 
 	var img = document.querySelector('.player-details__track-img');
@@ -427,7 +430,7 @@ function checkmarkToggle(trackId, state){
 socket.on('joinPlaylist', function(currentUser, activeUsers) {
 	console.log(currentUser);
 	var currentusers = document.querySelector('.playlist-currentusers');
-	var currentusersAmount = document.querySelector('.playlist-currentusers-amount');
+	var currentusersAmount = document.querySelector('.playlist-currentusers__amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
 
 	var li = document.createElement('li');
@@ -451,9 +454,9 @@ socket.on('joinPlaylist', function(currentUser, activeUsers) {
 });
 
 socket.on('showActiveUsers', function(activeUsers) {
-	var currentusers = document.querySelector('.playlist-currentusers');
+	var currentusers = document.querySelector('.playlist-currentusers__list');
 	var currentusersElements = document.querySelectorAll('.current-user');
-	var currentusersAmount = document.querySelector('.playlist-currentusers-amount');
+	var currentusersAmount = document.querySelector('.playlist-currentusers__amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
 
 	for (var i = 0; i < activeUsers.length; i++) {
@@ -498,7 +501,7 @@ socket.on('showActiveUsers', function(activeUsers) {
 socket.on('leavePlaylist', function(currentUser, activeUsers) {
 	console.log(currentUser.spotifyId, 'leaves');
 	var currentusers = document.querySelectorAll('.current-user');
-	var currentusersAmount = document.querySelector('.playlist-currentusers-amount');
+	var currentusersAmount = document.querySelector('.playlist-currentusers__amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
 
 	for (var i = 0; i < currentusers.length; i++) {
