@@ -14,7 +14,7 @@
 					<% if(playlistData.tracks.length > 0 ){ %>
 					<img class="header-currenttrack-img" src="<%= playlistData.tracks[0].album.images[1].url %>" alt="">
 					<% } else {%>
-						<img class="header-currenttrack-img" src="//:0" alt="">
+					<img class="header-currenttrack-img" src="//:0" alt="">
 					<% } %>
 				</div>
 				<div class="playlist-header__details">
@@ -49,7 +49,7 @@
 
 			<section class="playlist-queue">
 				<header class="tracklist-header">
-					<h3>Songs</h3>
+					<h3>Queue</h3>
 					<a href="#add-track" class="button show-add-tracks">Add song</a>
 				</header>
 				<div class="tracklist__track--top">
@@ -70,13 +70,15 @@
 							<span class="tracklist__track-name"><%= playlistData.tracks[i].name %></span>
 							<span class="tracklist__track-artist"><%= playlistData.tracks[i].artists.map(a => a.name).join(', ') %></span>
 							<!-- <span class="tracklist__track-album"><%= playlistData.tracks[i].album.name %></span> -->
+							<div class="tracklist__track-addedby">
+								<img class="tracklist__track-addedby-profilepic" src="<%= playlistData.tracks[i].addedBy.profilePic %>" alt="">
+								<% if(playlistData.tracks[i].addedBy.displayName){ %>
+								<span class="tracklist__track-addedby-name"><%= playlistData.tracks[i].addedBy.displayName.split(" ")[0] %></span>
+								<% } else {%>
+								<span class="tracklist__track-addedby-name"><%= playlistData.tracks[i].addedBy.username %></span>
+								<% } %>
 
-							<% if(playlistData.tracks[i].addedBy.displayName){ %>
-							<span class="tracklist__track-addedby"><%= playlistData.tracks[i].addedBy.displayName.split(" ")[0] %></span>
-							<% } else {%>
-							<span class="tracklist__track-addedby"><%= playlistData.tracks[i].addedBy.username %></span>
-							<% } %>
-
+							</div>
 
 							<span class="tracklist__track-likes">
 								<span class="like-amount"><%= playlistData.tracks[i].likes %></span>

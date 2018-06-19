@@ -9,7 +9,7 @@ body {
     /* background: linear-gradient(to top, #000000 0%,#001749 100%); */
     background-color: #000;
     color: #fff;
-    min-height: calc(100vh + 4em);
+    min-height: calc(100vh + 7em);
 }
 
 h1 {
@@ -22,7 +22,8 @@ h2 {
 }
 
 h3 {
-    font-size: 1.5em;
+    font-size: 1.7em;
+	font-weight: 600;
 }
 
 a {
@@ -168,6 +169,7 @@ button, input[type="submit"], input[type="reset"] {
 .tracklist-header {
     display: flex;
     align-items: center;
+	   margin-bottom: 1em;
 }
 
 .show-add-tracks {
@@ -187,31 +189,40 @@ button, input[type="submit"], input[type="reset"] {
 
 .tracklist__track, .tracklist__track--top {
     display: grid;
-    grid-template-columns: 5em 1fr 1fr 10em 4em;
+    grid-template-columns: 4.5em 1fr 1fr 13em 4em;
     grid-gap: 1em;
     list-style-type: none;
     margin-bottom: 1em;
 }
 
 .top-songs .tracklist__track, .top-songs .tracklist__track--top, .search-results .tracklist__track, .search-results .tracklist__track--top {
-    grid-template-columns: 5em 26em 1fr 4em;
+    grid-template-columns: 4.5em 26em 1fr 4em;
 }
 
 .tracklist__track {
-    height: 3em;
+    height: 3.2em;
     width: 100%;
     position: relative;
 }
 
-.tracklist__track img {
-    width: 60%;
-    height: auto;
+.tracklist__track-img {
+    height: 100%;
+    width: auto;
     border-radius: 4px;
 }
 
 .tracklist__track span {
     display: flex;
     align-items: center;
+}
+.tracklist__track-addedby {
+	display: flex;
+	align-items: center;
+}
+.tracklist__track-addedby-profilepic {
+	width: 2.2em;
+	margin-right: 0.8em;
+	border-radius: 50%;
 }
 
 .tracklist__track-likes {

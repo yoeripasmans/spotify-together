@@ -337,6 +337,7 @@ socket.on('addTrack', function(trackData, spotifyId) {
 	tracklist.appendChild(li);
 
 	var albumCover = document.createElement('img');
+	albumCover.classList.add('tracklist__track-img');
 	li.appendChild(albumCover);
 	albumCover.src = trackData.album.images[1].url;
 
@@ -352,15 +353,23 @@ socket.on('addTrack', function(trackData, spotifyId) {
 	// li.appendChild(albumName);
 	// albumName.textContent = trackData.album.name;
 
-	var addedBy = document.createElement('span');
+	var addedBy = document.createElement('div');
+	addedBy.classList.add('tracklist__track-addedby');
 	li.appendChild(addedBy);
 
-	if(trackData.addedBy.displayName){
-		addedBy.textContent = trackData.addedBy.displayName.split(" ")[0];
-	} else {
-		addedBy.textContent = trackData.addedBy.username;
-	}
+	var addedByImg = document.createElement('img');
+	addedByImg.classList.add('tracklist__track-addedby-profilepic');
+	addedByImg.src = trackData.addedBy.profilePic;
+	addedBy.appendChild(addedByImg);
 
+	var addedByName =  document.createElement('span');
+	addedBy.appendChild(addedByName);
+
+	if(trackData.addedBy.displayName){
+		addedByName.textContent = trackData.addedBy.displayName.split(" ")[0];
+	} else {
+		addedByName.textContent = trackData.addedBy.username;
+	}
 
 	var likes = document.createElement('span');
 	likes.classList.add('tracklist__track-likes');
