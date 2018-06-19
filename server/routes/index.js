@@ -58,6 +58,7 @@ var returnRouter = function(io) {
 	var timeouts = {};
 
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
+		var playlistId = req.params.id;
 		if (req.params !== 'undefined' && req.params.id !== 'undefined') {
 
 			io.on('connection', function(socket) {
@@ -65,7 +66,7 @@ var returnRouter = function(io) {
 				//Remove listeners to prevent multiple connections on refresh
 				io.removeAllListeners('connection');
 				//Join room with the parameter of the url
-				socket.join(req.params.id);
+				socket.join(playlistId);
 				//Emit 'connected' to socket with user object
 				socket.emit('connected', req.user);
 				//Logs who connected
@@ -79,7 +80,7 @@ var returnRouter = function(io) {
 				};
 
 				Playlist.update({
-						"_id": req.params.id,
+						"_id": playlistId,
 						'activeUsers.spotifyId': {
 							$ne: req.user.spotifyId
 						}
@@ -95,11 +96,11 @@ var returnRouter = function(io) {
 						} else {
 							//Get playlist from database
 							Playlist.findOne({
-								_id: req.params.id
+								_id: playlistId
 							}).then(function(results) {
 								var activeUsers = results.activeUsers;
 								socket.emit('showActiveUsers', activeUsers);
-								socket.broadcast.to(req.params.id).emit('joinPlaylist', req.user, activeUsers);
+								socket.broadcast.to(playlistId).emit('joinPlaylist', req.user, activeUsers);
 							}).catch(function(err) {
 								console.log(err);
 							});
@@ -121,7 +122,7 @@ var returnRouter = function(io) {
 					};
 
 					Playlist.findOneAndUpdate({
-							_id: req.params.id,
+							_id: playlistId,
 							'tracks.id': {
 								$ne: newTrackData.id
 							}
@@ -149,14 +150,14 @@ var returnRouter = function(io) {
 								console.log('duplicate');
 							} else {
 								var databaseTrackData = docs.tracks[docs.tracks.length - 1];
-								io.to(req.params.id).emit('addTrack', databaseTrackData);
+								io.to(playlistId).emit('addTrack', databaseTrackData);
 							}
 						});
 				});
 
 				socket.on('likeTrack', function(trackId) {
 					Playlist.findOneAndUpdate({
-							"_id": req.params.id,
+							"_id": playlistId,
 							"tracks.id": trackId
 						}, {
 							"$inc": {
@@ -173,7 +174,7 @@ var returnRouter = function(io) {
 								console.log(err);
 							} else {
 								Playlist.findOneAndUpdate({
-										_id: req.params.id
+										_id: playlistId
 									}, {
 										$push: {
 											tracks: {
@@ -193,7 +194,7 @@ var returnRouter = function(io) {
 										if (err) {
 											console.log(err);
 										} else {
-											io.to(req.params.id).emit('likeTrack', trackId, docs.tracks[0]);
+											io.to(playlistId).emit('likeTrack', trackId, docs.tracks[0]);
 										}
 									});
 
@@ -206,7 +207,7 @@ var returnRouter = function(io) {
 				socket.on('deleteTrack', function(trackId) {
 					console.log(trackId);
 					Playlist.findOneAndUpdate({
-							_id: req.params.id,
+							_id: playlistId,
 							"tracks.id": trackId
 						}, {
 							$pull: {
@@ -227,19 +228,19 @@ var returnRouter = function(io) {
 
 								if(trackId === docs.tracks[0].id && docs.isPlaying === true && docs.tracks.length > 1){
 									playTrack(docs.tracks[1]);
-									io.to(req.params.id).emit('deleteTrack', trackId, docs.tracks[1]);
+									io.to(playlistId).emit('deleteTrack', trackId, docs.tracks[1]);
 								} else if(trackId === docs.tracks[0].id && docs.isPlaying === false) {
-									io.to(req.params.id).emit('deleteTrack', trackId, docs.tracks[1]);
+									io.to(playlistId).emit('deleteTrack', trackId, docs.tracks[1]);
 								} else {
-									io.to(req.params.id).emit('deleteTrack', trackId);
+									io.to(playlistId).emit('deleteTrack', trackId);
 								}
 								//Delete current track and stops player
 								if(trackId === docs.tracks[0].id && docs.isPlaying === true && docs.tracks.length === 1){
-									io.to(req.params.id).emit('resetPlayer');
+									io.to(playlistId).emit('resetPlayer');
 									pauseTrack();
 								}
 								if(trackId === docs.tracks[0].id && docs.isPlaying === false && docs.tracks.length === 1){
-									io.to(req.params.id).emit('resetPlayer');
+									io.to(playlistId).emit('resetPlayer');
 								}
 
 
@@ -251,7 +252,7 @@ var returnRouter = function(io) {
 				socket.on('playTrack', function() {
 
 					Playlist.findOne({
-						_id: req.params.id
+						_id: playlistId
 					}).then(function(results) {
 						if (results.tracks.length > 0) {
 							//Save currentTrack and set playing to true
@@ -264,6 +265,7 @@ var returnRouter = function(io) {
 								playTrack(currentTrack);
 							}).catch(function(err) {
 								console.log(err);
+								return next();
 							});
 						}
 
@@ -279,17 +281,17 @@ var returnRouter = function(io) {
 						})
 						.then(function() {
 
-							console.log('started playing in', req.params.id);
+							console.log('started playing in', playlistId);
 							console.log('currentrack-name:', currentTrack.name);
 							console.log('currentrack-length:', currentTrack.duration_ms);
 
-							io.to(req.params.id).emit('playingTrack', currentTrack);
+							io.to(playlistId).emit('playingTrack', currentTrack);
 
-							timeouts[req.params.id] = setTimeout(nextTrack, currentTrack.duration_ms);
+							timeouts[playlistId] = setTimeout(nextTrack, currentTrack.duration_ms);
 							console.log('play', timeouts);
 
 							Playlist.findOne({
-								_id: req.params.id
+								_id: playlistId
 							}).then(function(results) {
 								results.set('isPlaying', true).save();
 							}).catch(function(err) {
@@ -309,26 +311,26 @@ var returnRouter = function(io) {
 
 				function pauseTrack() {
 					Playlist.findOne({
-						_id: req.params.id
+						_id: playlistId
 					}).then(function(results) {
 					spotifyApi.pause()
 						.then(function() {
 							console.log('pause track');
 							//Save state to database
 							Playlist.findOne({
-								_id: req.params.id
+								_id: playlistId
 							}).then(function(results) {
 								results.set('isPlaying', false).save();
 								//Stop timer
 								// req.timer.stop();
-								clearTimeout(timeouts[req.params.id]);
-								delete timeouts[req.params.id];
+								clearTimeout(timeouts[playlistId]);
+								delete timeouts[playlistId];
 
 								console.log('pause', timeouts);
 							}).catch(function(err) {
 								console.log(err);
 							});
-							io.to(req.params.id).emit('pauseTrack', results);
+							io.to(playlistId).emit('pauseTrack', results);
 						}).catch(function(err) {
 							// stoptimer();
 							console.log('play function', err);
@@ -352,7 +354,7 @@ var returnRouter = function(io) {
 				function timeout(tracklength) {
 					//Update player in database
 					Playlist.findOne({
-						_id: req.params.id
+						_id: playlistId
 					}).then(function(results) {
 						results.set('isPlaying', true).save();
 					}).catch(function(err) {
@@ -365,7 +367,7 @@ var returnRouter = function(io) {
 					// clearTimeout(timer);
 
 					Playlist.findOne({
-						_id: req.params.id
+						_id: playlistId
 					}).then(function(results) {
 						results.set('isPlaying', false).save();
 					}).catch(function(err) {
@@ -376,7 +378,7 @@ var returnRouter = function(io) {
 
 				function nextTrack() {
 					Playlist.findOne({
-							_id: req.params.id,
+							_id: playlistId,
 						},
 						function(err, docs) {
 							if (err) {
@@ -409,24 +411,24 @@ var returnRouter = function(io) {
 														uris: [newCurrentTrack.uri]
 													})
 													.then(function() {
-														console.log('next track in', req.params.id);
+														console.log('next track in', playlistId);
 														console.log('currentrack-name:', newCurrentTrack.name);
 														console.log('currentrack-length:', newCurrentTrack.duration_ms);
 														// cleartimer();
 														// timeout(newCurrentTrack.duration_ms);
 														Playlist.findOne({
-															_id: req.params.id
+															_id: playlistId
 														}).then(function(results) {
 															results.set('isPlaying', true).save();
 														}).catch(function(err) {
 															console.log(err);
 														});
-														clearTimeout(timeouts[req.params.id]);
-														timeouts[req.params.id] = setTimeout(nextTrack, newCurrentTrack.duration_ms);
+														clearTimeout(timeouts[playlistId]);
+														timeouts[playlistId] = setTimeout(nextTrack, newCurrentTrack.duration_ms);
 														console.log('next track', timeouts);
 
-														io.to(req.params.id).emit('nextTrack', oldCurrentTrack);
-														io.to(req.params.id).emit('playingTrack', newCurrentTrack, oldCurrentTrack);
+														io.to(playlistId).emit('nextTrack', oldCurrentTrack);
+														io.to(playlistId).emit('playingTrack', newCurrentTrack, oldCurrentTrack);
 													}).catch(function(err) {
 														console.log('play function', err);
 														checkAccesToken(req, res, next, err, playTrack, newCurrentTrack);
@@ -448,7 +450,7 @@ var returnRouter = function(io) {
 				function prevTrack() {
 					console.log('prev');
 					Playlist.findOne({
-							_id: req.params.id,
+							_id: playlistId,
 						},
 						function(err, docs) {
 							if (err) {
@@ -484,7 +486,7 @@ var returnRouter = function(io) {
 													.then(function(data) {
 														// cleartimer();
 														// timeout(newCurrentTrack.duration_ms);
-														io.to(req.params.id).emit('playingTrack', newCurrentTrack, oldCurrentTrack);
+														io.to(playlistId).emit('playingTrack', newCurrentTrack, oldCurrentTrack);
 													}).catch(function(err) {
 														console.log('play function', err);
 														checkAccesToken(req, res, next, err, playTrack);
@@ -506,7 +508,7 @@ var returnRouter = function(io) {
 					spotifyApi.setAccessToken(req.user.accessToken);
 
 					Playlist.findOne({
-							_id: req.params.id,
+							_id: playlistId,
 						},
 						function(err, docs) {
 							if (err) {
@@ -564,7 +566,7 @@ var returnRouter = function(io) {
 
 				socket.on('disconnect', function(socket) {
 					Playlist.update({
-							"_id": req.params.id
+							"_id": playlistId
 						}, {
 							"$pull": {
 								"activeUsers": req.user,
@@ -574,15 +576,16 @@ var returnRouter = function(io) {
 						function(err, raw) {
 							if (err) {
 								console.log(err);
-								next();
+								return next();
 							} else {
 								Playlist.findOne({
-									_id: req.params.id
+									_id: playlistId
 								}).then(function(results) {
 									var activeUsers = results.activeUsers;
-									io.to(req.params.id).emit('leavePlaylist', req.user, activeUsers);
+									io.to(playlistId).emit('leavePlaylist', req.user, activeUsers);
 								}).catch(function(err) {
 									console.log('dissconnect', err);
+									return next();
 								});
 							}
 						});
@@ -600,7 +603,7 @@ var returnRouter = function(io) {
 
 			//Get playlist from database
 			Playlist.findOne({
-				_id: req.params.id
+				_id: playlistId
 			}).then(function(results) {
 				var topTracks;
 				var userPlaylists;

@@ -439,7 +439,7 @@ function checkmarkToggle(trackId, state){
 
 socket.on('joinPlaylist', function(currentUser, activeUsers) {
 	console.log(currentUser);
-	var currentusers = document.querySelector('.playlist-currentusers');
+	var currentusers = document.querySelector('.playlist-currentusers__list');
 	var currentusersAmount = document.querySelector('.playlist-currentusers__amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
 
