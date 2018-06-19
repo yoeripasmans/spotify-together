@@ -121,7 +121,7 @@ socket.on('deleteTrack', function(trackId, currentTrack) {
 	var element = document.querySelector('[data-id="' + trackId + '"]');
 	checkmarkToggle(trackId, false);
 
-	if(currentTrack){
+	if (currentTrack) {
 		updatePlayer(currentTrack);
 	}
 
@@ -147,6 +147,8 @@ socket.on('playingTrack', function(currentTrack, oldCurrentTrack) {
 		playButton.classList.add('hidden');
 		pauseButton.classList.remove('hidden');
 	}
+	var playStatus = document.querySelector('.play-status');
+	playStatus.textContent = "Playing";
 
 	iso.updateSortData(tracklist);
 	iso.reloadItems();
@@ -166,6 +168,8 @@ socket.on('pauseTrack', function(results) {
 		playButton.classList.remove('hidden');
 		pauseButton.classList.add('hidden');
 	}
+	var playStatus = document.querySelector('.play-status');
+	playStatus.textContent = "Paused";
 });
 
 function updatePlayer(currentTrack) {
@@ -186,7 +190,7 @@ function updatePlayer(currentTrack) {
 
 	var addedBy = document.querySelector('.player-details__addedby');
 
-	if(currentTrack.addedBy.displayName){
+	if (currentTrack.addedBy.displayName) {
 		addedBy.textContent = currentTrack.addedBy.displayName.split(" ")[0];
 	} else {
 		addedBy.textContent = currentTrack.addedBy.username;
@@ -240,16 +244,16 @@ socket.on('searchTrack', function(trackData, playlistData) {
 		addTrackButtonIcon.classList.add('icon');
 		addTrackButton.appendChild(addTrackButtonIcon);
 
-		for(let j=0; j < playlistData.length; j++) {
-			if(trackData[i].id === playlistData[j].id){
+		for (let j = 0; j < playlistData.length; j++) {
+			if (trackData[i].id === playlistData[j].id) {
 				console.log('true');
 				addTrackButton.disabled = true;
 				addTrackButtonIcon.src = "/icons/check.svg";
-			 } else {
-				 addTrackButton.disabled = false;
- 				addTrackButtonIcon.src = "/icons/add.svg";
-			 }
-		 }
+			} else {
+				addTrackButton.disabled = false;
+				addTrackButtonIcon.src = "/icons/add.svg";
+			}
+		}
 
 		addTrackButton.addEventListener('click', function() {
 			socket.emit('addTrack', trackData[i]);
@@ -274,7 +278,7 @@ function likeTrack() {
 socket.on('nextTrack', function(oldCurrentTrack) {
 	var oldCurrentTrackEl = document.querySelector('[data-id="' + oldCurrentTrack.id + '"]');
 	var likeButton = oldCurrentTrackEl.querySelector('.track-like-button');
-	if(likeButton){
+	if (likeButton) {
 		likeButton.disabled = false;
 		likeButton.setAttribute('liked', 'false');
 		likeButton.classList.remove('track-like-button--disabled');
@@ -299,6 +303,28 @@ socket.on('likeTrack', function(trackId, currentTrack) {
 			date: true
 		}
 	});
+
+});
+
+socket.on('resetPlayer', function() {
+	console.log('clear');
+	var playlistheaderImg = document.querySelector('.header-currenttrack-img');
+	playlistheaderImg.src = "//:0";
+
+	var backgroundImage = document.querySelector('.background-image--playlist');
+	backgroundImage.style.backgroundImage = "";
+
+	var img = document.querySelector('.player-details__track-img');
+	img.src = "//:0";
+
+	var name = document.querySelector('.player-details__track-name');
+	name.textContent = "";
+
+	var artist = document.querySelector('.player-details__artist-name');
+	artist.textContent = "";
+
+	var addedBy = document.querySelector('.player-details__addedby');
+	addedBy.textContent = "";
 
 });
 
@@ -363,10 +389,10 @@ socket.on('addTrack', function(trackData, spotifyId) {
 	addedByImg.src = trackData.addedBy.profilePic;
 	addedBy.appendChild(addedByImg);
 
-	var addedByName =  document.createElement('span');
+	var addedByName = document.createElement('span');
 	addedBy.appendChild(addedByName);
 
-	if(trackData.addedBy.displayName){
+	if (trackData.addedBy.displayName) {
 		addedByName.textContent = trackData.addedBy.displayName.split(" ")[0];
 	} else {
 		addedByName.textContent = trackData.addedBy.username;
@@ -418,14 +444,14 @@ socket.on('addTrack', function(trackData, spotifyId) {
 
 });
 
-function checkmarkToggle(trackId, state){
+function checkmarkToggle(trackId, state) {
 	console.log(trackId);
 	var addedTrack = document.querySelectorAll('[data-trackid="' + trackId + '"]');
 	console.log(addedTrack);
 	for (var i = 0; i < addedTrack.length; i++) {
 		var addedTrackButton = addedTrack[i].querySelector('.track-add-button');
 		var addedTrackButtonIcon = addedTrackButton.querySelector('.icon');
-		if(state === true){
+		if (state === true) {
 			//Add check to added track
 			addedTrackButton.disabled = true;
 			addedTrackButtonIcon.src = "/icons/check.svg";
@@ -455,7 +481,7 @@ socket.on('joinPlaylist', function(currentUser, activeUsers) {
 	var userName = document.createElement('p');
 	li.appendChild(userName);
 
-	if(currentUser.displayName){
+	if (currentUser.displayName) {
 		userName.textContent = currentUser.displayName.split(" ")[0];
 	} else {
 		userName.textContent = currentUser.username;
@@ -471,9 +497,9 @@ socket.on('showActiveUsers', function(activeUsers) {
 
 	for (var i = 0; i < activeUsers.length; i++) {
 		for (var j = 0; j < currentusersElements.length; j++) {
-			if(activeUsers[i].spotifyId === currentusersElements[j].getAttribute('data-id')){
+			if (activeUsers[i].spotifyId === currentusersElements[j].getAttribute('data-id')) {
 				console.log('same');
-			}else {
+			} else {
 				createEl(i);
 			}
 		}
@@ -485,7 +511,7 @@ socket.on('showActiveUsers', function(activeUsers) {
 		createEl(i);
 	}
 
-	function createEl(i){
+	function createEl(i) {
 		var li = document.createElement('li');
 		li.classList.add('current-user');
 		li.setAttribute('data-id', activeUsers[i].spotifyId);
@@ -498,7 +524,7 @@ socket.on('showActiveUsers', function(activeUsers) {
 		var userName = document.createElement('p');
 		li.appendChild(userName);
 
-		if(activeUsers[i].displayName){
+		if (activeUsers[i].displayName) {
 			userName.textContent = activeUsers[i].displayName.split(" ")[0];
 		} else {
 			userName.textContent = activeUsers[i].username;

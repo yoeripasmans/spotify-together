@@ -16,6 +16,11 @@
 					<% } else {%>
 					<img class="header-currenttrack-img" src="//:0" alt="">
 					<% } %>
+					<% if(playlistData.isPlaying === true ){ %>
+					<span class="play-status">Playing</span>
+					<% } else {%>
+					<span class="play-status">Paused</span>
+					<% } %>
 				</div>
 				<div class="playlist-header__details">
 					<a href="/playlists" class="leave-playlist-button"><img src="/icons/back.svg" alt="" class="icon"><span>Leave playlist</span></a>
@@ -142,7 +147,7 @@
 						<% for(var i=0; i < 6; i++) { %>
 							<li class="user-playlists__item" data-playlistid="<%= userPlaylists[i].uri %>">
 
-								<img class="tracklist__track-img" src="<%= userPlaylists[i].images[0].url %>" alt="Album cover of <%= userPlaylists[i].name %>">
+								<img class="tracklist__playlist-img" src="<%= userPlaylists[i].images[0].url %>" alt="Album cover of <%= userPlaylists[i].name %>">
 								<span class="tracklist__track-name"><%= userPlaylists[i].name %></span>
 								<button class="show-playlist-button"><span>Show playlist</span></button>
 							</li>

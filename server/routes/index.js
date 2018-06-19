@@ -551,8 +551,7 @@ var returnRouter = function(io) {
 
 					function transferDevicePlayback() {
 						spotifyApi.transferMyPlayback({
-								deviceIds: [device.id],
-								play: true
+								deviceIds: [device.id]
 							})
 							.then(function(data) {
 								console.log('transferd');
