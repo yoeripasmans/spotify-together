@@ -217,6 +217,7 @@ socket.on('searchTrack', function(trackData, playlistData) {
 
 		var albumCover = document.createElement('img');
 		li.appendChild(albumCover);
+		albumCover.classList.add('tracklist__track-img');
 		albumCover.src = trackData[i].album.images[1].url;
 
 		var trackName = document.createElement('span');
