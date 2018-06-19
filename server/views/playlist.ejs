@@ -15,7 +15,11 @@
 				<p class="playlist-header__description">
 					<%= playlistData.description %>
 				</p>
+				<% if(playlistData.createdBy.displayName){ %>
+				<span>Created by: <%= playlistData.createdBy.displayName %></span>
+				<% } else {%>
 				<span>Created by: <%= playlistData.createdBy.username %></span>
+				<% } %>
 			</header>
 
 			<section>
@@ -57,9 +61,17 @@
 							<span class="tracklist__track-name"><%= playlistData.tracks[i].name %></span>
 							<span class="tracklist__track-artist"><%= playlistData.tracks[i].artists.map(a => a.name).join(', ') %></span>
 							<!-- <span class="tracklist__track-album"><%= playlistData.tracks[i].album.name %></span> -->
-							<span class="tracklist__track-addedby"><%= playlistData.tracks[i].addedBy.spotifyId %></span>
+
+							<% if(playlistData.tracks[i].addedBy.displayName){ %>
+							<span class="tracklist__track-addedby"><%= playlistData.tracks[i].addedBy.displayName.split(" ")[0] %></span>
+							<% } else {%>
+							<span class="tracklist__track-addedby"><%= playlistData.tracks[i].addedBy.username %></span>
+							<% } %>
+
+
 							<span class="tracklist__track-likes">
 								<span class="like-amount"><%= playlistData.tracks[i].likes %></span>
+
 							<% if(playlistData.tracks[i].addedBy.spotifyId === user.spotifyId || user.spotifyId === playlistData.admins[0]){ %>
 								<button type="button" class="track-delete-button"><span>Remove</span><img class="icon" src="/icons/close.svg" alt="Cross icon"></button>
 								<% } else {%>
@@ -184,11 +196,16 @@
 							<%= playlistData.tracks[0].artists.map(a => a.name).join(', ') %>
 						</p>
 						<div class="player-details__addedby">
-							<span><%= playlistData.tracks[0].addedBy.spotifyId%></span>
+						<% if(playlistData.tracks[0].addedBy.displayName){ %>
+						<span><%= playlistData.tracks[0].addedBy.displayName.split(" ")[0] %></span>
+						<% } else {%>
+						<span><%= playlistData.tracks[0].addedBy.username %></span>
+						<% } %>
+
 						</div>
 					</div>
 					<% } else { %>
-						<img src="/" alt="" class="player-details__track-img">
+						<img src="//:0" alt="" class="player-details__track-img">
 						<div class="player-details__text">
 							<p class="player-details__track-name"></p>
 							<p class="player-details__artist-name"></p>

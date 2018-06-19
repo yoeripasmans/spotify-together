@@ -27,7 +27,7 @@ function auth() {
 			callbackURL: redirect_uri
 		},
 		function(accessToken, refreshToken, expires_in, profile, done) {
-
+			console.log(profile);
 			//Search for user in database
 			User.findOne({
 				spotifyId: profile.id
@@ -39,7 +39,8 @@ function auth() {
 				if (!user) {
 					user = new User({
 						spotifyId: profile.id,
-						display_name: profile.display_name,
+						product: profile.product,
+						displayName: profile.displayName,
 						birthdate: profile.birthdate,
 						country: profile.country,
 						username: profile.username,

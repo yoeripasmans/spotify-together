@@ -182,7 +182,12 @@ function updatePlayer(currentTrack) {
 	artist.textContent = currentTrack.artists.map(a => a.name).join(', ');
 
 	var addedBy = document.querySelector('.player-details__addedby');
-	addedBy.textContent = currentTrack.addedBy.spotifyId;
+
+	if(currentTrack.addedBy.displayName){
+		addedBy.textContent = currentTrack.addedBy.displayName.split(" ")[0];
+	} else {
+		addedBy.textContent = currentTrack.addedBy.username;
+	}
 
 	console.log(currentTrack);
 }
@@ -346,7 +351,13 @@ socket.on('addTrack', function(trackData, spotifyId) {
 
 	var addedBy = document.createElement('span');
 	li.appendChild(addedBy);
-	addedBy.textContent = trackData.addedBy.spotifyId;
+
+	if(trackData.addedBy.displayName){
+		addedBy.textContent = trackData.addedBy.displayName.split(" ")[0];
+	} else {
+		addedBy.textContent = trackData.addedBy.username;
+	}
+
 
 	var likes = document.createElement('span');
 	likes.classList.add('tracklist__track-likes');
@@ -430,7 +441,12 @@ socket.on('joinPlaylist', function(currentUser, activeUsers) {
 
 	var userName = document.createElement('p');
 	li.appendChild(userName);
-	userName.textContent = currentUser.spotifyId;
+
+	if(currentUser.displayName){
+		userName.textContent = currentUser.displayName.split(" ")[0];
+	} else {
+		userName.textContent = currentUser.username;
+	}
 	console.log(currentUser.username, 'joined');
 });
 
@@ -468,7 +484,12 @@ socket.on('showActiveUsers', function(activeUsers) {
 
 		var userName = document.createElement('p');
 		li.appendChild(userName);
-		userName.textContent = activeUsers[i].spotifyId;
+
+		if(activeUsers[i].displayName){
+			userName.textContent = activeUsers[i].displayName.split(" ")[0];
+		} else {
+			userName.textContent = activeUsers[i].username;
+		}
 	}
 
 	console.log('activeUsers', activeUsers);

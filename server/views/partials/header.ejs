@@ -3,10 +3,14 @@
 	<div class="account">
 		<div class="account__text">
 			<div class="account__text--account">Account</div>
-			<div class="account__text--name"><%= user.spotifyId %></div>
+			<% if(user.displayName){ %>
+			<div class="account__text--name"><%= user.displayName %></div>
+			<% } else {%>
+			<div class="account__text--name"><%= user.username %></div>
+			<% } %>
 		</div>
 			<img class="account__profile-pic" src="<%= user.profilePic %>" alt="Profile picture of <%= user.profilePic %>">
-		<%# <a href="/logout" class="logout-button">Log out</a> %>
+		<a href="/logout" class="logout-button">Log out</a>
 	</div>
 
 </header>

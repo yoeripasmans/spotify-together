@@ -20,7 +20,7 @@ var returnRouter = function(io) {
 	router.get('/login',
 		passport.authenticate('spotify', {
 			scope: ['streaming user-read-birthdate user-read-private playlist-read-private user-read-email user-read-playback-state user-modify-playback-state user-top-read'],
-			showDialog: false
+			showDialog: true
 		}),
 		function(req, res) {
 			// The request will be redirected to spotify for authentication, so this function will not be called.
@@ -475,8 +475,8 @@ var returnRouter = function(io) {
 														uris: [newCurrentTrack.uri]
 													})
 													.then(function(data) {
-														cleartimer();
-														timeout(newCurrentTrack.duration_ms);
+														// cleartimer();
+														// timeout(newCurrentTrack.duration_ms);
 														io.to(req.params.id).emit('playingTrack', newCurrentTrack, oldCurrentTrack);
 													}).catch(function(err) {
 														console.log('play function', err);
@@ -614,7 +614,7 @@ var returnRouter = function(io) {
 					spotifyApi.getUserPlaylists(req.user.spotifyId)
 						.then(function(data) {
 							var userPlaylists = data.body.items;
-							console.log(userPlaylists);
+							// console.log(userPlaylists);
 							res.render('playlist', {
 								playlistData: results,
 								user: req.user,

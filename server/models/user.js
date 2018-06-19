@@ -5,14 +5,14 @@ var Schema = mongoose.Schema;
 // create a schema
 var userSchema = new Schema({
    spotifyId: String,
-   display_name: String,
+   displayName: String,
    username: String,
    email: String,
    images: Object,
    accessToken: String,
    profilePic: String,
    refreshToken: String,
-   birthdate: String,
+   birthdate: Date,
    country: String,
 
 });
