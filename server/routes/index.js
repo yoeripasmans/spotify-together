@@ -514,6 +514,7 @@ var returnRouter = function(io) {
 							if (err) {
 								console.log(err);
 							} else {
+								console.log(docs);
 								searchTrack(value, docs);
 							}
 						});
@@ -524,11 +525,42 @@ var returnRouter = function(io) {
 								socket.emit('searchTrack', data.body.tracks.items, playlistData.tracks);
 							}, function(err) {
 								console.error(err);
-								searchTrack(req, res, next, err, searchTrack);
+								searchTrack(req, res, next, err, searchTrack, value);
 							});
 					}
 
 				});
+
+				socket.on('showPlaylist', function(userId, userPlaylistId) {
+					spotifyApi.setAccessToken(req.user.accessToken);
+
+					Playlist.findOne({
+							_id: playlistId,
+						},
+						function(err, docs) {
+							if (err) {
+								console.log(err);
+							} else {
+								getPlaylist(docs);
+							}
+						});
+
+
+					function getPlaylist(docs) {
+						spotifyApi.getPlaylist(userId, userPlaylistId)
+							.then(function(data) {
+								var userPlaylistData = data.body;
+
+								socket.emit('showPlaylist', userPlaylistData, docs.tracks);
+							}).catch(function(err) {
+								console.log(err);
+								checkAccesToken(req, res, next, err, getPlaylist, docs);
+							});
+					}
+
+				});
+
+
 
 				socket.on('fetchDevices', function() {
 					spotifyApi.setAccessToken(req.user.accessToken);
@@ -623,6 +655,7 @@ var returnRouter = function(io) {
 					spotifyApi.getUserPlaylists(req.user.spotifyId)
 						.then(function(data) {
 							var userPlaylists = data.body.items;
+							console.log(userPlaylists);
 							// console.log(userPlaylists);
 							res.render('playlist', {
 								playlistData: results,
@@ -638,34 +671,6 @@ var returnRouter = function(io) {
 				}
 
 				getUserTopTracks();
-
-				// function getTopTracks() {
-				// 	spotifyApi.getMyTopTracks()
-				// 		.then(function(data) {
-				// 			topTracks = data.body.items;
-				// 			console.log(topTracks);
-				//
-				// 		}).catch(function(err) {
-				// 			checkAccesToken(req, res, next, err, getTopTracks);
-				// 		});
-				// }
-				// getTopTracks();
-				// }
-				// //Get track details from playlist
-				// function getTracks() {
-				// 	spotifyApi.getTracks(tracks).then(function(data) {
-				// 		return data.body;
-				// 	}).then(function(trackData) {
-				// 		res.render('playlist', {
-				// 			playlistData: results,
-				// 			trackData: trackData.tracks,
-				// 		});
-				// 	}).catch(function(error) {
-				// 		//Refresh acces token if error
-				// 		console.log(error);
-				// 		checkAccesToken(req, res, next, error, getTracks);
-				// 	});
-				// }
 
 			}).catch(function(err) {
 				console.log(err);

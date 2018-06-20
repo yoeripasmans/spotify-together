@@ -57,7 +57,7 @@
 					<h3>Queue</h3>
 					<a href="#add-track" class="button show-add-tracks">Add song</a>
 				</header>
-				<div class="tracklist__track--top">
+				<div class="tracklist__header">
 					<span></span>
 					<span>Title</span>
 					<span>Artist</span>
@@ -132,7 +132,7 @@
 
 				<section class="search-results">
 					<h3>Search results</h3>
-					<div class="tracklist__track--top">
+					<div class="tracklist__header">
 						<span></span>
 						<span>Title</span>
 						<span>Artist</span>
@@ -141,11 +141,11 @@
 					</ul>
 				</section>
 
-				<section class="user-playlists-wrapper">
+				<section class="user-playlists-overview">
 					<h3>Your playlists</h3>
 					<ul class="user-playlists">
 						<% for(var i=0; i < 6; i++) { %>
-							<li class="user-playlists__item" data-playlistid="<%= userPlaylists[i].uri %>">
+							<li class="user-playlists__item" data-playlistid="<%= userPlaylists[i].id %>" data-playlistowner="<%= userPlaylists[i].owner.id %>">
 
 								<img class="tracklist__playlist-img" src="<%= userPlaylists[i].images[0].url %>" alt="Album cover of <%= userPlaylists[i].name %>">
 								<span class="tracklist__track-name"><%= userPlaylists[i].name %></span>
@@ -155,16 +155,42 @@
 					</ul>
 				</section>
 
+				<section class="user-playlist hidden">
+					<div class="add-track-wrapper">
+						<header class="playlist-header">
+							<div class="playlist-header__currentrack playlist-header__cover">
+								<img class="user-playlist-cover" src="//:0" alt="">
+							</div>
+							<div class="playlist-header__details">
+								<button class="leave-playlist-button close-playlist-button"><img src="/icons/back.svg" alt="" class="icon"><span>Back</span></button>
+								<h1 class="playlist-header__title user-playlist-header__title"></h1>
+								<div class="playlist-header__user-created user-playlist-header__user-created">
+									<span></span>
+									<img src="//:0" alt="">
+								</div>
+							</div>
+						</header>
+
+						<div class="tracklist__header">
+							<span></span>
+							<span>Title</span>
+							<span>Artist</span>
+						</div>
+
+						<ul class="tracklist add-tracks add-playlist-tracks">
+
+						</ul>
+					</div>
+					<div class="background-image" style="background-image: url(<%= user.profilePic %> )"></div>
+				</section>
+
 
 
 				<section class="top-songs">
-					<div class="tracklist__track--top">
+					<div class="tracklist__header">
 						<span></span>
 						<span>Title</span>
 						<span>Artist</span>
-						<!-- <span>Album</span> -->
-
-
 					</div>
 
 					<ul class="tracklist add-tracks">
