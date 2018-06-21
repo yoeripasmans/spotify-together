@@ -8,6 +8,8 @@ var pauseButton = document.querySelector('.pause-button');
 var nextButton = document.querySelector('.next-button');
 var prevButton = document.querySelector('.prev-button');
 
+socket.emit('connected');
+
 socket.on('connected', function(userDetails) {
 	var showAddTracksButton = document.querySelector('.show-add-tracks');
 	var closeAddTracksButton = document.querySelector('.close-add-tracks');
@@ -519,7 +521,23 @@ function checkmarkToggle(trackId, state) {
 
 
 socket.on('joinPlaylist', function(currentUser, activeUsers) {
+	var currentusersElements = document.querySelectorAll('.current-user');
+	console.log(currentusersElements);
+	console.log(currentUser.spotifyId);
+	var duplicate;
+
+	for (var i = 0; i < currentusersElements.length; i++) {
+		if (currentUser.spotifyId === currentusersElements[i].getAttribute('data-id')) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	if(true){
+	 createEl();
+	}
 	console.log(currentUser);
+	function createEl(){
 	var currentusers = document.querySelector('.playlist-currentusers__list');
 	var currentusersAmount = document.querySelector('.playlist-currentusers__amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
@@ -531,7 +549,12 @@ socket.on('joinPlaylist', function(currentUser, activeUsers) {
 
 	var profilePic = document.createElement('img');
 	li.appendChild(profilePic);
-	profilePic.src = currentUser.profilePic;
+
+	if (currentUser.profilePic) {
+		profilePic.src = currentUser.profilePic;
+	} else {
+		profilePic.src = "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+	}
 
 	var userName = document.createElement('p');
 	li.appendChild(userName);
@@ -542,28 +565,29 @@ socket.on('joinPlaylist', function(currentUser, activeUsers) {
 		userName.textContent = currentUser.username;
 	}
 	console.log(currentUser.username, 'joined');
+	}
 });
 
 socket.on('showActiveUsers', function(activeUsers) {
+
 	var currentusers = document.querySelector('.playlist-currentusers__list');
 	var currentusersElements = document.querySelectorAll('.current-user');
 	var currentusersAmount = document.querySelector('.playlist-currentusers__amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
 
+	//Create elements
+	for (let i = 0; i < activeUsers.length; i++) {
+		createEl(i);
+	}
+
+	//Remove duplicates
 	for (var i = 0; i < activeUsers.length; i++) {
 		for (var j = 0; j < currentusersElements.length; j++) {
 			if (activeUsers[i].spotifyId === currentusersElements[j].getAttribute('data-id')) {
 				console.log('same');
-			} else {
-				createEl(i);
+				currentusers.removeChild(currentusersElements[j]);
 			}
 		}
-
-		console.log(activeUsers[i].spotifyId, 'joined');
-	}
-
-	for (let i = 0; i < activeUsers.length; i++) {
-		createEl(i);
 	}
 
 	function createEl(i) {
@@ -574,7 +598,12 @@ socket.on('showActiveUsers', function(activeUsers) {
 
 		var profilePic = document.createElement('img');
 		li.appendChild(profilePic);
-		profilePic.src = activeUsers[i].profilePic;
+
+		if (activeUsers[i].profilePic) {
+			profilePic.src = activeUsers[i].profilePic;
+		} else {
+			profilePic.src = "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+		}
 
 		var userName = document.createElement('p');
 		li.appendChild(userName);

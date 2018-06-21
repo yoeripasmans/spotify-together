@@ -76,7 +76,12 @@
 							<span class="tracklist__track-artist"><%= playlistData.tracks[i].artists.map(a => a.name).join(', ') %></span>
 							<!-- <span class="tracklist__track-album"><%= playlistData.tracks[i].album.name %></span> -->
 							<div class="tracklist__track-addedby">
+								<% if(playlistData.tracks[i].addedBy.profilePic){ %>
 								<img class="tracklist__track-addedby-profilepic" src="<%= playlistData.tracks[i].addedBy.profilePic %>" alt="">
+								<% } else {%>
+									<img class="tracklist__track-addedby-profilepic" src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="">
+								<% } %>
+								
 								<% if(playlistData.tracks[i].addedBy.displayName){ %>
 								<span class="tracklist__track-addedby-name"><%= playlistData.tracks[i].addedBy.displayName.split(" ")[0] %></span>
 								<% } else {%>

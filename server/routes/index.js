@@ -44,7 +44,7 @@ var returnRouter = function(io) {
 		}),
 		function(req, res, next) {
 			console.log(req.session.playlistId);
-			if(req.session.playlistId){
+			if (req.session.playlistId) {
 				res.redirect('/playlist/' + req.session.playlistId);
 			} else {
 				res.redirect('/playlists');
@@ -86,45 +86,79 @@ var returnRouter = function(io) {
 		if (req.params !== 'undefined' && req.params.id !== 'undefined') {
 
 			io.on('connection', function(socket) {
-
 				//Remove listeners to prevent multiple connections on refresh
 				io.removeAllListeners('connection');
-				//Join room with the parameter of the url
-				socket.join(playlistId);
-				//Emit 'connected' to socket with user object
-				socket.emit('connected', req.user);
-				//Logs who connected
-				console.log(req.user.spotifyId, 'Connected');
-				//Update database with adding active user to database
 
-				Playlist.update({
-						"_id": playlistId,
-						'activeUsers.spotifyId': {
-							$ne: req.user.spotifyId
-						}
-					}, {
-						"$push": {
-							"activeUsers": req.user,
-							"users": req.user,
-						}
-					},
-					function(err, raw) {
-						if (err) {
-							console.log(err);
-						} else {
-							//Get playlist from database
-							Playlist.findOne({
-								_id: playlistId
-							}).then(function(results) {
-								var activeUsers = results.activeUsers;
-								socket.emit('showActiveUsers', activeUsers);
-								socket.broadcast.to(playlistId).emit('joinPlaylist', req.user, activeUsers);
-							}).catch(function(err) {
+				socket.on('connected', function() {
+					//Join room with the parameter of the url
+					socket.join(playlistId);
+					//Emit 'connected' to socket with user object
+					socket.emit('connected', req.user);
+					//Logs who connected
+					console.log(req.user.spotifyId, 'Connected');
+
+					//Update database with adding active user to database
+					Playlist.update({
+							"_id": playlistId,
+							'activeUsers.spotifyId': {
+								$ne: req.user.spotifyId
+							}
+						}, {
+							"$push": {
+								"activeUsers": req.user,
+								"users": req.user,
+							}
+						},
+						function(err, raw) {
+							if (err) {
 								console.log(err);
-							});
-						}
+							} else {
+								//Get playlist from database
+								Playlist.findOne({
+									_id: playlistId
+								}).then(function(results) {
+									var activeUsers = results.activeUsers;
+									socket.emit('showActiveUsers', activeUsers);
+									socket.broadcast.to(playlistId).emit('joinPlaylist', req.user, activeUsers);
+								}).catch(function(err) {
+									console.log(err);
+								});
+							}
 
-					});
+						});
+
+				});
+
+				socket.on('disconnect', function() {
+					console.log(req.user.spotifyId, 'Disconnected');
+					socket.leave(playlistId);
+
+					Playlist.update({
+							"_id": playlistId
+						}, {
+							"$pull": {
+								"activeUsers": req.user,
+								"users": req.user
+							}
+						},
+						function(err, raw) {
+							if (err) {
+								console.log(err);
+								return next();
+							} else {
+								Playlist.findOne({
+									_id: playlistId
+								}).then(function(results) {
+									var activeUsers = results.activeUsers;
+									io.to(playlistId).emit('leavePlaylist', req.user, activeUsers);
+								}).catch(function(err) {
+									console.log('dissconnect', err);
+									return next();
+								});
+							}
+						});
+
+				});
 
 				socket.on('addTrack', function(trackData) {
 					var newTrackData = {
@@ -613,34 +647,6 @@ var returnRouter = function(io) {
 					transferDevicePlayback();
 				});
 
-				socket.on('disconnect', function(socket) {
-					Playlist.update({
-							"_id": playlistId
-						}, {
-							"$pull": {
-								"activeUsers": req.user,
-								"users": req.user
-							}
-						},
-						function(err, raw) {
-							if (err) {
-								console.log(err);
-								return next();
-							} else {
-								Playlist.findOne({
-									_id: playlistId
-								}).then(function(results) {
-									var activeUsers = results.activeUsers;
-									io.to(playlistId).emit('leavePlaylist', req.user, activeUsers);
-								}).catch(function(err) {
-									console.log('dissconnect', err);
-									return next();
-								});
-							}
-						});
-					// console.log('rooms after disconnect', socket.adapter);
-					console.log('Disconnected');
-				});
 				socket.on('error', function(err) {
 					if (err === 'handshake error') {
 						console.log('handshake error', err);

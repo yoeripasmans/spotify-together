@@ -9,7 +9,12 @@
 			<div class="account__text--name"><%= user.username %></div>
 			<% } %>
 		</div>
-			<img class="account__profile-pic" src="<%= user.profilePic %>" alt="Profile picture of <%= user.profilePic %>">
+		<% if(user.profilePic){ %>
+		<img class="account__profile-pic" src="<%= user.profilePic %>" alt="Profile picture of <%= user.profilePic %>">
+		<% } else {%>
+		<img class="account__profile-pic" src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Profile picture of <%= user.profilePic %>">
+		<% } %>
+
 		<a href="/logout" class="logout-button">Log out</a>
 	</div>
 
