@@ -69,9 +69,10 @@ var returnRouter = function(io) {
 
 	});
 	//If playlist gets QR scanned link directly to playlist
-	router.get('/playlist/:qr/:id', ensureAuthenticated, function(req, res, next) {
+	router.get('/playlist/:qr/:id',  function(req, res, next) {
 		var playlistId = req.params.id;
 		req.session.playlistId = playlistId;
+		ensureAuthenticated();
 		console.log(req.session.playlistId);
 		res.redirect('/playlist/' + playlistId);
 
@@ -744,6 +745,7 @@ var returnRouter = function(io) {
 	});
 
 	function ensureAuthenticated(req, res, next) {
+
 		if (req.isAuthenticated()) {
 			return next();
 		} else {
