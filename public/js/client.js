@@ -34,7 +34,7 @@ socket.on('connected', function(userDetails) {
 			socket.emit('showPlaylist', this.parentElement.getAttribute('data-playlistowner'), this.parentElement.getAttribute('data-playlistid'));
 		});
 	}
-
+	//Search
 	searchTrackForm.addEventListener('keyup', function(e) {
 		var topSongs = document.querySelector('.top-songs');
 		var searchResults = document.querySelector('.search-results');
@@ -58,6 +58,22 @@ socket.on('connected', function(userDetails) {
 
 		return false;
 
+	});
+
+	//Show user playlist
+	var userPlaylistClose = document.querySelector('.close-playlist-button');
+	var userPlaylistWrapper = document.querySelector('.user-playlist');
+	var userPlaylistTracklist = document.querySelector('.add-playlist-tracks');
+	var userPlaylistTitle = document.querySelector('.user-playlist-header__title');
+	var userPlaylistCover = document.querySelector('.user-playlist-cover');
+	var userPlaylistCreatedByText = document.querySelector('.user-playlist-header__user-created span');
+	var userPlaylistCreatedByImg = document.querySelector('.user-playlist-header__user-created img');
+
+	//Close wrapper
+	userPlaylistClose.addEventListener('click', function() {
+		userPlaylistWrapper.classList.add('hidden');
+		var userPlaylistTracklistElements = document.querySelectorAll('.tracklist__track--results');
+		removeTrackList(userPlaylistTracklist, userPlaylistTracklistElements);
 	});
 
 	fetchDevicesButton.addEventListener('click', function() {
@@ -198,21 +214,6 @@ function updatePlayer(currentTrack) {
 
 	console.log(currentTrack);
 }
-
-var userPlaylistClose = document.querySelector('.close-playlist-button');
-var userPlaylistWrapper = document.querySelector('.user-playlist');
-var userPlaylistTracklist = document.querySelector('.add-playlist-tracks');
-var userPlaylistTitle = document.querySelector('.user-playlist-header__title');
-var userPlaylistCover = document.querySelector('.user-playlist-cover');
-var userPlaylistCreatedByText = document.querySelector('.user-playlist-header__user-created span');
-var userPlaylistCreatedByImg = document.querySelector('.user-playlist-header__user-created img');
-
-//Close wrapper
-userPlaylistClose.addEventListener('click', function() {
-	userPlaylistWrapper.classList.add('hidden');
-	var userPlaylistTracklistElements = document.querySelectorAll('.tracklist__track--results');
-	removeTrackList(userPlaylistTracklist, userPlaylistTracklistElements);
-});
 
 socket.on('showPlaylist', function(userPlaylistData, playlistData) {
 	//Open wrapper

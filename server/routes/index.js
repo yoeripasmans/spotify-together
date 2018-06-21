@@ -18,7 +18,7 @@ var returnRouter = function(io) {
 	});
 
 	router.get('/login',
-		passport.authenticate('spotify', {
+		passport.authenticate('spotify',  {
 			scope: ['streaming user-read-birthdate user-read-private playlist-read-private user-read-email user-read-playback-state user-modify-playback-state user-top-read'],
 			showDialog: true
 		}),
@@ -31,6 +31,7 @@ var returnRouter = function(io) {
 			failureRedirect: '/'
 		}),
 		function(req, res, next) {
+			console.log(req);
 			res.redirect('/playlists');
 		});
 
@@ -72,12 +73,6 @@ var returnRouter = function(io) {
 				//Logs who connected
 				console.log(req.user.spotifyId, 'Connected');
 				//Update database with adding active user to database
-
-				var currentUser = {
-					"id": req.user.spotifyId,
-					"name": req.user.username,
-					"profilePic": req.user.profilePic
-				};
 
 				Playlist.update({
 						"_id": playlistId,

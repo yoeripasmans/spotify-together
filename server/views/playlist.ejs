@@ -34,10 +34,10 @@
 						<img src="<%= playlistData.createdBy.profilePic %>" alt="">
 					</div>
 				</div>
+				<img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt="">
 			</header>
 
 			<section class="playlist-currentusers">
-				<!-- <img src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt=""> -->
 				<h3 class="playlist-currentusers__amount"><%= playlistData.activeUsers.length %> Users</h3>
 				<ul class="playlist-currentusers__list">
 					<!-- <% for(var i=0; i < playlistData.activeUsers.length; i++) { %>

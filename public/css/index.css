@@ -568,3 +568,10 @@ input[type=search] {
     background: linear-gradient(to bottom, transparent 0%, #000 100%);
     z-index: 1;
 }
+
+.qr-code {
+	align-self: center;
+margin-left: auto;
+height: 100%;
+}
+}
