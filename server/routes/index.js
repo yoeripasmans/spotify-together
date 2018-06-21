@@ -17,8 +17,20 @@ var returnRouter = function(io) {
 		res.redirect('/login');
 	});
 
+	// router.get('/login', function(req, res, next) {
+	//
+	// 	passport.authenticate('spotify', {
+	// 		state: req.session.playlistId
+	// 	}, {
+	// 		scope: ['streaming user-read-birthdate user-read-private playlist-read-private user-read-email user-read-playback-state user-modify-playback-state user-top-read'],
+	// 		showDialog: true
+	// 	});
+	//
+	//
+	// });
+
 	router.get('/login',
-		passport.authenticate('spotify',  {
+		passport.authenticate('spotify', {
 			scope: ['streaming user-read-birthdate user-read-private playlist-read-private user-read-email user-read-playback-state user-modify-playback-state user-top-read'],
 			showDialog: true
 		}),
@@ -31,13 +43,18 @@ var returnRouter = function(io) {
 			failureRedirect: '/'
 		}),
 		function(req, res, next) {
-			console.log(req);
-			res.redirect('/playlists');
+			console.log(req.session.playlistId);
+			if(req.session.playlistId){
+				res.redirect('/playlist/' + req.session.playlistId);
+			} else {
+				res.redirect('/playlists');
+			}
+
 		});
 
 
 	router.get('/playlists', ensureAuthenticated, function(req, res, next) {
-
+		req.session.playlistId = null;
 		Playlist.find({}).sort({
 			createdAt: 'desc'
 		}).then(function(results) {
@@ -53,13 +70,18 @@ var returnRouter = function(io) {
 	});
 	//If playlist gets QR scanned link directly to playlist
 	router.get('/playlist/:qr/:id', ensureAuthenticated, function(req, res, next) {
-		res.redirect('/playlist/' + req.params.id);
+		var playlistId = req.params.id;
+		req.session.playlistId = playlistId;
+		res.redirect('/playlist/' + playlistId);
+
 	});
 
 	var timeouts = {};
 
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
 		var playlistId = req.params.id;
+		//Save current playlist id inside session
+		req.session.playlistId = playlistId;
 		if (req.params !== 'undefined' && req.params.id !== 'undefined') {
 
 			io.on('connection', function(socket) {
@@ -221,20 +243,20 @@ var returnRouter = function(io) {
 							} else {
 
 
-								if(trackId === docs.tracks[0].id && docs.isPlaying === true && docs.tracks.length > 1){
+								if (trackId === docs.tracks[0].id && docs.isPlaying === true && docs.tracks.length > 1) {
 									playTrack(docs.tracks[1]);
 									io.to(playlistId).emit('deleteTrack', trackId, docs.tracks[1]);
-								} else if(trackId === docs.tracks[0].id && docs.isPlaying === false) {
+								} else if (trackId === docs.tracks[0].id && docs.isPlaying === false) {
 									io.to(playlistId).emit('deleteTrack', trackId, docs.tracks[1]);
 								} else {
 									io.to(playlistId).emit('deleteTrack', trackId);
 								}
 								//Delete current track and stops player
-								if(trackId === docs.tracks[0].id && docs.isPlaying === true && docs.tracks.length === 1){
+								if (trackId === docs.tracks[0].id && docs.isPlaying === true && docs.tracks.length === 1) {
 									io.to(playlistId).emit('resetPlayer');
 									pauseTrack();
 								}
-								if(trackId === docs.tracks[0].id && docs.isPlaying === false && docs.tracks.length === 1){
+								if (trackId === docs.tracks[0].id && docs.isPlaying === false && docs.tracks.length === 1) {
 									io.to(playlistId).emit('resetPlayer');
 								}
 
@@ -308,29 +330,29 @@ var returnRouter = function(io) {
 					Playlist.findOne({
 						_id: playlistId
 					}).then(function(results) {
-					spotifyApi.pause()
-						.then(function() {
-							console.log('pause track');
-							//Save state to database
-							Playlist.findOne({
-								_id: playlistId
-							}).then(function(results) {
-								results.set('isPlaying', false).save();
-								//Stop timer
-								// req.timer.stop();
-								clearTimeout(timeouts[playlistId]);
-								delete timeouts[playlistId];
+						spotifyApi.pause()
+							.then(function() {
+								console.log('pause track');
+								//Save state to database
+								Playlist.findOne({
+									_id: playlistId
+								}).then(function(results) {
+									results.set('isPlaying', false).save();
+									//Stop timer
+									// req.timer.stop();
+									clearTimeout(timeouts[playlistId]);
+									delete timeouts[playlistId];
 
-								console.log('pause', timeouts);
+									console.log('pause', timeouts);
+								}).catch(function(err) {
+									console.log(err);
+								});
+								io.to(playlistId).emit('pauseTrack', results);
 							}).catch(function(err) {
-								console.log(err);
+								// stoptimer();
+								console.log('play function', err);
+								checkAccesToken(req, res, next, err, pauseTrack);
 							});
-							io.to(playlistId).emit('pauseTrack', results);
-						}).catch(function(err) {
-							// stoptimer();
-							console.log('play function', err);
-							checkAccesToken(req, res, next, err, pauseTrack);
-						});
 					}).catch(function(err) {
 						console.log(err);
 						next();
