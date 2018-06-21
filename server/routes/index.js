@@ -72,6 +72,7 @@ var returnRouter = function(io) {
 	router.get('/playlist/:qr/:id', ensureAuthenticated, function(req, res, next) {
 		var playlistId = req.params.id;
 		req.session.playlistId = playlistId;
+		console.log(req.session.playlistId);
 		res.redirect('/playlist/' + playlistId);
 
 	});
@@ -672,7 +673,7 @@ var returnRouter = function(io) {
 					spotifyApi.getUserPlaylists(req.user.spotifyId)
 						.then(function(data) {
 							var userPlaylists = data.body.items;
-							console.log(userPlaylists);
+
 							// console.log(userPlaylists);
 							res.render('playlist', {
 								playlistData: results,
@@ -746,7 +747,7 @@ var returnRouter = function(io) {
 		if (req.isAuthenticated()) {
 			return next();
 		} else {
-			res.redirect('/');
+			res.redirect('/login');
 		}
 	}
 
