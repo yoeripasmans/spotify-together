@@ -276,7 +276,7 @@ button, input[type="submit"], input[type="reset"] {
 } */
 
 @media(max-width: 750px) {
-    .logout-button, .player-details {
+ .player-details {
         display: none !important;
     }
     main, .main-header, .add-track-wrapper {
