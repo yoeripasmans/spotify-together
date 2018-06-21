@@ -62,12 +62,6 @@ socket.on('connected', function(userDetails) {
 
 	//Show user playlist
 	var userPlaylistClose = document.querySelector('.close-playlist-button');
-	var userPlaylistWrapper = document.querySelector('.user-playlist');
-	var userPlaylistTracklist = document.querySelector('.add-playlist-tracks');
-	var userPlaylistTitle = document.querySelector('.user-playlist-header__title');
-	var userPlaylistCover = document.querySelector('.user-playlist-cover');
-	var userPlaylistCreatedByText = document.querySelector('.user-playlist-header__user-created span');
-	var userPlaylistCreatedByImg = document.querySelector('.user-playlist-header__user-created img');
 
 	//Close wrapper
 	userPlaylistClose.addEventListener('click', function() {
@@ -214,8 +208,16 @@ function updatePlayer(currentTrack) {
 
 	console.log(currentTrack);
 }
+var userPlaylistWrapper = document.querySelector('.user-playlist');
+	var userPlaylistTracklist = document.querySelector('.add-playlist-tracks');
 
 socket.on('showPlaylist', function(userPlaylistData, playlistData) {
+
+	var userPlaylistTitle = document.querySelector('.user-playlist-header__title');
+	var userPlaylistCover = document.querySelector('.user-playlist-cover');
+	var userPlaylistCreatedByText = document.querySelector('.user-playlist-header__user-created span');
+	var userPlaylistCreatedByImg = document.querySelector('.user-playlist-header__user-created img');
+	var userPlaylistWrapper = document.querySelector('.user-playlist');
 	//Open wrapper
 	userPlaylistWrapper.classList.remove('hidden');
 
