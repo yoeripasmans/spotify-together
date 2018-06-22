@@ -365,6 +365,12 @@ var returnRouter = function(io) {
 					Playlist.findOne({
 						_id: playlistId
 					}).then(function(results) {
+						results.set('isPlaying', false).save();
+						clearTimeout(timeouts[playlistId]);
+						delete timeouts[playlistId];
+						console.log('pause', timeouts);
+						io.to(playlistId).emit('pauseTrack', results);
+
 						spotifyApi.pause()
 							.then(function() {
 								console.log('pause track');
@@ -372,17 +378,12 @@ var returnRouter = function(io) {
 								Playlist.findOne({
 									_id: playlistId
 								}).then(function(results) {
-									results.set('isPlaying', false).save();
 									//Stop timer
 									// req.timer.stop();
-									clearTimeout(timeouts[playlistId]);
-									delete timeouts[playlistId];
-
-									console.log('pause', timeouts);
 								}).catch(function(err) {
 									console.log(err);
 								});
-								io.to(playlistId).emit('pauseTrack', results);
+
 							}).catch(function(err) {
 								// stoptimer();
 								console.log('play function', err);

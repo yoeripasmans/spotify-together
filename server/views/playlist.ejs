@@ -34,11 +34,17 @@
 						<img src="<%= playlistData.createdBy.profilePic %>" alt="">
 					</div>
 				</div>
-				<img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt="">
 			</header>
 
 			<section class="playlist-currentusers">
-				<h3 class="playlist-currentusers__amount"><%= playlistData.activeUsers.length %> Users</h3>
+				<header class="tracklist-header">
+					<h3 class="playlist-currentusers__amount"><%= playlistData.activeUsers.length %> Users</h3>
+					<div class="button-wrapper">
+						<a href="#showinfo" class="button show-qr-code"><span>QR Code</span><img src="/icons/qr.svg" alt="" class="button-icon"></a>
+						<a href="#add-track" class="button show-all-users"><span>View all</span><img src="/icons/users.svg" alt="" class="button-icon"></a>
+					</div>
+				</header>
+
 				<ul class="playlist-currentusers__list">
 					<!-- <% for(var i=0; i < playlistData.activeUsers.length; i++) { %>
 
@@ -52,10 +58,18 @@
 				</ul>
 			</section>
 
+			<div class="qr-overlay hidden">
+					<img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt="">
+			</div>
+
 			<section class="playlist-queue">
 				<header class="tracklist-header">
 					<h3>Queue</h3>
-					<a href="#add-track" class="button show-add-tracks">Add song</a>
+					<div class="button-wrapper">
+						<a href="#showinfo" class="button show-playlist-info"><span>Info</span><img src="/icons/users.svg" alt="" class="button-icon"></a>
+						<a href="#add-track" class="button show-add-tracks"><span>Add songs</span><img src="/icons/add.svg" alt="" class="button-icon"></a>
+					</div>
+
 				</header>
 				<div class="tracklist__header">
 					<span></span>
@@ -63,7 +77,7 @@
 					<span>Artist</span>
 					<!-- <span>Album</span> -->
 					<span>Added by</span>
-					<span>Likes</span>
+					<%# <span>Likes</span> %>
 
 				</div>
 
@@ -81,7 +95,7 @@
 								<% } else {%>
 									<img class="tracklist__track-addedby-profilepic" src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="">
 								<% } %>
-								
+
 								<% if(playlistData.tracks[i].addedBy.displayName){ %>
 								<span class="tracklist__track-addedby-name"><%= playlistData.tracks[i].addedBy.displayName.split(" ")[0] %></span>
 								<% } else {%>
