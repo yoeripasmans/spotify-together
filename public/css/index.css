@@ -155,6 +155,7 @@ margin-left: 1em;
 .playlist-header__currentrack img {
     height: 100%;
     border-radius: 4px;
+	box-shadow: 0 32px 40px -20px rgba(0,0,0,0.80);
 }
 
 .playlist-header__currentrack .play-status {
@@ -584,17 +585,27 @@ input[type=search] {
     margin-bottom: 4px;
 }
 
+.background-image-wrapper {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+}
+
 .background-image {
     background-size: cover;
     display: block;
     filter: blur(2.5em);
     -webkit-filter: blur(2.5em);
-	transform: scale(1.1);
+    	transform: scale(1.1);
     height: 100%;
     width: 100%;
     top: 0;
     left: 0;
-    position: absolute;
+    position: fixed;
     right: 0;
     z-index: -1;
     transition: background-image 0.6s ease-in-out;
@@ -606,7 +617,7 @@ input[type=search] {
     width: 100%;
     height: 100%;
     background-color: rgba(0,0,0,0.2);
-	background-image: linear-gradient(to bottom, transparent 0%, #000000 77%);
+	background: linear-gradient(to bottom, transparent 0%, #000000 77%);
     z-index: 1;
 }
 

@@ -297,7 +297,9 @@
 					<button type="button" class="fetch-devices-button">Fetch Devices</button>
 		</section>
 		<% if(playlistData.tracks.length > 0 ){ %>
-		<div class="background-image background-image--playlist" style="background-image: url(<%= playlistData.tracks[0].album.images[1].url %>)"></div>
+		<div class="background-image-wrapper">
+			<div class="background-image background-image--playlist" style="background-image: url(<%= playlistData.tracks[0].album.images[1].url %>)"></div>
+		</div>
 		<% } else {%>
 		<div class="background-image background-image--playlist"></div>
 			<% } %>
