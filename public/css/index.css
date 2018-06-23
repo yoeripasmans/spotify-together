@@ -287,7 +287,7 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 .top-songs .tracklist__track, .top-songs .tracklist__header, .search-results .tracklist__track, .search-results .tracklist__header, .user-playlist .tracklist__track, .user-playlist .tracklist__header {
-    grid-template-columns: 4.5em 26em 1fr 4em;
+    grid-template-columns: 4.5em 26em 1fr 2em;
 }
 
 .tracklist__track {
@@ -429,6 +429,11 @@ button, input[type="submit"], input[type="reset"] {
 .user-playlists {
     display: flex;
     justify-content: space-between;
+	margin-top: 2em;
+}
+
+.user-playlist-header {
+	display: flex;
 }
 
 .user-playlists__item {
@@ -439,7 +444,7 @@ button, input[type="submit"], input[type="reset"] {
 .user-playlists img {
     width: 100%;
     display: block;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.6em;
 }
 
 .show-playlist-button {
@@ -537,7 +542,7 @@ input[type=search] {
 }
 
 .playlist-search, .track-search {
-    width: 16em;
+
     height: 3.5em;
     background-color: #191919;
     color: #fff;
@@ -546,7 +551,10 @@ input[type=search] {
     padding: 1em;
     border-radius: 4px;
 	margin-left: auto;
-	    align-self: flex-end;
+	 width: 400px;
+  height: 40px;
+  border-radius: 40px;
+  background-color: #0a0b0c;
 }
 
 
