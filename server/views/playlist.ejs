@@ -11,7 +11,8 @@
 		<main>
 			<header class="playlist-header">
 				<div class="playlist-header__currentrack">
-					<% if(playlistData.tracks.length > 0 ){ %>
+
+					<% if(playlistData.tracks ){ %>
 					<img class="header-currenttrack-img" src="<%= playlistData.tracks[0].album.images[1].url %>" alt="">
 					<% } else {%>
 					<img class="header-currenttrack-img" src="//:0" alt="">
@@ -67,7 +68,7 @@
 					<h3>Queue</h3>
 					<div class="button-wrapper">
 						<a href="#showinfo" class="button show-playlist-info"><span>Info</span><img src="/icons/users.svg" alt="" class="button-icon"></a>
-						<% if(playlistData.tracks.length > 0 ){ %>
+						<% if(playlistData.tracks ){ %>
 							<a href="#add-track" class="button show-add-tracks" style="background-color: rgb(<%= playlistData.tracks[0].primaryColor %>)"><span>Add songs</span><img src="/icons/add.svg" alt="" class="button-icon"></a>
 							<% } else {%>
 							<a href="#add-track" class="button show-add-tracks"><span>Add songs</span><img src="/icons/add.svg" alt="" class="button-icon"></a>
@@ -268,7 +269,7 @@
 		<section id="player">
 
 			<div class="player-details">
-				<% if(playlistData.tracks.length > 0 ){ %>
+				<% if(playlistData.tracks ){ %>
 					<img src="<%= playlistData.tracks[0].album.images[1].url %>" alt="" class="player-details__track-img">
 					<div class="player-details__text">
 						<p class="player-details__track-name">
@@ -316,7 +317,7 @@
 
 					<button type="button" class="fetch-devices-button">Fetch Devices</button>
 		</section>
-		<% if(playlistData.tracks.length > 0 ){ %>
+		<% if(playlistData.tracks ){ %>
 		<div class="background-image-wrapper">
 			<div class="background-image background-image--playlist" style="background-image: url(<%= playlistData.tracks[0].album.images[1].url %>)"></div>
 		</div>
