@@ -185,6 +185,8 @@ socket.on('pauseTrack', function(results) {
 });
 
 function updatePlayer(currentTrack) {
+	var addTrackButton = document.querySelector('.show-add-tracks');
+
 	var playlistheaderImg = document.querySelector('.header-currenttrack-img');
 	playlistheaderImg.src = currentTrack.album.images[1].url;
 
@@ -204,6 +206,7 @@ function updatePlayer(currentTrack) {
 
 	// Promise
 	Vibrant.from(currentTrack.album.images[0].url).getPalette().then(function(palette) {
+		addTrackButton.style.backgroundColor = "rgb(" + palette.Vibrant._rgb[0] + "," + palette.Vibrant._rgb[1] + "," + palette.Vibrant._rgb[2] + ")";
 		console.log(palette);
 	}).catch(function(err){
 		console.log(err);
