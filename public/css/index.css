@@ -115,6 +115,9 @@ margin-left: 1em;
 .logo {
     font-size: 1.2em;
     font-weight: 400;
+	background-image: url(../images/logo.svg);
+	width: 180px;
+	height: 28px;
 }
 
 .account {
@@ -597,6 +600,9 @@ input[type=search] {
 
 .background-image {
     background-size: cover;
+	background: #667780 -webkit-linear-gradient(rgba(0,0,0,0.30) 0%, #000000 77%);
+	background: #667780 -o-linear-gradient(rgba(0,0,0,0.30) 0%, #000000 77%);
+	background: #667780 linear-gradient(rgba(0,0,0,0.30) 0%, #000000 77%);
     display: block;
     filter: blur(2.5em);
     -webkit-filter: blur(2.5em);
