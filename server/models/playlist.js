@@ -12,7 +12,8 @@ var trackSchema = new Schema({
 	likes: Number,
 	userLiked: Array,
 	addedBy: Object,
-	isPlaying: Boolean
+	isPlaying: Boolean,
+	primaryColor: String,
 },{
 	timestamps: true
 });

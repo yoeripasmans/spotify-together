@@ -9,6 +9,7 @@ var Playlist = require('../models/playlist');
 var User = require('../models/user');
 var crypto = require("crypto");
 var spotifyApi = new SpotifyWebApi();
+var Vibrant = require('node-vibrant');
 
 var returnRouter = function(io) {
 
@@ -173,6 +174,7 @@ var returnRouter = function(io) {
 						isPlaying: false
 					};
 
+
 					Playlist.findOneAndUpdate({
 							_id: playlistId,
 							'tracks.id': {
@@ -203,8 +205,31 @@ var returnRouter = function(io) {
 							} else {
 								var databaseTrackData = docs.tracks[docs.tracks.length - 1];
 								io.to(playlistId).emit('addTrack', databaseTrackData);
+
+								// Vibrant.from(databaseTrackData.album.images[0].url).getPalette().then(function(palette) {
+								// 	console.log(palette);
+								// 	if (palette.Vibrant) {
+								// 		databaseTrackData.set('primaryColor', palette.Vibrant._rgb[0] + "," + palette.Vibrant._rgb[1] + "," + palette.Vibrant._rgb[2]);
+								// 		docs.save();
+								// 		// newTrackData.primaryColor = palette.Vibrant._rgb[0] + "," + palette.Vibrant._rgb[1] + "," + palette.Vibrant._rgb[2];
+								// 	} else if (palette.DarkMuted) {
+								// 		databaseTrackData.set('primaryColor', palette.DarkMuted._rgb[0] + "," + palette.DarkMuted._rgb[1] + "," + palette.DarkMuted._rgb[2]);
+								// 		docs.save();
+								// 		// newTrackData.primaryColor = palette.DarkMuted._rgb[0] + "," + palette.DarkMuted._rgb[1] + "," + palette.DarkMuted._rgb[2];
+								// 	} else {
+								// 		databaseTrackData.set('primaryColor', "102, 119, 128)");
+								// 			docs.save();
+								// 		// newTrackData.primaryColor = "102, 119, 128)";
+								// 	}
+								//
+								// }).then(function() {});
 							}
-						});
+
+						}).catch(function(err) {
+						console.log(err);
+					});
+
+
 				});
 
 				socket.on('likeTrack', function(trackId) {
@@ -369,7 +394,7 @@ var returnRouter = function(io) {
 						clearTimeout(timeouts[playlistId]);
 						delete timeouts[playlistId];
 						console.log('pause', timeouts);
-						io.to(playlistId).emit('pauseTrack', results);
+						io.to(playlistId).emit('pauseTrack');
 
 						spotifyApi.pause()
 							.then(function() {
@@ -680,14 +705,14 @@ var returnRouter = function(io) {
 					spotifyApi.getUserPlaylists(req.user.spotifyId)
 						.then(function(data) {
 							var userPlaylists = data.body.items;
-
-							// console.log(userPlaylists);
 							res.render('playlist', {
 								playlistData: results,
 								user: req.user,
 								topTracks: topTracks,
-								userPlaylists: userPlaylists
+								userPlaylists: userPlaylists,
 							});
+
+
 
 						}).catch(function(err) {
 							console.log(err);

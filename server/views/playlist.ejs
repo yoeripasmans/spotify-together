@@ -67,7 +67,14 @@
 					<h3>Queue</h3>
 					<div class="button-wrapper">
 						<a href="#showinfo" class="button show-playlist-info"><span>Info</span><img src="/icons/users.svg" alt="" class="button-icon"></a>
-						<a href="#add-track" class="button show-add-tracks"><span>Add songs</span><img src="/icons/add.svg" alt="" class="button-icon"></a>
+						<% if(playlistData.tracks.length > 0 ){ %>
+							<a href="#add-track" class="button show-add-tracks" style="background-color: rgb(<%= playlistData.tracks[0].primaryColor %>)"><span>Add songs</span><img src="/icons/add.svg" alt="" class="button-icon"></a>
+							<% } else {%>
+							<a href="#add-track" class="button show-add-tracks"><span>Add songs</span><img src="/icons/add.svg" alt="" class="button-icon"></a>
+							<% } %>
+
+
+
 					</div>
 
 				</header>
@@ -126,7 +133,7 @@
 										 }
 									 }
 									 if(liked === true){ %>
-											<button type="button" class="track-like-button track-like-button--disabled" disabled><span>Like</span><img class="icon" src="/icons/heart.svg" alt="Heart icon"></button>
+											<button type="button" class="track-like-button track-like-button--disabled" disabled><span>Like</span><img class="icon" src="/icons/heart-filled.svg" alt="Heart icon"></button>
 											<% } else {%>
 												<button type="button" class="track-like-button"><span>Like</span><img class="icon" src="/icons/heart.svg" alt="Heart icon"></button>
 												<% }
@@ -143,11 +150,15 @@
 
 		<section id="add-track">
 			<div class="add-track-wrapper">
-				<header>
-					<h2>Add songs to <%= playlistData.name %></h2>
-					<a href="#" class="close-add-tracks button">Close</a>
+				<header class="add-track-header">
+					<div class="header-titles">
+
+						<a href="#" class="leave-playlist-button"><img src="/icons/back.svg" alt="" class="icon"><span>Back to playlist</span></a>
+						<h1>Add songs</h1>
+					</div>
+
+					<input class="track-search" type="search" name="search" placeholder="Search for a song">
 				</header>
-				<input class="track-search" type="search" name="search" placeholder="Search for a song">
 
 				<section class="search-results">
 					<h3>Search results</h3>
