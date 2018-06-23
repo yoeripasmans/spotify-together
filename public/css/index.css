@@ -84,14 +84,14 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 .show-add-tracks {
-background-color: #667780;
-border: none;
-width: 160px;
- margin-left: 1em;
+	background-color: #667780;
+	border: none;
+	width: 160px;
+	margin-left: 1em;
 }
 
 .button-icon {
-margin-left: 1em;
+	margin-left: 1em;
 }
 
 .show-playlist-info  {
@@ -100,8 +100,8 @@ margin-left: 1em;
 }
 
 .show-all-users, .show-qr-code {
-	 width: 139px;
-	 margin-left: 1em;
+	width: 139px;
+	margin-left: 1em;
 }
 
 .main-header {
@@ -113,11 +113,9 @@ margin-left: 1em;
 }
 
 .logo {
-    font-size: 1.2em;
-    font-weight: 400;
 	background-image: url(../images/logo.svg);
-	width: 180px;
-	height: 28px;
+	width: 11.25rem;
+	height: 1.75rem;
 }
 
 .account {
@@ -448,6 +446,18 @@ margin-left: 1em;
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+#player::before {
+	content: "";
+    display: block;
+	position: absolute;
+    width: 100%;
+    height: 20px;
+    background-color: rgba(0,0,0,0.2);
+	background: red;
+    z-index: 1;
+	top: -20px;
 }
 
 .player-details {
