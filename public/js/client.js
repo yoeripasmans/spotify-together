@@ -325,6 +325,7 @@ function likeTrack() {
 		var trackId = this.parentElement.parentElement.getAttribute('data-id');
 		// this.previousElementSibling.textContent = likeAmount;
 		this.setAttribute('liked', 'true');
+		this.childNodes[1].src = "/icons/heart-filled.svg";
 		this.disabled = true;
 		this.classList.add('track-like-button--disabled');
 		socket.emit('likeTrack', trackId);
@@ -338,6 +339,7 @@ socket.on('nextTrack', function(oldCurrentTrack) {
 		likeButton.disabled = false;
 		likeButton.setAttribute('liked', 'false');
 		likeButton.classList.remove('track-like-button--disabled');
+		likeButton.childNodes[1].src = "/icons/heart.svg";
 	}
 });
 
