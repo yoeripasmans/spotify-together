@@ -202,6 +202,13 @@ function updatePlayer(currentTrack) {
 
 	var addedBy = document.querySelector('.player-details__addedby');
 
+	// Promise
+	Vibrant.from(currentTrack.album.images[0].url).getPalette().then(function(palette) {
+		console.log(palette);
+	}).catch(function(err){
+		console.log(err);
+	});
+
 	if (currentTrack.addedBy.displayName) {
 		addedBy.textContent = currentTrack.addedBy.displayName.split(" ")[0];
 	} else {

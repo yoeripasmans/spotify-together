@@ -143,11 +143,15 @@
 
 		<section id="add-track">
 			<div class="add-track-wrapper">
-				<header>
-					<h2>Add songs to <%= playlistData.name %></h2>
-					<a href="#" class="close-add-tracks button">Close</a>
+				<header class="add-track-header">
+					<div class="header-titles">
+
+						<a href="#" class="leave-playlist-button"><img src="/icons/back.svg" alt="" class="icon"><span>Back to playlist</span></a>
+						<h1>Add songs</h1>
+					</div>
+
+					<input class="track-search" type="search" name="search" placeholder="Search for a song">
 				</header>
-				<input class="track-search" type="search" name="search" placeholder="Search for a song">
 
 				<section class="search-results">
 					<h3>Search results</h3>

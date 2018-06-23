@@ -29,6 +29,7 @@
         "mongoose-unique-array": "^0.2.0",
         "node-fetch": "^2.1.2",
         "node-timers": "0.0.2",
+        "node-vibrant": "^3.0.0",
         "passport": "^0.4.0",
         "passport-oauth2-refresh": "^1.1.0",
         "passport-spotify": "^1.0.0",

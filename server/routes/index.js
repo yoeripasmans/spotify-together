@@ -369,7 +369,7 @@ var returnRouter = function(io) {
 						clearTimeout(timeouts[playlistId]);
 						delete timeouts[playlistId];
 						console.log('pause', timeouts);
-						io.to(playlistId).emit('pauseTrack', results);
+						
 
 						spotifyApi.pause()
 							.then(function() {
@@ -378,8 +378,12 @@ var returnRouter = function(io) {
 								Playlist.findOne({
 									_id: playlistId
 								}).then(function(results) {
+
 									//Stop timer
 									// req.timer.stop();
+
+
+
 								}).catch(function(err) {
 									console.log(err);
 								});
