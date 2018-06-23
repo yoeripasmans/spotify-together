@@ -10,13 +10,15 @@
 		<main>
 			<header class="playlist-overview-header">
 				<h1>All playlists</h1>
+				<input class="playlist-search" type="search" name="search" placeholder="Search for playlist">
+				<a href="create" class="button">Create playlist</a>
 			</header>
 
-			<input class="playlist-search" type="search" name="search" placeholder="Search for playlist">
+
 			<section class="playlist-overview-section">
 				<header>
 					<h3>Playlists</h3>
-					<a href="create" class="button">Create playlist</a>
+
 				</header>
 				<ul class="playlist-overview-list">
 					<% for(var i=0; i < playlists.length; i++) { %>

@@ -67,7 +67,14 @@
 					<h3>Queue</h3>
 					<div class="button-wrapper">
 						<a href="#showinfo" class="button show-playlist-info"><span>Info</span><img src="/icons/users.svg" alt="" class="button-icon"></a>
-						<a href="#add-track" class="button show-add-tracks"><span>Add songs</span><img src="/icons/add.svg" alt="" class="button-icon"></a>
+						<% if(playlistData.tracks.length > 0 ){ %>
+							<a href="#add-track" class="button show-add-tracks" style="background-color: rgb(<%= playlistData.tracks[0].primaryColor %>)"><span>Add songs</span><img src="/icons/add.svg" alt="" class="button-icon"></a>
+							<% } else {%>
+							<a href="#add-track" class="button show-add-tracks"><span>Add songs</span><img src="/icons/add.svg" alt="" class="button-icon"></a>
+							<% } %>
+
+
+
 					</div>
 
 				</header>

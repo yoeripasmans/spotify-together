@@ -190,8 +190,14 @@ function updatePlayer(currentTrack) {
 	var playlistheaderImg = document.querySelector('.header-currenttrack-img');
 	playlistheaderImg.src = currentTrack.album.images[1].url;
 
+
+if (currentTrack.isPlaying === true) {
 	var backgroundImage = document.querySelector('.background-image--playlist');
 	backgroundImage.style.backgroundImage = "url(" + currentTrack.album.images[0].url + ")";
+}
+
+
+
 
 	var img = document.querySelector('.player-details__track-img');
 	img.src = currentTrack.album.images[1].url;
@@ -206,11 +212,18 @@ function updatePlayer(currentTrack) {
 
 	// Promise
 	Vibrant.from(currentTrack.album.images[0].url).getPalette().then(function(palette) {
-		addTrackButton.style.backgroundColor = "rgb(" + palette.Vibrant._rgb[0] + "," + palette.Vibrant._rgb[1] + "," + palette.Vibrant._rgb[2] + ")";
+		if(palette.Vibrant && palette.LightVibrant){
+			addTrackButton.style.backgroundColor = "rgb(" + palette.Vibrant._rgb[0] + "," + palette.Vibrant._rgb[1] + "," + palette.Vibrant._rgb[2] + ")";
+		} else {
+			addTrackButton.style.backgroundColor = "rgb(102, 119, 128)";
+		}
+
 		console.log(palette);
 	}).catch(function(err){
 		console.log(err);
 	});
+	addTrackButton.style.backgroundColor = "rgb(" + currentTrack.primaryColor + ")";
+
 
 	if (currentTrack.addedBy.displayName) {
 		addedBy.textContent = currentTrack.addedBy.displayName.split(" ")[0];

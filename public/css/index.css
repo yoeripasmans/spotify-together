@@ -87,7 +87,14 @@ button, input[type="submit"], input[type="reset"] {
     border: none;
     width: 160px;
     margin-left: 1em;
+	transition: 0.6s ease background-color;
 }
+
+.playlist-overview-header {
+	display: flex;
+}
+
+
 .add-track-header {
 	display: flex;
 	margin: 4em 0;
@@ -495,7 +502,7 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 .player-controls {
-    position: fixed;
+    position: absolute;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
