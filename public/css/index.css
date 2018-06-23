@@ -599,14 +599,14 @@ input[type=search] {
 }
 
 .background-image {
-    background-size: cover;
 	background: #667780 -webkit-linear-gradient(rgba(0,0,0,0.30) 0%, #000000 77%);
 	background: #667780 -o-linear-gradient(rgba(0,0,0,0.30) 0%, #000000 77%);
 	background: #667780 linear-gradient(rgba(0,0,0,0.30) 0%, #000000 77%);
+	background-size: cover;
     display: block;
     filter: blur(2.5em);
     -webkit-filter: blur(2.5em);
-    	transform: scale(1.1);
+    transform: scale(1.1);
     height: 100%;
     width: 100%;
     top: 0;
