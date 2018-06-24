@@ -34,10 +34,17 @@ h3 {
   font-size: 1.7em;
   font-weight: 600;
 }
+h4 {
+  font-size: 1.1em;
+}
 
 a {
   color: #fff;
   text-decoration: none;
+}
+
+p {
+  line-height: 1.5;
 }
 
 ul {
@@ -317,8 +324,8 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 .tracklist__track-img {
-  height: 100%;
-  width: auto;
+  height: auto;
+  width: 72%;
   border-radius: 4px;
 }
 
@@ -361,14 +368,17 @@ button, input[type="submit"], input[type="reset"] {
 /* .pause-button.hidden {
 	display: none;
 } */
+@media(max-width: 1170px) {
+  main, .main-header, .add-track-wrapper {
+    padding: 0 1em;
+  }
+}
 
 @media(max-width: 750px) {
   .player-details {
     display: none !important;
   }
-  main, .main-header, .add-track-wrapper {
-    padding: 0 1em;
-  }
+
   .playlist-header__currentrack {
     margin-right: 2em;
   }
@@ -383,6 +393,10 @@ button, input[type="submit"], input[type="reset"] {
     grid-row-gap: 0;
     height: 4em;
   }
+  .tracklist__track-img {
+    width: 100%;
+  }
+
   .tracklist__track-addedby {
     display: none !important;
   }
@@ -720,5 +734,35 @@ input[type="search"]::-webkit-search-results-decoration {
 .qr-code {
   align-self: center;
   margin-left: auto;
-  height: 100%;
+  width: 100%;
+  margin-top: 3em;
+}
+
+.qr-overlay {
+  position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.qr-wrapper {
+  width: 512px;
+height: 636px;
+border-radius: 4px;
+background-color: #000000;
+padding: 4em;
+}
+.qr-wrapper header {
+  display: flex;
+  margin-bottom: 1em;
+}
+
+.close-qr-overlay-button {
+  margin-left: auto;
 }

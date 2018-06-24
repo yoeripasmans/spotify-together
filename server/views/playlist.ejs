@@ -41,7 +41,9 @@
 					<h3 class="playlist-currentusers__amount"><%= playlistData.activeUsers.length %> Users</h3>
 					<div class="button-wrapper">
 						<a href="#showinfo" class="button show-qr-code"><span>QR Code</span><img src="/icons/qr.svg" alt="" class="button-icon"></a>
+						<% if(playlistData.activeUsers.length > 10)  {%>
 						<a href="#add-track" class="button show-all-users"><span>View all</span><img src="/icons/users.svg" alt="" class="button-icon"></a>
+						<% } %>
 					</div>
 				</header>
 
@@ -59,7 +61,14 @@
 			</section>
 
 			<div class="qr-overlay hidden">
-					<img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt="">
+				<div class="qr-wrapper">
+					<header>
+						<h4>Quick access</h4>
+						<button class="close-qr-overlay-button"><img src="/icons/close.svg" alt="" class="icon"></button>
+					</header>
+						<p>Show this QR code to people so they can immediately join the playlist without any hassle.</p>
+						<img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt="">
+				</div>
 			</div>
 
 			<section class="playlist-queue">
@@ -320,8 +329,9 @@
 				</div>
 				<% } %>
 
-
+					<% if(user.spotifyId === playlistData.admins[0]){ %>
 					<button type="button" class="fetch-devices-button">Fetch Devices</button>
+					<% } %>
 		</section>
 		<% if(playlistData.tracks.length > 0 ){ %>
 		<div class="background-image-wrapper">

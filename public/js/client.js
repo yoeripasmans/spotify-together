@@ -102,9 +102,11 @@ socket.on('connected', function(userDetails) {
     removeTrackList(userPlaylistTracklist, userPlaylistTracklistElements);
   });
 
-  fetchDevicesButton.addEventListener('click', function() {
-    socket.emit('fetchDevices');
-  });
+	if (fetchDevicesButton) {
+		fetchDevicesButton.addEventListener('click', function() {
+	    socket.emit('fetchDevices');
+	  });
+	}
 
   if (playButton) {
     //Player event listeners
@@ -124,6 +126,19 @@ socket.on('connected', function(userDetails) {
       socket.emit('prevTrack');
     });
   }
+
+	//Toggle qr code
+	var qrOverlay = document.querySelector('.qr-overlay');
+	var openQrOverlayButton = document.querySelector('.show-qr-code');
+	var closeQrOverlayButton = document.querySelector('.close-qr-overlay-button');
+
+	openQrOverlayButton.addEventListener('click', function(){
+		qrOverlay.classList.remove('hidden');
+	})
+	closeQrOverlayButton.addEventListener('click', function(){
+		qrOverlay.classList.add('hidden');
+	})
+
 
   for (var i = 0; i < likeButtons.length; i++) {
     likeButtons[i].setAttribute('liked', 'false');
