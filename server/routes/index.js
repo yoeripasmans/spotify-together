@@ -33,7 +33,7 @@ var returnRouter = function(io) {
 	router.get('/login',
 		passport.authenticate('spotify', {
 			scope: ['streaming user-read-birthdate user-read-private playlist-read-private user-read-email user-read-playback-state user-modify-playback-state user-top-read'],
-			showDialog: true
+			showDialog: false
 		}),
 		function(req, res) {
 			// The request will be redirected to spotify for authentication, so this function will not be called.
