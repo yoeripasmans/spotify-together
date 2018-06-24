@@ -152,12 +152,14 @@
 			<div class="add-track-wrapper">
 				<header class="add-track-header">
 					<div class="header-titles">
-
 						<a href="#" class="leave-playlist-button"><img src="/icons/back.svg" alt="" class="icon"><span>Back to playlist</span></a>
 						<h1>Add songs</h1>
 					</div>
+					<div class="track-search-wrapper">
+							<input class="track-search" type="search" name="search" placeholder="Search for a song">
+							<img src="/icons/search.svg" alt="" class="track-search-icon">
+					</div>
 
-					<input class="track-search" type="search" name="search" placeholder="Search for a song">
 				</header>
 
 				<section class="search-results">
@@ -178,10 +180,10 @@
 					<header class="user-playlist-header">
 						<h3>Personal playlists</h3>
 						<div class="button-wrapper">
-							<a href="#add-track" class="button show-all-users"><span>View all</span><img src="/icons/music_note.svg" alt="" class="button-icon"></a>
+							<a href="#add-track" class="button show-all-user-playlists"><span>View all</span><img src="/icons/music_note.svg" alt="" class="button-icon"></a>
 						</div>
 					</header>
-
+					<div class="user-playlists-wrapper">
 					<ul class="user-playlists">
 						<% for(var i=0; i < 6; i++) { %>
 							<li class="user-playlists__item" data-playlistid="<%= userPlaylists[i].id %>" data-playlistowner="<%= userPlaylists[i].owner.id %>">
@@ -192,6 +194,7 @@
 							</li>
 							<% } %>
 					</ul>
+					</div>
 				</section>
 
 				<section class="user-playlist hidden">
@@ -226,6 +229,10 @@
 
 
 				<section class="top-songs">
+					<header class="tracklist-header">
+						<h3>Top tracks</h3>
+					</header>
+
 					<div class="tracklist__header">
 						<span></span>
 						<span>Title</span>
