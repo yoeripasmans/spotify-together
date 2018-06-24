@@ -134,10 +134,10 @@ socket.on('connected', function(userDetails) {
 
 	openQrOverlayButton.addEventListener('click', function(){
 		qrOverlay.classList.remove('hidden');
-	})
+	});
 	closeQrOverlayButton.addEventListener('click', function(){
 		qrOverlay.classList.add('hidden');
-	})
+	});
 
 
   for (var i = 0; i < likeButtons.length; i++) {
