@@ -177,8 +177,10 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 .main-header {
-  max-width: 70em;
-  margin: 0 auto;
+	max-width: 77rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
   display: flex;
   align-items: center;
   height: 4em;
@@ -687,7 +689,7 @@ input[type="search"]::-webkit-search-results-decoration {
     background: #667780 -webkit-linear-gradient(rgba(0, 0, 0, 0.30) 0%, #000000 77%);
     background: #667780 -o-linear-gradient(rgba(0, 0, 0, 0.30) 0%, #000000 77%);
     background: #667780 linear-gradient(rgba(0, 0, 0, 0.30) 0%, #000000 77%);
-    background-size: contain;
+    background-size: 100%;
     display: block;
     filter: blur(2.5em);
     -webkit-filter: blur(2.5em);
@@ -757,6 +759,11 @@ padding: 4em;
 }
 
 @media(max-width: 750px) {
+
+	.background-image:after {
+	  background: linear-gradient(to bottom, transparent 0%, #000000 50%);
+	}
+
     .background-image {
         /* background: red !important; */
     }
@@ -808,8 +815,8 @@ padding: 4em;
     }
 
 	.show-add-tracks {
-	    background: none;
-	    padding: 0.5rem 0.5rem;
+	    /* background: none; */
+	    padding: 0.5rem 0.75rem;
 	}
 
 	.show-add-tracks .button-icon {
