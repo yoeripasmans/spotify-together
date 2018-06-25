@@ -102,6 +102,10 @@ button, input[type="submit"], input[type="reset"] {
     padding: 0.5rem 1.5rem;
 }
 
+.show-add-tracks span::before {
+	content: 'Add songs';
+}
+
 .playlist-overview-header {
     display: flex;
 }
@@ -140,11 +144,13 @@ button, input[type="submit"], input[type="reset"] {
     margin-right: 1em;
     border: none;
 	color: rgba(255,255,255,0.6);
+	transition: .5s;
 }
 
 .active-tab {
     background-color: #667780;
 	color: #ffffff;
+	transition: .5s;
 }
 
 .button-icon {
@@ -170,11 +176,13 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 .main-header {
-    max-width: 70em;
+	max-width: 77rem;
     margin: 0 auto;
-    display: flex;
-    align-items: center;
-    height: 4em;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  height: 4em;
 }
 
 .logo {
@@ -445,17 +453,6 @@ align-items: center;
     margin: 2em 0 4em 0;
 }
 
-@media (max-width: 750px) {
-    .user-playlists-wrapper {
-        overflow-x: scroll;
-        margin-right: -1em;
-        overflow-y: hidden;
-    }
-    .user-playlists {
-        width: 60em;
-    }
-}
-
 .user-playlists {
     display: flex;
     justify-content: space-between;
@@ -652,15 +649,10 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
     top: 12px;
 }
 
-@media(max-width: 750px) {
-    .track-search, .track-search-wrapper {
-        width: 100%;
-    }
-}
+.playlist-overview-header  {
 
-.playlist-overview-header {
-    margin: 4em 0 2em 0;
-    height: 3em;
+  margin: 4em 0 2em 0;
+  height: 3em;
 }
 
 .create-playlist-button {
@@ -744,7 +736,7 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
     background: #667780 -webkit-linear-gradient(rgba(0, 0, 0, 0.30) 0%, #000000 77%);
     background: #667780 -o-linear-gradient(rgba(0, 0, 0, 0.30) 0%, #000000 77%);
     background: #667780 linear-gradient(rgba(0, 0, 0, 0.30) 0%, #000000 77%);
-    background-size: contain;
+    background-size: 100%;
     display: block;
     filter: blur(2.5em);
     -webkit-filter: blur(2.5em);
@@ -866,6 +858,7 @@ body.cast {
 }
 
 
+
 .desktop {
     display: block;
 }
@@ -875,6 +868,11 @@ body.cast {
 }
 
 @media(max-width: 750px) {
+
+	.background-image:after {
+	  background: linear-gradient(to bottom, transparent 0%, #000000 50%);
+	}
+
     .background-image {
         /* background: red !important; */
     }
@@ -887,6 +885,9 @@ body.cast {
     .player-details {
         display: none !important;
     }
+	.playlist-header__details {
+		padding: 2rem 0;
+	}
     main, .main-header, .add-track-wrapper {
         /* padding: 0 1em; */
     }
@@ -921,27 +922,65 @@ body.cast {
     .track-add-button {
         grid-row: 1 / 3;
     }
-    .cast-active-button {
-      display: none;
-    }
-    #player {
 
-      display: none;
-    }
-    #player.admin {
-      display: flex;
-      padding: 0 2em;
-    }
-    .playlist-controls .icon {
-      width: 1.8em;
-      margin: 0;
-    }
+	.show-add-tracks {
+	    /* background: none; */
+	    padding: 0.5rem 0.75rem;
+	}
 
-    .fetch-devices-button span {
-      display: none;
-    }
-    .playlist-controls {
-      justify-content: center;
-      align-items: center;
-    }
+	.show-add-tracks .button-icon {
+	  margin-left: 0;
+	}
+
+	.show-add-tracks span::before {
+		content: '';
+	}
+
+	#player {
+	  height: 4em;
+	}
+
+  .track-search, .track-search-wrapper {
+    width: 100%;
+  }
+
+  .user-playlists-wrapper {
+    overflow-x: scroll;
+    overflow-y: hidden;
+	margin-left: -1rem;
+	margin-right: -1rem;
+	padding: 0 1rem;
+  }
+
+  .user-playlists {
+    width: 60em;
+	height: 10.16rem;
+	padding-right: 1rem;
+	box-sizing: border-box;
+  }
+  #player {
+
+    display: none;
+  }
+  #player.admin {
+    display: flex;
+    padding: 0 2em;
+  }
+  .playlist-controls .icon {
+    width: 1.8em;
+    margin: 0;
+  }
+
+  .fetch-devices-button span {
+    display: none;
+  }
+  .playlist-controls {
+    justify-content: center;
+    align-items: center;
+  }
+  .cast-active-button {
+    display: none;
+  }
+
+
 }

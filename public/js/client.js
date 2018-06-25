@@ -775,3 +775,40 @@ function toggleCheckboxState() {
 		this.value = false;
 	}
 }
+
+if (document.querySelector('.tab-users')) {
+
+	if (window.innerWidth <= 750) {
+		// var divs = document.getElementsByTagName("main section");   // order: first, second, third
+		//
+		// console.log("hoi");
+		// console.log(divs);
+
+		// divs[2].parentNode.insertBefore(divs[2], divs[0]); // order: third, first, second
+		// divs[2].parentNode.insertBefore(divs[2], divs[1]); // order: third, second, third
+	}
+
+	document.querySelector('.logo').classList.add("desktop");
+	document.querySelector('.leave-playlist-button').classList.remove("hidden");
+
+	document.querySelector('.tab-users').addEventListener("click", function(){
+    	document.querySelector('.tab-users').classList.add("active-tab");
+		document.querySelector('.tab-queue').classList.remove("active-tab");
+		document.querySelector('.tracklist').classList.add("hidden");
+	});
+
+	document.querySelector('.tab-queue').addEventListener("click", function(){
+    	document.querySelector('.tab-users').classList.remove("active-tab");
+		document.querySelector('.tab-queue').classList.add("active-tab");
+		document.querySelector('.tracklist').classList.remove("hidden");
+	});
+}
+
+window.onresize = function() {
+	if (document.querySelector('.tab-users') && window.innerWidth > 750) {
+		document.querySelector('.tab-users').classList.remove("active-tab");
+		document.querySelector('.tab-queue').classList.add("active-tab");
+		document.querySelector('.tracklist').classList.remove("hidden");
+		document.querySelector('.logo').classList.remove("hidden");
+	}
+}

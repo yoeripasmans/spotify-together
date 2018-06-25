@@ -23,7 +23,7 @@
 					<% } %>
 				</div>
 				<div class="playlist-header__details">
-					<a href="/playlists" class="leave-playlist-button"><img src="/icons/back.svg" alt="" class="icon"><span>Leave playlist</span></a>
+					<a href="/playlists" class=" desktop leave-playlist-button"><img src="/icons/back.svg" alt="" class="icon"><span>Leave playlist</span></a>
 					<h1 class="playlist-header__title"><%= playlistData.name %></h1>
 					<div class="playlist-header__user-created">
 						<% if(playlistData.createdBy.displayName){ %>
@@ -75,13 +75,13 @@
 				<header class="tracklist-header">
 					<h3 class="desktop">Queue</h3>
 					<button type="button" class="mobile button tab-queue active-tab">Queue</button>
-					<button type="button" class="mobile button tab-users">View users</button>
+					<button type="button" class="mobile button tab-users"><%= playlistData.activeUsers.length %> Users</button>
 					<div class="button-wrapper">
 						<a href="#showinfo" class="button show-playlist-info"><span>Info</span><img src="/icons/users.svg" alt="" class="button-icon"></a>
 						<% if(playlistData.tracks.length > 0 ){ %>
-							<a href="#add-track" class="button show-add-tracks" style="background-color: rgb(<%= playlistData.tracks[0].primaryColor %>)"><span>Add songs</span><img src="/icons/add.svg" alt="" class="button-icon"></a>
+							<a href="#add-track" class="button show-add-tracks" style="background-color: rgb(<%= playlistData.tracks[0].primaryColor %>)"><span></span><img src="/icons/add.svg" alt="" class="button-icon"></a>
 							<% } else {%>
-							<a href="#add-track" class="button show-add-tracks"><span>Add songs</span><img src="/icons/add.svg" alt="" class="button-icon"></a>
+							<a href="#add-track" class="button show-add-tracks"><span></span><img src="/icons/add.svg" alt="" class="button-icon"></a>
 							<% } %>
 
 
@@ -242,7 +242,9 @@
 
 						</ul>
 					</div>
-					<div class="background-image" style="background-image: url(<%= user.profilePic %> )"></div>
+					<div class="background-image-wrapper">
+						<div class="background-image" style="background-image: url(<%= user.profilePic %> )"></div>
+					</div>
 				</section>
 
 
@@ -286,7 +288,9 @@
 					</ul>
 				</section>
 			</div>
-			<div class="background-image" style="background-image: url(<%= user.profilePic %> )"></div>
+			<div class="background-image-wrapper">
+				<div class="background-image" style="background-image: url(<%= user.profilePic %> )"></div>
+			</div>
 		</section>
 
 		<div class="overlay fetch-devices-overlay hidden">
