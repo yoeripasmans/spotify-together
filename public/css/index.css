@@ -291,10 +291,13 @@ button, input[type="submit"], input[type="reset"] {
 
 .playlist-currentusers__list {
   padding: 0;
-display: grid;
-grid-template-columns: repeat(10, 1fr);
-column-gap: 25px;
-row-gap: 25px;
+      display: grid;
+      column-gap: 25px;
+      row-gap: 25px;
+      grid-template-columns: repeat(auto-fill, minmax(6em, 1fr));
+      height: 8em;
+      overflow: hidden;
+  }
 }
 
 .leave-playlist-button {
@@ -855,9 +858,6 @@ body.cast {
 	height: 8.5em;
 }
 
-.cast .playlist-currentusers__list{
-  grid-template-columns: repeat(8, 1fr);
-}
 
 
 
@@ -987,7 +987,13 @@ body.cast {
 
   .playlist-currentusers__list {
 	  grid-template-columns: 1fr;
+    overflow: visible;
+    height: auto;
   }
+
+  .playlist-currentusers {
+    margin: 2em 0;
+}
 
   .current-user {
 	  flex-direction: row;
