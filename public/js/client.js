@@ -825,8 +825,8 @@ window.onresize = function() {
 	}
 
 	if (document.querySelector('.tab-users') && window.innerWidth <= 750) {
-		document.querySelector('.playlist-currentusers').classList.add("hidden");
 		if (sectionSwitch == false) {
+			document.querySelector('.playlist-currentusers').classList.add("hidden");
 			var divs = document.querySelector("main").getElementsByTagName("section");
 			divs[0].parentNode.insertBefore(divs[1], divs[0]);
 			sectionSwitch = true;
