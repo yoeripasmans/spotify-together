@@ -40,7 +40,7 @@
 				<header class="tracklist-header">
 					<h3 class="playlist-currentusers__amount"><%= playlistData.activeUsers.length %> Users</h3>
 					<div class="button-wrapper">
-						<a href="#showinfo" class="button show-qr-code"><span>QR Code</span><img src="/icons/qr.svg" alt="" class="button-icon"></a>
+						<button class="button show-qr-code"><span>QR Code</span><img src="/icons/qr.svg" alt="" class="button-icon"></button>
 						<% if(playlistData.activeUsers.length > 10)  {%>
 						<a href="#add-track" class="button show-all-users"><span>View all</span><img src="/icons/users.svg" alt="" class="button-icon"></a>
 						<% } %>
@@ -60,11 +60,11 @@
 				</ul>
 			</section>
 
-			<div class="qr-overlay hidden">
-				<div class="qr-wrapper">
+			<div class="overlay qr-overlay hidden">
+				<div class="overlay-wrapper qr-wrapper">
 					<header>
 						<h4>Quick access</h4>
-						<button class="close-qr-overlay-button"><img src="/icons/close.svg" alt="" class="icon"></button>
+						<button class="close-overlay-button close-qr-overlay-button"><img src="/icons/close.svg" alt="" class="icon"></button>
 					</header>
 						<p>Show this QR code to people so they can immediately join the playlist without any hassle.</p>
 						<img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt="">
@@ -279,8 +279,18 @@
 			<div class="background-image" style="background-image: url(<%= user.profilePic %> )"></div>
 		</section>
 
+		<div class="overlay fetch-devices-overlay hidden">
+			<div class="overlay-wrapper">
+				<header>
+					<h4>Connect to devices</h4>
+					<button class="close-overlay-button close-fetch-overlay-button"><img src="/icons/close.svg" alt="" class="icon"></button>
+				</header>
+					<p>Choose on which device you want to play the Spotify Together playlist.</p>
+					<ul class="fetch-devices-wrapper"></ul>
+			</div>
+		</div>
 
-		<ul class="fetch-devices-wrapper"></ul>
+
 		<section id="player">
 
 			<div class="player-details">
@@ -330,7 +340,11 @@
 				<% } %>
 
 					<% if(user.spotifyId === playlistData.admins[0]){ %>
-					<button type="button" class="fetch-devices-button">Fetch Devices</button>
+						<div class="playlist-controls">
+						<button type="button" class="cast-active-button"><span>Cast mode</span><img class="icon" src="/icons/settings.svg" alt="Settings icon"></button>
+						<button type="button" class="fetch-devices-button"><span>Connect to device</span><img class="icon" src="/icons/stream.svg" alt="Connect icon"></button>
+						</div>
+
 					<% } %>
 		</section>
 		<% if(playlistData.tracks.length > 0 ){ %>
