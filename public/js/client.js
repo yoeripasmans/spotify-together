@@ -20,6 +20,7 @@ socket.on('connected', function(userDetails) {
 	var addTrackButton = document.querySelectorAll('.track-add-button');
 	var searchTrackForm = document.querySelector('.track-search');
 	var showPlaylistButton = document.querySelectorAll('.show-playlist-button');
+
 	user = userDetails;
 
 	//Eventlistener for adding tracks to the playlist
@@ -36,6 +37,7 @@ socket.on('connected', function(userDetails) {
 			socket.emit('showPlaylist', this.parentElement.getAttribute('data-playlistowner'), this.parentElement.getAttribute('data-playlistid'));
 		});
 	}
+
 	//Search
 	var searchIcon = document.querySelector('.track-search-icon');
 	var topSongs = document.querySelector('.top-songs');
@@ -151,10 +153,17 @@ socket.on('connected', function(userDetails) {
 
 	//Toggle cast
 	var castActiveButton = document.querySelector('.cast-active-button');
+	var castInactiveButton = document.querySelector('.cast-inactive-button');
 
 	if (castActiveButton) {
 		castActiveButton.addEventListener('click', function() {
 			document.body.classList.add('cast');
+		});
+	}
+
+	if (castInactiveButton) {
+		castInactiveButton.addEventListener('click', function() {
+			document.body.classList.remove('cast');
 		});
 	}
 
@@ -244,6 +253,11 @@ socket.on('playingTrack', function(currentTrack, oldCurrentTrack) {
 	});
 	updatePlayer(currentTrack);
 });
+	var progressBar = document.querySelector('.progress-bar');
+
+socket.on('progressBar', function(width) {
+	progressBar.style.width = width + "%";
+});
 
 socket.on('pauseTrack', function(results) {
 	if (playButton) {
@@ -252,6 +266,8 @@ socket.on('pauseTrack', function(results) {
 	}
 	var playStatus = document.querySelector('.play-status');
 	playStatus.textContent = "Paused";
+
+	progressBar.style.width = 0;
 });
 
 function updatePlayer(currentTrack) {
@@ -260,14 +276,10 @@ function updatePlayer(currentTrack) {
 	var playlistheaderImg = document.querySelector('.header-currenttrack-img');
 	playlistheaderImg.src = currentTrack.album.images[1].url;
 
-
 	if (currentTrack.isPlaying === true) {
 		var backgroundImage = document.querySelector('.background-image--playlist');
 		backgroundImage.style.backgroundImage = "url(" + currentTrack.album.images[0].url + ")";
 	}
-
-
-
 
 	var img = document.querySelector('.player-details__track-img');
 	img.src = currentTrack.album.images[1].url;
@@ -284,8 +296,10 @@ function updatePlayer(currentTrack) {
 	Vibrant.from(currentTrack.album.images[0].url).getPalette().then(function(palette) {
 		if (palette.Vibrant && palette.LightVibrant) {
 			addTrackButton.style.backgroundColor = "rgb(" + palette.Vibrant._rgb[0] + "," + palette.Vibrant._rgb[1] + "," + palette.Vibrant._rgb[2] + ")";
+			progressBar.style.backgroundColor = "rgb(" + palette.Vibrant._rgb[0] + "," + palette.Vibrant._rgb[1] + "," + palette.Vibrant._rgb[2] + ")";
 		} else {
 			addTrackButton.style.backgroundColor = "rgb(102, 119, 128)";
+			progressBar.style.backgroundColor = "#fff";
 		}
 
 		console.log(palette);
@@ -436,6 +450,7 @@ socket.on('nextTrack', function(oldCurrentTrack) {
 		likeButton.classList.remove('track-like-button--disabled');
 		likeButton.childNodes[1].src = "/icons/heart.svg";
 	}
+	progressBar.style.width = 0;
 });
 
 socket.on('likeTrack', function(trackId, currentTrack) {
@@ -490,7 +505,6 @@ socket.on('showDevices', function(devices) {
 			fetchDevicesWrapper.removeChild(deviceElements[i]);
 	}
 
-
 	for (let i = 0; i < devices.length; i++) {
 		var li = document.createElement('li');
 		li.classList.add('device-element');
@@ -530,10 +544,12 @@ socket.on('addTrack', function(trackData, spotifyId) {
 	albumCover.src = trackData.album.images[1].url;
 
 	var trackName = document.createElement('span');
+	trackName.classList.add('tracklist__track-name');
 	li.appendChild(trackName);
 	trackName.textContent = trackData.name;
 
 	var artistName = document.createElement('span');
+	artistName.classList.add('tracklist__track-artist');
 	li.appendChild(artistName);
 	artistName.textContent = trackData.artists.map(a => a.name).join(', ');
 

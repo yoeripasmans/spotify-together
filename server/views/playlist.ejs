@@ -95,7 +95,7 @@
 					<span>Artist</span>
 					<!-- <span>Album</span> -->
 					<span>Added by</span>
-					<%# <span>Likes</span> %>
+					<span>Likes</span>
 
 				</div>
 
@@ -158,6 +158,14 @@
 			</section>
 
 		</main>
+
+		<aside class="cast-qr-code">
+			<header>
+				<h3>Join the playlist</h3>
+			</header>
+				<p>Scan the QR code to easily join the playlist!</p>
+				<img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt="">
+		</aside>
 
 		<section id="add-track">
 			<div class="add-track-wrapper">
@@ -292,9 +300,14 @@
 			</div>
 		</div>
 
-
+<% if(user.spotifyId === playlistData.admins[0]){ %>
+		<section id="player" class="admin">
+			<% } else {%>
 		<section id="player">
-
+			<% } %>
+			<div class="progress-bar-wrapper">
+				<div class="progress-bar"></div>
+			</div>
 			<div class="player-details">
 				<% if(playlistData.tracks.length > 0 ){ %>
 					<img src="<%= playlistData.tracks[0].album.images[1].url %>" alt="" class="player-details__track-img">
@@ -344,6 +357,7 @@
 					<% if(user.spotifyId === playlistData.admins[0]){ %>
 						<div class="playlist-controls">
 						<button type="button" class="cast-active-button"><span>Cast mode</span><img class="icon" src="/icons/settings.svg" alt="Settings icon"></button>
+						<button type="button" class="cast-inactive-button"><span>Exit cast mode</span><img class="icon" src="/icons/close.svg" alt="Close icon"></button>
 						<button type="button" class="fetch-devices-button"><span>Connect to device</span><img class="icon" src="/icons/stream.svg" alt="Connect icon"></button>
 						</div>
 

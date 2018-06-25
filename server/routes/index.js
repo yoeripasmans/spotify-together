@@ -79,6 +79,7 @@ var returnRouter = function(io) {
 	});
 
 	var timeouts = {};
+	var intervals = {};
 
 	router.get('/playlist/:id', ensureAuthenticated, function(req, res, next) {
 		var playlistId = req.params.id;
@@ -364,7 +365,21 @@ var returnRouter = function(io) {
 
 							io.to(playlistId).emit('playingTrack', currentTrack);
 
-							timeouts[playlistId] = setTimeout(nextTrack, currentTrack.duration_ms);
+							//Progress bar
+							var width = 0;
+							var tracklengthSec = Math.floor(currentTrack.duration_ms / 1000);
+
+							intervals[playlistId] = setInterval(function(){
+								width += 0.5;
+								var percent = (width / tracklengthSec) * 100;
+										io.to(playlistId).emit('progressBar', percent);
+							},500);
+
+							//Set timeout
+							timeouts[playlistId] = setTimeout(function(){
+								nextTrack();
+
+							}, currentTrack.duration_ms);
 							console.log('play', timeouts);
 
 							Playlist.findOne({
@@ -391,6 +406,10 @@ var returnRouter = function(io) {
 						_id: playlistId
 					}).then(function(results) {
 						results.set('isPlaying', false).save();
+
+						clearInterval(intervals[playlistId]);
+						delete intervals[playlistId];
+
 						clearTimeout(timeouts[playlistId]);
 						delete timeouts[playlistId];
 						console.log('pause', timeouts);
@@ -502,6 +521,18 @@ var returnRouter = function(io) {
 															console.log(err);
 														});
 														clearTimeout(timeouts[playlistId]);
+														clearInterval(intervals[playlistId]);
+
+														//Progress bar
+														var width = 0;
+														var tracklengthSec = Math.floor(newCurrentTrack.duration_ms / 1000);
+
+														intervals[playlistId] = setInterval(function(){
+															width += 0.5;
+															var percent = (width / tracklengthSec) * 100;
+																	io.to(playlistId).emit('progressBar', percent);
+														},500);
+
 														timeouts[playlistId] = setTimeout(nextTrack, newCurrentTrack.duration_ms);
 														console.log('next track', timeouts);
 

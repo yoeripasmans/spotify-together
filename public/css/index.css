@@ -280,8 +280,11 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 .playlist-currentusers__list {
-    padding: 0;
-    display: flex;
+  padding: 0;
+display: grid;
+grid-template-columns: repeat(10, 1fr);
+column-gap: 25px;
+row-gap: 25px;
 }
 
 .leave-playlist-button {
@@ -294,8 +297,9 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 .current-user {
-    list-style-type: none;
-    margin-right: 1em;
+  display: flex;
+flex-direction: column;
+align-items: center;
 }
 
 .current-user img {
@@ -327,7 +331,7 @@ button, input[type="submit"], input[type="reset"] {
 
 .tracklist__track, .tracklist__header {
     display: grid;
-    grid-template-columns: 4.5em 1fr 1fr 13em 4em;
+        grid-template-columns: 4.5em 1fr 1fr 15em 3em;
     grid-gap: 1em;
     list-style-type: none;
     margin-bottom: 1em;
@@ -367,7 +371,7 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 .tracklist__track-likes {
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
 .like-amount {
@@ -514,6 +518,23 @@ button, input[type="submit"], input[type="reset"] {
     left: 0;
 }
 
+.progress-bar-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    top: -0.4em;
+    left: 0;
+    background-color: #1a2026;
+}
+.progress-bar {
+  height: 100%;
+  background-color: #fff;
+  border-radius: 2px;
+  width: 0;
+  /* transition: 0.1s linear width; */
+
+}
+
 .player-details {
     height: 100%;
     display: flex;
@@ -566,14 +587,15 @@ button, input[type="submit"], input[type="reset"] {
     height: 3em;
     justify-content: space-between;
     align-items: flex-end;
+        margin-left: auto;
 }
 
-.fetch-devices-button, .cast-active-button {
+.fetch-devices-button, .cast-active-button, .cast-inactive-button {
     display: flex;
     align-items: center;
 }
 
-.fetch-devices-button .icon, .cast-active-button .icon {
+.playlist-controls .icon {
     margin-left: 1em;
 }
 
@@ -785,24 +807,64 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
     margin-left: auto;
 }
 
-.cast .playlist-header__currentrack, .cast .leave-playlist-button, .cast .button, .cast .player-controls, .cast .playlist-controls, .cast .playlist-header__user-created, .cast .main-header {
+.cast-inactive-button {
+  display: none;
+}
+
+.cast-qr-code {
+  display: none;
+}
+
+.cast .cast-inactive-button {
+  display: flex;
+}
+
+.cast .playlist-header__currentrack, .cast .leave-playlist-button, .cast .button, .cast .player-controls, .cast .cast-active-button,.cast .fetch-devices-button, .cast .playlist-header__user-created, .cast .main-header, .cast .track-delete-button {
 	display: none;
 }
 
+.cast .playlist-controls {
+	justify-content: center;
+}
+
 .cast .playlist-header {
-	height: 6em;
+	height: auto;
+  margin: 0;
+}
+
+body.cast {
+  display: flex;
 }
 
 .cast main {
-	max-width: 70%;
-	padding: 0 2em;
+	width: 75%;
+	padding: 3em;
 	margin: 0;
 }
 
+.cast aside {
+  width: 30%;
+    padding: 11em 4em;
+    height: 100%;
+    margin: 0;
+}
+
+.cast .cast-qr-code header {
+  margin-bottom: 1em;
+}
+
+.cast .cast-qr-code {
+  display: block;
+}
 
 .cast #player {
 	height: 8.5em;
 }
+
+.cast .playlist-currentusers__list{
+  grid-template-columns: repeat(8, 1fr);
+}
+
 
 .desktop {
     display: block;
@@ -838,7 +900,7 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
         display: none;
     }
     .tracklist__track {
-        grid-template-columns: 5em 1fr 4em !important;
+        grid-template-columns: 5em 1fr 2em !important;
         grid-row-gap: 0;
         height: 5em;
     }
@@ -847,6 +909,7 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
     }
     .tracklist__track-img {
         grid-row: 1 / 3;
+        width: 100%;
     }
     .tracklist__track-name {
         grid-row: 1;
@@ -857,5 +920,28 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
     }
     .track-add-button {
         grid-row: 1 / 3;
+    }
+    .cast-active-button {
+      display: none;
+    }
+    #player {
+
+      display: none;
+    }
+    #player.admin {
+      display: flex;
+      padding: 0 2em;
+    }
+    .playlist-controls .icon {
+      width: 1.8em;
+      margin: 0;
+    }
+
+    .fetch-devices-button span {
+      display: none;
+    }
+    .playlist-controls {
+      justify-content: center;
+      align-items: center;
     }
 }
