@@ -23,7 +23,7 @@
 					<% } %>
 				</div>
 				<div class="playlist-header__details">
-					<a href="/playlists" class="leave-playlist-button"><img src="/icons/back.svg" alt="" class="icon"><span>Leave playlist</span></a>
+					<a href="/playlists" class=" desktop leave-playlist-button"><img src="/icons/back.svg" alt="" class="icon"><span>Leave playlist</span></a>
 					<h1 class="playlist-header__title"><%= playlistData.name %></h1>
 					<div class="playlist-header__user-created">
 						<% if(playlistData.createdBy.displayName){ %>
@@ -234,7 +234,9 @@
 
 						</ul>
 					</div>
-					<div class="background-image" style="background-image: url(<%= user.profilePic %> )"></div>
+					<div class="background-image-wrapper">
+						<div class="background-image" style="background-image: url(<%= user.profilePic %> )"></div>
+					</div>
 				</section>
 
 
@@ -278,7 +280,9 @@
 					</ul>
 				</section>
 			</div>
-			<div class="background-image" style="background-image: url(<%= user.profilePic %> )"></div>
+			<div class="background-image-wrapper">
+				<div class="background-image" style="background-image: url(<%= user.profilePic %> )"></div>
+			</div>
 		</section>
 
 

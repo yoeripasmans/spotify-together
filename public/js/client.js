@@ -730,6 +730,12 @@ function toggleCheckboxState() {
 
 if (document.querySelector('.tab-users')) {
 
+	if (window.innerWidth <= 750) {
+		document.querySelector('.logo').classList.add("hidden");
+	}
+
+	document.querySelector('.leave-playlist-button').classList.remove("hidden");
+
 	document.querySelector('.tab-users').addEventListener("click", function(){
     	document.querySelector('.tab-users').classList.add("active-tab");
 		document.querySelector('.tab-queue').classList.remove("active-tab");
@@ -748,5 +754,10 @@ window.onresize = function() {
 		document.querySelector('.tab-users').classList.remove("active-tab");
 		document.querySelector('.tab-queue').classList.add("active-tab");
 		document.querySelector('.tracklist').classList.remove("hidden");
+		document.querySelector('.logo').classList.remove("hidden");
+	}
+
+	if (document.querySelector('.tab-users') && window.innerWidth <= 750) {
+		document.querySelector('.logo').classList.add("hidden");
 	}
 }

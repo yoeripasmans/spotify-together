@@ -447,18 +447,6 @@ button, input[type="submit"], input[type="reset"] {
   margin: 2em 0 4em 0;
 }
 
-@media (max-width: 750px) {
-  .user-playlists-wrapper {
-        overflow-x: scroll;
-        margin-right: -1em;
-        overflow-y: hidden;
-  }
-  .user-playlists {
-    width: 60em;
-  }
-}
-
-
 .user-playlists {
   display: flex;
   justify-content: space-between;
@@ -617,12 +605,6 @@ input[type="search"]::-webkit-search-results-decoration {
   position: absolute;
   right: 1em;
   top: 12px;
-}
-
-@media(max-width: 750px){
-  .track-search, .track-search-wrapper {
-    width: 100%;
-  }
 }
 
 .playlist-overview-header  {
@@ -787,6 +769,10 @@ padding: 4em;
     .player-details {
         display: none !important;
     }
+
+	.playlist-header__details {
+		padding: 2rem 0;
+	}
     main, .main-header, .add-track-wrapper {
         /* padding: 0 1em; */
     }
@@ -833,5 +819,28 @@ padding: 4em;
 	.show-add-tracks span::before {
 		content: '';
 	}
+
+	#player {
+	  height: 4em;
+	}
+
+  .track-search, .track-search-wrapper {
+    width: 100%;
+  }
+
+  .user-playlists-wrapper {
+    overflow-x: scroll;
+    overflow-y: hidden;
+	margin-left: -1rem;
+	margin-right: -1rem;
+	padding: 0 1rem;
+  }
+
+  .user-playlists {
+    width: 60em;
+	height: 10.16rem;
+	padding-right: 1rem;
+	box-sizing: border-box;
+  }
 
 }
