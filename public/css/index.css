@@ -191,6 +191,8 @@ button, input[type="submit"], input[type="reset"] {
     background-image: url(../images/logo.svg);
     width: 180px;
     height: 28px;
+	background-repeat: no-repeat;
+	background-position: left center;
 }
 
 .account {
@@ -897,6 +899,7 @@ body.cast {
     .playlist-header__title {
         font-size: 2.5em;
     }
+
     .tracklist__header {
         display: none;
     }
@@ -981,6 +984,27 @@ body.cast {
   .cast-active-button {
     display: none;
   }
+
+  .playlist-currentusers__list {
+	  grid-template-columns: 1fr;
+  }
+
+  .current-user {
+	  flex-direction: row;
+  }
+
+  .current-user img {
+	  width: 3rem;
+  }
+
+  .current-user p {
+	  margin: 0 0 0 1rem;
+  }
+
+ .playlist-currentusers .tracklist-header {
+ 	  display: none;
+ }
+
 
 
 }

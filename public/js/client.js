@@ -776,28 +776,32 @@ function toggleCheckboxState() {
 	}
 }
 
+var sectionSwitch;
+
 if (document.querySelector('.tab-users')) {
 
 	if (window.innerWidth <= 750) {
-		// var divs = document.getElementsByTagName("main section");   // order: first, second, third
-		//
-		// console.log("hoi");
-		// console.log(divs);
+		var divs = document.querySelector("main").getElementsByTagName("section");
+		divs[0].parentNode.insertBefore(divs[1], divs[0]);
+		sectionSwitch = true;
 
-		// divs[2].parentNode.insertBefore(divs[2], divs[0]); // order: third, first, second
-		// divs[2].parentNode.insertBefore(divs[2], divs[1]); // order: third, second, third
+		document.querySelector('.playlist-currentusers').classList.add("hidden");
+	} else {
+		sectionSwitch = false;
 	}
 
 	document.querySelector('.logo').classList.add("desktop");
 	document.querySelector('.leave-playlist-button').classList.remove("hidden");
 
 	document.querySelector('.tab-users').addEventListener("click", function(){
+		document.querySelector('.playlist-currentusers').classList.remove("hidden");
     	document.querySelector('.tab-users').classList.add("active-tab");
 		document.querySelector('.tab-queue').classList.remove("active-tab");
 		document.querySelector('.tracklist').classList.add("hidden");
 	});
 
 	document.querySelector('.tab-queue').addEventListener("click", function(){
+		document.querySelector('.playlist-currentusers').classList.add("hidden");
     	document.querySelector('.tab-users').classList.remove("active-tab");
 		document.querySelector('.tab-queue').classList.add("active-tab");
 		document.querySelector('.tracklist').classList.remove("hidden");
@@ -805,10 +809,27 @@ if (document.querySelector('.tab-users')) {
 }
 
 window.onresize = function() {
+
 	if (document.querySelector('.tab-users') && window.innerWidth > 750) {
 		document.querySelector('.tab-users').classList.remove("active-tab");
 		document.querySelector('.tab-queue').classList.add("active-tab");
 		document.querySelector('.tracklist').classList.remove("hidden");
 		document.querySelector('.logo').classList.remove("hidden");
+		document.querySelector('.playlist-currentusers').classList.remove("hidden");
+
+		if (sectionSwitch == true) {
+			var divs = document.querySelector("main").getElementsByTagName("section");
+			divs[0].parentNode.insertBefore(divs[1], divs[0]);
+			sectionSwitch = false;
+		}
+	}
+
+	if (document.querySelector('.tab-users') && window.innerWidth <= 750) {
+		document.querySelector('.playlist-currentusers').classList.add("hidden");
+		if (sectionSwitch == false) {
+			var divs = document.querySelector("main").getElementsByTagName("section");
+			divs[0].parentNode.insertBefore(divs[1], divs[0]);
+			sectionSwitch = true;
+		}
 	}
 }
