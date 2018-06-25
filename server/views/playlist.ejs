@@ -36,7 +36,7 @@
 				</div>
 			</header>
 
-			<section class="playlist-currentusers">
+			<section class="desktop playlist-currentusers">
 				<header class="tracklist-header">
 					<h3 class="playlist-currentusers__amount"><%= playlistData.activeUsers.length %> Users</h3>
 					<div class="button-wrapper">
@@ -73,7 +73,9 @@
 
 			<section class="playlist-queue">
 				<header class="tracklist-header">
-					<h3>Queue</h3>
+					<h3 class="desktop">Queue</h3>
+					<button type="button" class="mobile button tab-queue active-tab">Queue</button>
+					<button type="button" class="mobile button tab-users">View users</button>
 					<div class="button-wrapper">
 						<a href="#showinfo" class="button show-playlist-info"><span>Info</span><img src="/icons/users.svg" alt="" class="button-icon"></a>
 						<% if(playlistData.tracks.length > 0 ){ %>
