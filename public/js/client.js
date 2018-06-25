@@ -143,7 +143,7 @@ socket.on('connected', function(userDetails) {
 	});
 
 	if (fetchDevicesButton) {
-		fetchDevicesButton.addEventListener('click', function() {
+		fetchDevicesButton.addEventListener('click', function(e) {
 			fetchDevicesOverlay.classList.remove('hidden');
 			socket.emit('fetchDevices');
 		});
@@ -164,14 +164,6 @@ socket.on('connected', function(userDetails) {
 			fetchDevicesOverlay.classList.add('hidden');
 		});
 	}
-
-	if (fetchDevicesButton) {
-		fetchDevicesButton.addEventListener('click', function() {
-			fetchDevicesOverlay.classList.remove('hidden');
-			socket.emit('fetchDevices');
-		});
-	}
-
 
 	for (var i = 0; i < likeButtons.length; i++) {
 		likeButtons[i].setAttribute('liked', 'false');
@@ -490,11 +482,18 @@ socket.on('resetPlayer', function() {
 });
 
 socket.on('showDevices', function(devices) {
-
+	console.log('show device');
 	var fetchDevicesWrapper = document.querySelector('.fetch-devices-wrapper');
+
+	var deviceElements = document.querySelectorAll('.device-element');
+	for (var i = 0; i < deviceElements.length; i++) {
+			fetchDevicesWrapper.removeChild(deviceElements[i]);
+	}
+
 
 	for (let i = 0; i < devices.length; i++) {
 		var li = document.createElement('li');
+		li.classList.add('device-element');
 		fetchDevicesWrapper.appendChild(li);
 
 		var deviceName = document.createElement('span');

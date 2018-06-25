@@ -498,6 +498,7 @@ button, input[type="submit"], input[type="reset"] {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    z-index: 3;
 }
 
 #player::before {
@@ -577,16 +578,18 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 .fetch-devices-wrapper {
-    position: fixed;
-    bottom: 3em;
-    background-color: #191919;
+  margin-top: 2em;
     color: #fff;
-    padding: 0;
     right: 1em;
     min-height: 8em;
-    padding: 1em;
+
     list-style-type: none;
-    display: none;
+}
+
+.fetch-devices-wrapper li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5em;
 }
 
 .fetch-devices-wrapper.active {
