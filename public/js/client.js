@@ -727,3 +727,26 @@ function toggleCheckboxState() {
     this.value = false;
   }
 }
+
+if (document.querySelector('.tab-users')) {
+
+	document.querySelector('.tab-users').addEventListener("click", function(){
+    	document.querySelector('.tab-users').classList.add("active-tab");
+		document.querySelector('.tab-queue').classList.remove("active-tab");
+		document.querySelector('.tracklist').classList.add("hidden");
+	});
+
+	document.querySelector('.tab-queue').addEventListener("click", function(){
+    	document.querySelector('.tab-users').classList.remove("active-tab");
+		document.querySelector('.tab-queue').classList.add("active-tab");
+		document.querySelector('.tracklist').classList.remove("hidden");
+	});
+}
+
+window.onresize = function() {
+	if (document.querySelector('.tab-users') && window.innerWidth > 750) {
+		document.querySelector('.tab-users').classList.remove("active-tab");
+		document.querySelector('.tab-queue').classList.add("active-tab");
+		document.querySelector('.tracklist').classList.remove("hidden");
+	}
+}

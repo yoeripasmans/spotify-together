@@ -101,6 +101,10 @@ button, input[type="submit"], input[type="reset"] {
     padding: 0.5rem 1.5rem;
 }
 
+.show-add-tracks span::before {
+	content: 'Add songs';
+}
+
 .playlist-overview-header {
   display: flex;
 }
@@ -141,11 +145,13 @@ button, input[type="submit"], input[type="reset"] {
     margin-right: 1em;
     border: none;
 	color: rgba(255,255,255,0.6);
+	transition: .5s;
 }
 
 .active-tab {
     background-color: #667780;
 	color: #ffffff;
+	transition: .5s;
 }
 
 .button-icon {
@@ -814,4 +820,18 @@ padding: 4em;
     .track-add-button {
         grid-row: 1 / 3;
     }
+
+	.show-add-tracks {
+	    background: none;
+	    padding: 0.5rem 0.5rem;
+	}
+
+	.show-add-tracks .button-icon {
+	  margin-left: 0;
+	}
+
+	.show-add-tracks span::before {
+		content: '';
+	}
+
 }
