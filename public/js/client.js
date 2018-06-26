@@ -100,6 +100,9 @@ socket.on('connected', function(userDetails) {
 	//Close wrapper
 	userPlaylistClose.addEventListener('click', function() {
 		userPlaylistWrapper.classList.add('hidden');
+		document.querySelector('.add-track-wrapper .add-track-header').classList.remove('hidden');
+		document.querySelector('.add-track-wrapper .user-playlists-overview').classList.remove('hidden');
+		document.querySelector('.add-track-wrapper .top-songs').classList.remove('hidden');
 		var userPlaylistTracklistElements = document.querySelectorAll('.tracklist__track--results');
 		removeTrackList(userPlaylistTracklist, userPlaylistTracklistElements);
 	});
@@ -331,6 +334,9 @@ socket.on('showPlaylist', function(userPlaylistData, playlistData) {
 
 	//Open wrapper
 	userPlaylistWrapper.classList.remove('hidden');
+	document.querySelector('.add-track-wrapper .add-track-header').classList.add('hidden');
+	document.querySelector('.add-track-wrapper .user-playlists-overview').classList.add('hidden');
+	document.querySelector('.add-track-wrapper .top-songs').classList.add('hidden');
 	userPlaylistTitle.textContent = userPlaylistData.name;
 	userPlaylistCover.src = userPlaylistData.images[1].url;
 	console.log(userPlaylistData);
