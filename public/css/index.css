@@ -472,7 +472,10 @@ align-items: center;
     width: 14.33%;
     position: relative;
 }
-
+.user-playlists__item span {
+  display: block;
+  width: 100;
+}
 .user-playlists img {
     width: 100%;
     display: block;
@@ -1057,7 +1060,9 @@ body.cast {
  .main-header .leave-playlist-button {
  	display: flex;
  }
-
+.progress-bar-wrapper {
+      top: -0.2em;
+}
 
 
 }

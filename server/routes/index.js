@@ -164,6 +164,7 @@ var returnRouter = function(io) {
 				});
 
 				socket.on('addTrack', function(trackData) {
+		
 					var newTrackData = {
 						id: trackData.id,
 						uri: trackData.uri,
@@ -369,6 +370,9 @@ var returnRouter = function(io) {
 							//Progress bar
 							var width = 0;
 							var tracklengthSec = Math.floor(currentTrack.duration_ms / 1000);
+
+							clearInterval(intervals[playlistId]);
+							clearTimeout(timeouts[playlistId]);
 
 							intervals[playlistId] = setInterval(function(){
 								width += 0.5;
@@ -635,7 +639,7 @@ var returnRouter = function(io) {
 								socket.emit('searchTrack', data.body.tracks.items, playlistData.tracks);
 							}, function(err) {
 								console.error(err);
-								searchTrack(req, res, next, err, searchTrack, value);
+								searchTrack(req, res, next, err, searchTrack, value, playlistData);
 							});
 					}
 
@@ -815,7 +819,7 @@ var returnRouter = function(io) {
 		}
 	}
 
-	function checkAccesToken(req, res, next, error, callback, data) {
+	function checkAccesToken(req, res, next, error, callback, data, secondData) {
 		if (error.statusCode === 401) {
 			// Access token expired.
 			// Try to fetch a new one.
@@ -853,7 +857,7 @@ var returnRouter = function(io) {
 					accessToken: newAccessToken
 				}, function() {
 					// Retry the request.
-					callback(data);
+					callback(data, secondData);
 				});
 			});
 
