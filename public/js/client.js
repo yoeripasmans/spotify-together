@@ -574,6 +574,7 @@ socket.on('addTrack', function(trackData, spotifyId) {
 	addedBy.appendChild(addedByImg);
 
 	var addedByName = document.createElement('span');
+	addedByName.classList.add('tracklist__track-addedby-name');
 	addedBy.appendChild(addedByName);
 
 	if (trackData.addedBy.displayName) {
