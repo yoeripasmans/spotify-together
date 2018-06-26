@@ -841,3 +841,21 @@ window.onresize = function() {
 		}
 	}
 }
+
+if (document.querySelector('.show-add-tracks')) {
+
+	document.querySelector('.show-add-tracks').addEventListener("click", function(){
+
+		document.querySelector('main').classList.add("hidden");
+		document.querySelector('header').classList.add("hidden");
+
+	});
+
+}
+
+document.querySelector('.add-track-header .leave-playlist-button').addEventListener("click", function(){
+
+	document.querySelector('main').classList.remove("hidden");
+	document.querySelector('header').classList.remove("hidden");
+
+});
