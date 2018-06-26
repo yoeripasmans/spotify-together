@@ -682,7 +682,7 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
 .playlist-overview-list {
     margin-top: 1.5em;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
     grid-gap: 2em;
 }
 
