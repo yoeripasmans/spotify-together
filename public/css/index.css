@@ -294,6 +294,7 @@ button, input[type="submit"], input[type="reset"] {
 	display: grid;
 	column-gap: 25px;
 	row-gap: 25px;
+  grid-gap: 25px;
 	grid-template-columns: repeat(auto-fill, minmax(6em, 1fr));
 	height: 8em;
 	overflow: hidden;
