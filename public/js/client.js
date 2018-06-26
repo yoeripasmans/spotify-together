@@ -327,8 +327,11 @@ socket.on('showPlaylist', function(userPlaylistData, playlistData) {
 	var userPlaylistCreatedByText = document.querySelector('.user-playlist-header__user-created span');
 	var userPlaylistCreatedByImg = document.querySelector('.user-playlist-header__user-created img');
 	var userPlaylistWrapper = document.querySelector('.user-playlist');
+
+
 	//Open wrapper
 	userPlaylistWrapper.classList.remove('hidden');
+	currentusersAmountTab.textContent = activeUsers.length + " Users";
 
 	userPlaylistTitle.textContent = userPlaylistData.name;
 	userPlaylistCover.src = userPlaylistData.images[1].url;
