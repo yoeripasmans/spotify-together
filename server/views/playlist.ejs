@@ -14,7 +14,8 @@
 					<% if(playlistData.tracks.length > 0 ){ %>
 					<img class="header-currenttrack-img" src="<%= playlistData.tracks[0].album.images[1].url %>" alt="">
 					<% } else {%>
-					<img class="header-currenttrack-img" src="//:0" alt="">
+					<div class="gradient"></div>
+					<!-- <img class="header-currenttrack-img" src="//:0" alt=""> -->
 					<% } %>
 					<% if(playlistData.isPlaying === true ){ %>
 					<span class="play-status">Playing</span>

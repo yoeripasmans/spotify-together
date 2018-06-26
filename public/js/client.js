@@ -661,7 +661,10 @@ socket.on('joinPlaylist', function(currentUser, activeUsers) {
 	function createEl() {
 		var currentusers = document.querySelector('.playlist-currentusers__list');
 		var currentusersAmount = document.querySelector('.playlist-currentusers__amount');
+		var currentusersAmountTab = document.querySelector('.tab-users');
+
 		currentusersAmount.textContent = activeUsers.length + " Users";
+		currentusersAmountTab.textContent = activeUsers.length + " Users";
 
 		var li = document.createElement('li');
 		li.classList.add('current-user');
@@ -694,7 +697,9 @@ socket.on('showActiveUsers', function(activeUsers) {
 	var currentusers = document.querySelector('.playlist-currentusers__list');
 	var currentusersElements = document.querySelectorAll('.current-user');
 	var currentusersAmount = document.querySelector('.playlist-currentusers__amount');
+	var currentusersAmountTab = document.querySelector('.tab-users');
 	currentusersAmount.textContent = activeUsers.length + " Users";
+	currentusersAmountTab.textContent = activeUsers.length + " Users";
 
 	//Create elements
 	for (let i = 0; i < activeUsers.length; i++) {
