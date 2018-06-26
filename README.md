@@ -32,3 +32,46 @@ Also known as “the bridge”. The beamer figuratively forms the bridge between
 ### Smartphone
 
 Also, straightforwards. This is the device 99% of the users are going to be using. When the users see the beamer they can scan the displayed QR code and join the playlist within seconds. On their smartphone they can like songs in the playlist and add they favorite songs from their own Spotify account.
+
+## Getting started
+
+1.  Clone the repo `git clone`.
+2.  Install dependencies `npm install`.
+3.  Run `npm start` to start server on port 3000.
+
+## Features
+There are different rights of users and admins. Admins have the more functionality as users but these are additional on the basic functionality. Here you can see the difference in what features they can use.
+
+### Users
+- Create a playlist.
+- Join a playlist.
+- See all active users inside a playlist.
+- Add tracks to the playlist.
+- Like songs in the playlist.
+- Remove your own added songs
+- Get information about the currently playing track.
+
+### Admins
+- Real time sync player on all connected devices.
+- Remove all songs.
+- Control the player.
+- Change settings of the playlist.
+- Set cast mode.
+
+## Setting up Node.js & Express
+
+To get my project running I've started with `npm init` to initialize a `package.json`. From there I started to set-up a `Node.js` directory structure and starting to add different dependencies like `Express` for static file serving and templating.
+
+## Data
+This application uses the `Spotify Web Api` as external data source. With this API, my application can retrieve Spotify content such as album data and playlists. To access user-related data through the Web API, an application must be authorized by the user to access that particular information. When the user connect with my application his user data gets fetched to my server and saved in a database. Based on this particular user, more data about his favorite tracks gets loaded and emitted to the client.
+
+### Database system
+This application uses mongoDB as database system with mongoose as schema-based model for application data. The database consist the users and a playlist.  When the user connect with my application the server checks if there already is an user present. If so send data from the database, else save that user in the database. Also the playlist is served from the database. When a user adds a playlist, the database gets updated and sets an object with the default properties of a playlist.
+
+### Data life cycle
+This is the data model of the application. It shows the communication between the major components of the app.
+
+![preview](datalifecycle.png)
+
+## Authorization
+To access user-related data through the Spotify Web API, my application must be authorized by the user to access particular user information. For authorization within my app I've used `passport.js`. This is an authentication middleware for Node.js with different Authentication mechanisms, known as strategies. I used the Passport strategy for authenticating with Spotify using the OAuth 2.0 API. Following this example [https://github.com/jmperez/passport-spotify#readme](https://github.com/jmperez/passport-spotify#readme)
