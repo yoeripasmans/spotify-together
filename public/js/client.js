@@ -331,8 +331,6 @@ socket.on('showPlaylist', function(userPlaylistData, playlistData) {
 
 	//Open wrapper
 	userPlaylistWrapper.classList.remove('hidden');
-	currentusersAmountTab.textContent = activeUsers.length + " Users";
-
 	userPlaylistTitle.textContent = userPlaylistData.name;
 	userPlaylistCover.src = userPlaylistData.images[1].url;
 	console.log(userPlaylistData);
@@ -842,20 +840,21 @@ window.onresize = function() {
 	}
 }
 
-if (document.querySelector('.show-add-tracks')) {
-
-	document.querySelector('.show-add-tracks').addEventListener("click", function(){
-
-		document.querySelector('main').classList.add("hidden");
-		document.querySelector('header').classList.add("hidden");
-
-	});
-
+if (location.hash === '#add-track') {
+	document.querySelector('main').classList.add("hidden");
+	document.querySelector('header').classList.add("hidden");
 }
 
-document.querySelector('.add-track-header .leave-playlist-button').addEventListener("click", function(){
+window.addEventListener("hashchange", function() {
+	console.log(location.hash);
 
-	document.querySelector('main').classList.remove("hidden");
-	document.querySelector('header').classList.remove("hidden");
-
+	if (location.hash === '#add-track') {
+		window.scrollTo(0, 0);
+		document.querySelector('main').classList.add("hidden");
+		document.querySelector('header').classList.add("hidden");
+	}
+	else {
+		document.querySelector('main').classList.remove("hidden");
+		document.querySelector('header').classList.remove("hidden");
+	}
 });
