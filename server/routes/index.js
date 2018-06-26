@@ -45,7 +45,7 @@ var returnRouter = function(io) {
 		}),
 		function(req, res, next) {
 			console.log(req.session.playlistId);
-			if (req.session.playlistId) {
+			if (req.session.playlistId !== null) {
 				res.redirect('/playlist/' + req.session.playlistId);
 			} else {
 				res.redirect('/playlists');

@@ -646,20 +646,20 @@ function checkmarkToggle(trackId, state) {
 socket.on('joinPlaylist', function(currentUser, activeUsers) {
 	var currentusersElements = document.querySelectorAll('.current-user');
 	console.log(currentusersElements);
-	console.log(currentUser.spotifyId);
+	console.log(currentUser.spotifyId, "joined");
 	var duplicate;
 
 	for (var i = 0; i < currentusersElements.length; i++) {
 		if (currentUser.spotifyId === currentusersElements[i].getAttribute('data-id')) {
-			return true;
+			duplicate = true;
 		} else {
-			return false;
+			duplicate = false;
 		}
 	}
-	if (true) {
+	if (duplicate === false) {
+		console.log('create');
 		createEl();
 	}
-	console.log(currentUser);
 
 	function createEl() {
 		var currentusers = document.querySelector('.playlist-currentusers__list');
