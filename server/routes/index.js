@@ -164,7 +164,7 @@ var returnRouter = function(io) {
 				});
 
 				socket.on('addTrack', function(trackData) {
-		
+
 					var newTrackData = {
 						id: trackData.id,
 						uri: trackData.uri,
@@ -297,13 +297,17 @@ var returnRouter = function(io) {
 							},
 
 						}, {
-							upsert: true,
+							upsert: false,
 							new: false
 						},
 						function(err, docs) {
 							if (err) {
 								console.log(err);
-							} else {
+
+							} else if(docs === null){
+								console.log('cant find track');
+							}
+								else {
 
 
 								if (trackId === docs.tracks[0].id && docs.isPlaying === true && docs.tracks.length > 1) {
