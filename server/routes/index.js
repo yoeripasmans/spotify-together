@@ -745,8 +745,6 @@ var returnRouter = function(io) {
 								userPlaylists: userPlaylists,
 							});
 
-
-
 						}).catch(function(err) {
 							console.log(err);
 							checkAccesToken(req, res, next, err, getUserPlaylist);
@@ -756,7 +754,8 @@ var returnRouter = function(io) {
 				getUserTopTracks();
 
 			}).catch(function(err) {
-				console.log(err);
+				console.log('database',err);
+				res.redirect('/playlists');
 			});
 		}
 	});
