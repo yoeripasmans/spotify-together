@@ -292,14 +292,13 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 .playlist-currentusers__list {
-  padding: 0;
-      display: grid;
-      column-gap: 25px;
-      row-gap: 25px;
-      grid-template-columns: repeat(auto-fill, minmax(6em, 1fr));
-      height: 8em;
-      overflow: hidden;
-  }
+	padding: 0;
+	display: grid;
+	column-gap: 25px;
+	row-gap: 25px;
+	grid-template-columns: repeat(auto-fill, minmax(6em, 1fr));
+	height: 8em;
+	overflow: hidden;
 }
 
 .leave-playlist-button {
@@ -419,10 +418,10 @@ align-items: center;
 }
 
 #add-track {
-    position: fixed;
+    /* position: fixed; */
     top: 0;
     left: 0;
-    background-color: #000;
+    /* background-color: #000; */
     color: #fff;
     width: 100%;
     min-height: 100%;
@@ -731,10 +730,14 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: -2;
     top: 0;
     left: 0;
     overflow: hidden;
+}
+
+#add-track .background-image-wrapper {
+	z-index: -1;
 }
 
 .background-image {
