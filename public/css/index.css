@@ -402,6 +402,10 @@ button, input[type="submit"], input[type="reset"] {
     width: 2em;
 }
 
+.track-delete-button img, .track-like-button img, .track-add-button img {
+	transition: transform .3s;
+}
+
 /* .pause-button.hidden {
 	display: none;
 } */
@@ -896,6 +900,38 @@ body.cast {
     display: block;
 }
 
+/* ==========================================
+				BUTTON STATES
+========================================== */
+
+.leave-playlist-button:hover img {
+	margin-right: 0.7rem;
+	margin-left: -0.2rem;
+	transition: margin 0.3s;
+}
+
+.tracklist-header button:hover, .tracklist-header button:target {
+	background: rgba(0, 0, 0, 0.6);
+	color: #ffffff;
+}
+
+.tracklist-header .active-tab:hover, .tracklist-header .active-tab:target  {
+	background: #525F66;
+}
+
+.show-add-tracks:hover, .show-add-tracks:target {
+	background: #525F66;
+}
+
+.track-like-button:hover img, .track-add-button:hover img, .track-delete-button:hover img {
+	transform: scale(1.2);
+	transition: transform .2s;
+}
+
+/* ==========================================
+				MEDIA QUERIES
+========================================== */
+
 @media(max-width: 750px) {
     .account__text--name {
         display: none;
@@ -936,19 +972,19 @@ body.cast {
         -webkit-mask-image: linear-gradient(to left, transparent 0%, rgba(0, 0, 0, 1.0) 10%);
     }
     /* .tracklist-header--sticky {
-    display: flex;
-    align-items: center;
-    margin-bottom: 2em;
-    position: fixed;
-    top: 0;
-    height: 4em;
-    width: 100%;
-    left: 0;
-    padding: 0 1em;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 3;
-	transition: 0.3s ease;
-} */
+	    display: flex;
+	    align-items: center;
+	    margin-bottom: 2em;
+	    position: fixed;
+	    top: 0;
+	    height: 4em;
+	    width: 100%;
+	    left: 0;
+	    padding: 0 1em;
+	    background-color: rgba(0, 0, 0, 0.8);
+	    z-index: 3;
+		transition: 0.3s ease;
+	} */
     .progress-bar-wrapper--header {
         display: block;
     }
