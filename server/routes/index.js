@@ -806,7 +806,7 @@ var returnRouter = function(io) {
 
   router.get('/logout', function(req, res) {
     req.logout();
-    res.redirect('/');
+    res.redirect('/index');
   });
 
   function ensureAuthenticated(req, res, next) {
