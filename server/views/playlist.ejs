@@ -169,8 +169,14 @@
 			<header>
 				<h3>Join the playlist</h3>
 			</header>
+			<section>
 				<p>Scan the QR code to easily join the playlist!</p>
 				<img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?color=ffffff&bgcolor=000000&data=https://spotifytogether.herokuapp.com/playlist/<%= playlistData.qrCodeId%>/<%=playlistData._id %>" alt="">
+			</section>
+			<section class="site-link">
+				<p>spotifytogether.herokuapp.com</p>
+			</section>
+
 		</aside>
 
 		<section id="add-track">

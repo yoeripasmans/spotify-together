@@ -161,12 +161,20 @@ socket.on('connected', function(userDetails) {
 	if (castActiveButton) {
 		castActiveButton.addEventListener('click', function() {
 			document.body.classList.add('cast');
+			var deleteButtons = document.querySelectorAll('.track-delete-button .icon');
+			for (var i = 0; i < deleteButtons.length; i++) {
+				deleteButtons[i].src = "/icons/heart.svg";
+			}
 		});
 	}
 
 	if (castInactiveButton) {
 		castInactiveButton.addEventListener('click', function() {
 			document.body.classList.remove('cast');
+			var deleteButtons = document.querySelectorAll('.track-delete-button .icon');
+			for (var i = 0; i < deleteButtons.length; i++) {
+				deleteButtons[i].src = "/icons/close.svg";
+			}
 		});
 	}
 

@@ -13,27 +13,22 @@ var Vibrant = require('node-vibrant');
 
 var returnRouter = function(io) {
 
-	router.get('/', function(req, res) {
-		// res.render('index');
-		res.redirect('/login');
+	router.get('/', ensureAuthenticated, function(req, res) {
+		if (req.session.playlistId) {
+			res.redirect('/playlist/' + req.session.playlistId);
+		} else {
+			res.redirect('/playlists');
+		}
 	});
 
-	// router.get('/login', function(req, res, next) {
-	//
-	// 	passport.authenticate('spotify', {
-	// 		state: req.session.playlistId
-	// 	}, {
-	// 		scope: ['streaming user-read-birthdate user-read-private playlist-read-private user-read-email user-read-playback-state user-modify-playback-state user-top-read'],
-	// 		showDialog: true
-	// 	});
-	//
-	//
-	// });
+	router.get('/index', function(req, res) {
+		res.render('index');
+	});
 
 	router.get('/login',
 		passport.authenticate('spotify', {
 			scope: ['streaming user-read-birthdate user-read-private playlist-read-private user-read-email user-read-playback-state user-modify-playback-state user-top-read'],
-			showDialog: false
+			showDialog: true
 		}),
 		function(req, res) {
 			// The request will be redirected to spotify for authentication, so this function will not be called.
@@ -45,12 +40,12 @@ var returnRouter = function(io) {
 		}),
 		function(req, res, next) {
 			console.log(req.session.playlistId);
-			if (req.session.playlistId) {
-				res.redirect('/playlist/' + req.session.playlistId);
-			} else {
-				res.redirect('/playlists');
-			}
-
+			// if (req.session.playlistId) {
+			// 	res.redirect('/playlist/' + req.session.playlistId);
+			// } else {
+			// 	res.redirect('/playlists');
+			// }
+				res.redirect('/');
 
 		});
 
@@ -819,7 +814,7 @@ var returnRouter = function(io) {
 		if (req.isAuthenticated()) {
 			return next();
 		} else {
-			res.redirect('/login');
+			res.redirect('/index');
 		}
 	}
 
