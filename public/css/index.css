@@ -70,8 +70,8 @@ main {
 button, input[type="submit"], input[type="reset"] {
     background: none;
     color: inherit;
-    border: none;
     padding: 0;
+    border: none;
     font: inherit;
     cursor: pointer;
     outline: inherit;
@@ -905,6 +905,27 @@ body.cast {
     display: block;
 }
 
+.playlist-create-header {
+      margin: 2em 0;
+}
+.playlist-create-header a{
+    margin-bottom: 1em;
+}
+
+.playlist-create-form input[type="text"] {
+  width: 21em;
+  height: 3em;
+  border-radius: 4px;
+  background-color: rgba(10, 11, 12, 0.4);
+  border: solid 1px #3d464c;
+  display: block;
+  margin-top: 1em;
+  font-size: 1em;
+  color: #fff;
+  padding: 0 1em;
+}
+
+
 /* ==========================================
 				BUTTON STATES
 ========================================== */
@@ -937,6 +958,13 @@ body.cast {
 	transition: background .3s;
 }
 
+.save-playlist-button {
+  margin-top: 2em;
+  padding: 0 3em!important;
+  border-radius: 20px;
+  border: 1px solid #fff!important;
+}
+
 @media(max-width: 750px) {
 
 	.tracklist-header button:hover, .tracklist-header button:target {
@@ -955,6 +983,11 @@ body.cast {
 ========================================== */
 
 @media(max-width: 750px) {
+    h1 {
+      font-size: 2em;
+    }.playlist-create-form input[type="text"] {
+      width: 100%;
+    }
     .account__text--name {
         display: none;
     }

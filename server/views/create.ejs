@@ -8,22 +8,20 @@
 <body>
 	<% include ./partials/header %>
 		<main>
-			<h1>Create a playlist</h1>
-			<a href="/playlists">Back</a>
+			<header class="playlist-create-header">
+				<a href="/playlists" class="leave-playlist-button"><img src="/icons/back.svg" alt="" class="icon"><span>Back to overview</span></a>
+				<h1>Create a playlist</h1>
+			</header>
 
-			<form name="create-playlist" method="POST" action="/create">
+
+			<form name="create-playlist" class="playlist-create-form" method="POST" action="/create">
 
 				<div>
-					<label for="name">Name</label>
-					<input type="text" name="name" id="name" required>
+					<label for="name">What do we call the playlist?</label>
+					<input type="text" name="name" id="name" placeholder="Enter a name" required>
 				</div>
 
-				<div>
-					<label for="description">Description</label>
-					<input type="text" name="description" id="description">
-				</div>
-
-				<div>
+				<!-- <div>
 					<label for="private">Make playlist private</label>
 					<input id="private" name="private" type="checkbox">
 				</div>
@@ -48,9 +46,9 @@
 			  <option value="hiphop">Hiphop</option>
 			  <option value="rock">Rock</option>
 			  <option value="classic">classic</option>
-			</select>
+			</select> -->
 
-				<input type="submit" value="Save">
+				<input type="submit" value="Create" class="button save-playlist-button">
 			</form>
 		</main>
 		<% include ./partials/scripts %>
