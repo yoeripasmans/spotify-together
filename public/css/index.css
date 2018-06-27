@@ -568,7 +568,6 @@ align-items: center;
 .player-details__artist-name {
     font-size: 0.9em;
     opacity: 0.8;
-    margin-top: 0.3em;
 }
 
 .player-details__addedby {
@@ -650,13 +649,14 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
     width: 400px;
     height: 40px;
     border-radius: 40px;
-    background-color: #0a0b0c;
-	opacity: 0.4;
+    background-color: rgba(10, 11, 12, 0.4);
+	    border: 1px solid rgba(113, 113, 113, 0.9);
 }
 
 .track-search-wrapper {
     margin-left: auto;
     position: relative;
+	opacity: 0.8;
 }
 
 .track-search-icon {
@@ -1131,9 +1131,9 @@ body.cast {
 	 height: 1.25rem;
  }
 
- .player-controls .play-button, .player-controls .play-button img {
+ /* .player-controls .play-button, .player-controls .play-button img {
 	 height: 100%;
- }
+ } */
 
 
 
