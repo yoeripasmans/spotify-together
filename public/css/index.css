@@ -252,7 +252,7 @@ button, input[type="submit"], input[type="reset"] {
     display: flex;
     justify-content: center;
     font-size: 0.75em;
-    display: none;
+    /* display: none; */
 }
 
 .playlist-header__currentrack {
@@ -540,7 +540,11 @@ align-items: center;
   border-radius: 2px;
   width: 0;
   /* transition: 0.1s linear width; */
-
+}
+.progress-bar-wrapper--header {
+	bottom: 0;
+	top: unset;
+	display: none;
 }
 
 .player-details {
@@ -930,12 +934,30 @@ body.cast {
 		padding: 0.2rem 0;
 	}
 	.playlist-header__details {
-		padding: 1.4rem 0;
+		padding: 1.2rem 0;
 		width: 100%;
 		/* background: blue; */
 		overflow: hidden;
 		-webkit-mask-image: linear-gradient(to left, transparent 0%, rgba(0, 0, 0, 1.0) 10%);
 	}
+	/* .tracklist-header--sticky {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2em;
+    position: fixed;
+    top: 0;
+    height: 4em;
+    width: 100%;
+    left: 0;
+    padding: 0 1em;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 3;
+	transition: 0.3s ease;
+} */
+.progress-bar-wrapper--header {
+	display: block;
+}
+
     main, .main-header, .add-track-wrapper {
         /* padding: 0 1em; */
     }
@@ -945,18 +967,28 @@ body.cast {
     .playlist-header__title {
 		/* margin-right: 1rem; */
 		/* box-sizing: border-box; */
-        font-size: 2.5em;
+		font-size: 1.875em;
+		line-height: 1.2;
+		white-space: normal;
+		height: min-content;
+		max-height: 2.5em;
 		/* display: inline; */
 		/* background: red; */
-		/* overflow: hidden; */
-		white-space: nowrap;
-		/* -webkit-mask-image: -webkit-gradient(linear, left 50%, left right, from(rgba(0,0,0,1)), to(rgba(0,0,0,0))); */
-		/* -webkit-mask-image: -webkit-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,0) 77%); */
+		overflow: hidden;
+		/* white-space: nowrap; */
+		-webkit-mask-image: -webkit-gradient(linear, left 50%, left right, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+		-webkit-mask-image: -webkit-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,0) 77%);
     }
+	.playlist-header__details {
+		justify-content: center;
+	}
 
     .tracklist__header {
         display: none;
     }
+	.playlist-queue .tracklist__track{
+		grid-template-columns: 3em 1fr 3em !important;
+	}
     .tracklist__track {
         grid-template-columns: 3em 1fr 2em !important;
         grid-row-gap: 0;

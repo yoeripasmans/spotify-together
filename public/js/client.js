@@ -204,6 +204,20 @@ socket.on('connected', function(userDetails) {
 
 	});
 
+	window.onscroll = onScroll;
+
+	var queueEl = document.querySelector('.queue');
+	var header = document.querySelector('.tracklist-header');
+	console.log(header);
+
+	function onScroll() {
+		if(queueEl.getBoundingClientRect().top <= 75){
+			header.classList.add('tracklist-header--sticky');
+		} else {
+			header.classList.remove('tracklist-header--sticky');
+		}
+	}
+
 });
 
 function deleteTrack() {
@@ -256,10 +270,13 @@ socket.on('playingTrack', function(currentTrack, oldCurrentTrack) {
 	});
 	updatePlayer(currentTrack);
 });
-	var progressBar = document.querySelector('.progress-bar');
+	var progressBar = document.querySelectorAll('.progress-bar');
 
 socket.on('progressBar', function(width) {
-	progressBar.style.width = width + "%";
+	for (var i = 0; i < progressBar.length; i++) {
+		progressBar[i].style.width = width + "%";
+	}
+
 });
 
 socket.on('pauseTrack', function(results) {
@@ -270,7 +287,10 @@ socket.on('pauseTrack', function(results) {
 	var playStatus = document.querySelector('.play-status');
 	playStatus.textContent = "Paused";
 
-	progressBar.style.width = 0;
+	for (var i = 0; i < progressBar.length; i++) {
+		progressBar[i].style.width = 0;
+	}
+
 });
 
 function updatePlayer(currentTrack) {
@@ -299,10 +319,16 @@ function updatePlayer(currentTrack) {
 	Vibrant.from(currentTrack.album.images[0].url).getPalette().then(function(palette) {
 		if (palette.Vibrant && palette.LightVibrant) {
 			addTrackButton.style.backgroundColor = "rgb(" + palette.Vibrant._rgb[0] + "," + palette.Vibrant._rgb[1] + "," + palette.Vibrant._rgb[2] + ")";
-			progressBar.style.backgroundColor = "rgb(" + palette.Vibrant._rgb[0] + "," + palette.Vibrant._rgb[1] + "," + palette.Vibrant._rgb[2] + ")";
+			for (var i = 0; i < progressBar.length; i++) {
+				progressBar[i].style.backgroundColor = "rgb(" + palette.Vibrant._rgb[0] + "," + palette.Vibrant._rgb[1] + "," + palette.Vibrant._rgb[2] + ")";
+			}
+
 		} else {
 			addTrackButton.style.backgroundColor = "rgb(102, 119, 128)";
-			progressBar.style.backgroundColor = "#fff";
+			for (var i = 0; i < progressBar.length; i++) {
+			progressBar[i].style.backgroundColor = "#fff";
+			}
+
 		}
 
 		console.log(palette);
@@ -457,7 +483,10 @@ socket.on('nextTrack', function(oldCurrentTrack) {
 		likeButton.classList.remove('track-like-button--disabled');
 		likeButton.childNodes[1].src = "/icons/heart.svg";
 	}
-	progressBar.style.width = 0;
+	for (var i = 0; i < progressBar.length; i++) {
+		progressBar[i].style.width = 0;
+	}
+
 });
 
 socket.on('likeTrack', function(trackId, currentTrack) {
