@@ -812,7 +812,12 @@ var returnRouter = function(io) {
 
 	function ensureAuthenticated(req, res, next) {
 		if (req.isAuthenticated()) {
-			return next();
+			if(req.session.playlistId){
+				res.redirect('/login');
+			} else {
+				return next();
+			}
+
 		} else {
 			res.redirect('/index');
 		}
