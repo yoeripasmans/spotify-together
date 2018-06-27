@@ -886,7 +886,7 @@ body.cast {
 	display: none;
 }
 
-.tracklist__track-artist, .tracklist__track-name {
+.tracklist__track-artist, .tracklist__track-name, .artist-name {
 	overflow: hidden;
 	white-space: nowrap;
 	-webkit-mask-image: linear-gradient(to left, transparent 0%, rgba(0, 0, 0, 1.0) 10%);
@@ -979,9 +979,9 @@ body.cast {
 		-webkit-mask-image: -webkit-gradient(linear, left 50%, left right, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
 		-webkit-mask-image: -webkit-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,0) 77%);
     }
-	.playlist-header__details {
+	/* .playlist-header__details {
 		justify-content: center;
-	}
+	} */
 
     .tracklist__header {
         display: none;
@@ -1019,7 +1019,7 @@ body.cast {
         font-weight: 600;
 		font-size: 1rem;
     }
-	.tracklist__track-artist {
+	.tracklist__track-artist, .artist-name {
 		font-size: .875rem;
 		color: rgba(255,255,255,0.6);
     }
@@ -1136,5 +1136,18 @@ body.cast {
  } */
 
 
+}
 
+@media(max-width: 400px) {
+	.add-track-wrapper .user-playlist-header__title {
+		font-size: 1.4rem;
+	}
+
+	.add-track-wrapper .playlist-header {
+		height: 100px;
+	}
+
+	.add-track-wrapper .user-playlist .playlist-header__details {
+		padding: 0;
+	}
 }
