@@ -720,7 +720,7 @@ var returnRouter = function(io) {
       Playlist.findOne({
         _id: playlistId
       }).then(function(results) {
-        console.log(results);
+
         var topTracks;
         var userPlaylists;
         spotifyApi.setAccessToken(req.user.accessToken);
