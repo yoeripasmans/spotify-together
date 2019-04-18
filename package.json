@@ -1,6 +1,6 @@
 {
     "name": "spotify-together",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Synchronized playlist",
     "repository": {
         "type": "git",
