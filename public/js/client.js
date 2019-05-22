@@ -33,7 +33,6 @@ socket.on('connected', function(userDetails) {
 	//Eventlistener for showing personal playlist track in the add section
 	for (let i = 0; i < showPlaylistButton.length; i++) {
 		showPlaylistButton[i].addEventListener('click', function() {
-			console.log(this.parentElement.getAttribute('data-playlistid'));
 			socket.emit('showPlaylist', this.parentElement.getAttribute('data-playlistowner'), this.parentElement.getAttribute('data-playlistid'));
 		});
 	}
@@ -216,7 +215,6 @@ socket.on('connected', function(userDetails) {
 
 	var queueEl = document.querySelector('.queue');
 	var header = document.querySelector('.tracklist-header');
-	console.log(header);
 
 	function onScroll() {
 		if(queueEl.getBoundingClientRect().top <= 75){
@@ -338,8 +336,6 @@ function updatePlayer(currentTrack) {
 			}
 
 		}
-
-		console.log(palette);
 	}).catch(function(err) {
 		console.log(err);
 	});
@@ -351,8 +347,6 @@ function updatePlayer(currentTrack) {
 	} else {
 		addedBy.textContent = currentTrack.addedBy.username;
 	}
-
-	console.log(currentTrack);
 }
 var userPlaylistWrapper = document.querySelector('.user-playlist');
 var userPlaylistTracklist = document.querySelector('.add-playlist-tracks');
@@ -373,7 +367,6 @@ socket.on('showPlaylist', function(userPlaylistData, playlistData) {
 	document.querySelector('.add-track-wrapper .top-songs').classList.add('hidden');
 	userPlaylistTitle.textContent = userPlaylistData.name;
 	userPlaylistCover.src = userPlaylistData.images[1].url;
-	console.log(userPlaylistData);
 
 	if (userPlaylistData.owner.display_name) {
 		userPlaylistCreatedByText.textContent = "Created by: " + userPlaylistData.owner.display_name;
@@ -395,7 +388,6 @@ socket.on('searchTrack', function(trackData, playlistData) {
 });
 
 function removeTrackList(wrapper, elements) {
-	console.log('remove');
 	//Remove tracks
 	for (let i = 0; i < elements.length; i++) {
 		wrapper.removeChild(elements[i]);
@@ -499,7 +491,6 @@ socket.on('nextTrack', function(oldCurrentTrack) {
 
 socket.on('likeTrack', function(trackId, currentTrack) {
 	var likeButton = document.querySelector('[data-id="' + trackId + '"]').children[4].children[1];
-	// console.log(likeButton.children[4].children[1]);
 	var likeAmount = Number(likeButton.previousElementSibling.textContent) + 1;
 	likeButton.previousElementSibling.textContent = likeAmount;
 
@@ -519,7 +510,6 @@ socket.on('likeTrack', function(trackId, currentTrack) {
 });
 
 socket.on('resetPlayer', function() {
-	console.log('clear');
 	var playlistheaderImg = document.querySelector('.header-currenttrack-img');
 	playlistheaderImg.src = "//:0";
 
@@ -541,7 +531,6 @@ socket.on('resetPlayer', function() {
 });
 
 socket.on('showDevices', function(devices) {
-	console.log('show device');
 	var fetchDevicesWrapper = document.querySelector('.fetch-devices-wrapper');
 
 	var deviceElements = document.querySelectorAll('.device-element');
@@ -667,9 +656,7 @@ socket.on('addTrack', function(trackData, spotifyId) {
 });
 
 function checkmarkToggle(trackId, state) {
-	console.log(trackId);
 	var addedTrack = document.querySelectorAll('[data-trackid="' + trackId + '"]');
-	console.log(addedTrack);
 	for (var i = 0; i < addedTrack.length; i++) {
 		var addedTrackButton = addedTrack[i].querySelector('.track-add-button');
 		var addedTrackButtonIcon = addedTrackButton.querySelector('.icon');
@@ -687,8 +674,6 @@ function checkmarkToggle(trackId, state) {
 
 socket.on('joinPlaylist', function(currentUser, activeUsers) {
 	var currentusersElements = document.querySelectorAll('.current-user');
-	console.log(currentusersElements);
-	console.log(currentUser.spotifyId, "joined");
 	var duplicate;
 
 	for (var i = 0; i < currentusersElements.length; i++) {
@@ -699,7 +684,6 @@ socket.on('joinPlaylist', function(currentUser, activeUsers) {
 		}
 	}
 	if (duplicate === false) {
-		console.log('create');
 		createEl();
 	}
 
@@ -733,7 +717,6 @@ socket.on('joinPlaylist', function(currentUser, activeUsers) {
 		} else {
 			userName.textContent = currentUser.username;
 		}
-		console.log(currentUser.username, 'joined');
 	}
 });
 
@@ -755,7 +738,6 @@ socket.on('showActiveUsers', function(activeUsers) {
 	for (var i = 0; i < activeUsers.length; i++) {
 		for (var j = 0; j < currentusersElements.length; j++) {
 			if (activeUsers[i].spotifyId === currentusersElements[j].getAttribute('data-id')) {
-				console.log('same');
 				currentusers.removeChild(currentusersElements[j]);
 			}
 		}
@@ -785,12 +767,9 @@ socket.on('showActiveUsers', function(activeUsers) {
 			userName.textContent = activeUsers[i].username;
 		}
 	}
-
-	console.log('activeUsers', activeUsers);
 });
 
 socket.on('leavePlaylist', function(currentUser, activeUsers) {
-	console.log(currentUser.spotifyId, 'leaves');
 	var currentusers = document.querySelectorAll('.current-user');
 	var currentusersAmount = document.querySelector('.playlist-currentusers__amount');
 	currentusersAmount.textContent = activeUsers.length + " Users";
@@ -890,8 +869,6 @@ if (location.hash === '#add-track') {
 }
 
 window.addEventListener("hashchange", function() {
-	console.log(location.hash);
-
 	if (location.hash === '#add-track') {
 		window.scrollTo(0, 0);
 		document.querySelector('main').classList.add("hidden");
