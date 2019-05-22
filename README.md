@@ -2,6 +2,8 @@
 
 ![preview](readme-images/preview.png)
 
+Link to prototype: https://spotifytogether.herokuapp.com/
+
 ## Problem
 
 We both had the problem that there isn’t any solution right now for a synchronized playlist together with other people. Spotify themselves have their ‘collaborative playlists’ only then everyone had their own version of the playlist and everyone can play it separately. We wanted something synchronized, easily accessible where the opinion of the users counted.

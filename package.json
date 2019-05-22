@@ -1,6 +1,6 @@
 {
     "name": "spotify-together",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Synchronized playlist",
     "repository": {
         "type": "git",
@@ -15,6 +15,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@labela/deploy": "^0.9.1",
         "body-parser": "^1.18.3",
         "connect-mongo": "^2.0.1",
         "cookie-parser": "^1.4.3",
